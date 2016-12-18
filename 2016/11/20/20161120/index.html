@@ -15,13 +15,16 @@
 
 
 
-<meta property="og:type" content="website">
-<meta property="og:title" content="tags">
-<meta property="og:url" content="http://yoursite.com/tags/index.html">
+<meta name="description" content="linux下简单的lamp服务器搭建对于新手来说，可能有些困难，博主抱着系天下苍生的心来帮助需要帮助的人，大神绕道右拐。phpStudy for linux版本的出现，真是极大地便利了安装时间成本。话不多说，详细步骤如下：">
+<meta property="og:type" content="article">
+<meta property="og:title" content="lamp/lnmp搭建+typecho搭建">
+<meta property="og:url" content="http://yoursite.com/2016/11/20/20161120/index.html">
 <meta property="og:site_name" content="MagicYou">
-<meta property="og:updated_time" content="2016-12-18T13:12:34.456Z">
+<meta property="og:description" content="linux下简单的lamp服务器搭建对于新手来说，可能有些困难，博主抱着系天下苍生的心来帮助需要帮助的人，大神绕道右拐。phpStudy for linux版本的出现，真是极大地便利了安装时间成本。话不多说，详细步骤如下：">
+<meta property="og:updated_time" content="2016-11-20T14:55:23.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="tags">
+<meta name="twitter:title" content="lamp/lnmp搭建+typecho搭建">
+<meta name="twitter:description" content="linux下简单的lamp服务器搭建对于新手来说，可能有些困难，博主抱着系天下苍生的心来帮助需要帮助的人，大神绕道右拐。phpStudy for linux版本的出现，真是极大地便利了安装时间成本。话不多说，详细步骤如下：">
 
 <link rel="apple-touch-icon" href= "/apple-touch-icon.png">
 
@@ -51,7 +54,7 @@
 <link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
 
 
-<title>tags | MagicYou</title>
+<title>lamp/lnmp搭建+typecho搭建 | MagicYou</title>
 
 <script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
 <script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
@@ -61,7 +64,7 @@
         fancybox: true,
         animate: true,
         isHome: false,
-        isPost: false,
+        isPost: true,
         isArchive: false,
         isTag: false,
         isCategory: false,
@@ -252,11 +255,11 @@
     </div>
     <link class="menu-list" tags="标签" friends="友情链接" about="关于我"/>
 </nav>
-      <div class="body-wrap"><article id="page-undefined" class="article article-type-page" itemscope itemprop="blogPost">
+      <div class="body-wrap"><article id="post-20161120" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/tags/index.html" class="article-date">
-      <time datetime="2016-12-18T13:12:34.000Z" itemprop="datePublished">2016-12-18</time>
+      <a href="/2016/11/20/20161120/" class="article-date">
+      <time datetime="2016-11-20T14:55:23.000Z" itemprop="datePublished">2016-11-20</time>
 </a>
 
 
@@ -271,7 +274,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      tags
+      lamp/lnmp搭建+typecho搭建
     </h1>
   
 
@@ -281,6 +284,10 @@
         
 
         
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Linux/">Linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/lamp/">lamp</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/lnmp/">lnmp</a></li></ul>
+    </div>
+
         <div class="clearfix"></div>
       </div>
       
@@ -288,96 +295,91 @@
     <div class="article-entry" itemprop="articleBody">
       
           
-              <style>
-    .article-meta { display: none; }
-    #container .article .article-title { padding-right: 0; }
-    .article-header {
-        padding: 0;
-        padding-top: 26px;
-        border-left: none;
-        text-align: center;
-    }
-    .article-header:hover { border-left: none; }
-    .article-title { font-size: 1.6em }
-    .article-entry hr { margin: 0;}
-    .article-meta,
-    #container .article-info-post.article-info { display: none;}
-    #container .article .article-title { padding: 0; }
-</style>
+        <p>linux下简单的lamp服务器搭建对于新手来说，可能有些困难，博主抱着系天下苍生的心来帮助需要帮助的人，大神绕道右拐。phpStudy for linux版本的出现，真是极大地便利了安装时间成本。话不多说，详细步骤如下：<br><a id="more"></a></p>
+<h2 id="1-准备工作"><a href="#1-准备工作" class="headerlink" title="1.准备工作"></a>1.准备工作</h2><p>环境：centos6.5 64位<br>软件：phpstudy for linux（云主机搭建最好忽略此条）</p>
+<h2 id="2-安装lamp-lump"><a href="#2-安装lamp-lump" class="headerlink" title="2.安装lamp/lump"></a>2.安装lamp/lump</h2><p>1.从网络获取安装包</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">wget -c http://lamp.phpstudy.net/phpstudy.bin</div></pre></td></tr></table></figure>
+<p>此步骤需要点时间下载，稍等一会儿就好，<br>如果不是云主机，建议从官网提前下载安装包<br>直达车<a href="http://www.phpstudy.net/a.php/203.html" target="_blank" rel="external">http://www.phpstudy.net/a.php/203.html</a></p>
+<p>2.权限设置</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">chmod +x phpstudy.bin</div></pre></td></tr></table></figure>
+<p>3.运行安装</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">./phpstudy.bin</div></pre></td></tr></table></figure>
+<p>此过程需要时间较长，可能十几到二十几分钟，和主机的配置有关系，我的用了25分钟多<br>安装完之后会有提示，简单的选择而已。喜欢lamp的就”a”，喜欢lnmp的就”n”,依次类推。<br>还有php版本选择的，博主选的5.5，可能大家都喜欢5.5的吧。（我也没发现5.6，7.0有什么不好的，注意：typecho环境需要php5.2以上）</p>
+<p>4.安装过程完毕，easy的跟1似的。方便快捷，记得刚学php时环境配置搞了一整天，繁琐的头疼，修改各类配置文件，各种排错。<br>几个命令</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"> 服务进程管理：phpstudy (start|stop|restart|uninstall)</div><div class="line">站点主机管理：phpstudy (add|del|list)</div><div class="line">ftpd用户管理：phpstudy ftp (add|del|list)</div></pre></td></tr></table></figure>
+<h2 id="3-修改mysql"><a href="#3-修改mysql" class="headerlink" title="3.修改mysql"></a>3.修改mysql</h2><p>1.修改mysql数据库密码<br> 默认mysql密码是root，<br>首先，登陆mysql</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">mysql -uroot -p</div></pre></td></tr></table></figure>
+<p>然后操作mysql库的user表，进行update</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">mysql&gt; use mysql;</div><div class="line">mysql&gt; update user set password=password(&apos;654321&apos;) where user=&apos;root&apos;;</div><div class="line">mysql&gt; flush privileges;</div></pre></td></tr></table></figure>
+<p>2.允许远程连接数据库<br>使用“use mysql”命令，选择要使用的数据库，修改远程连接的基本信息，保存在mysql数据库中，因此使用mysql数据库。</p>
+<p>使用“GRANT ALL PRIVILEGES ON <em>.</em> TO ‘root’@’%’ IDENTIFIED BY ‘root’ WITH GRANT OPTION;”命令可以更改远程连接的设置。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">mysql&gt; use mysql;</div><div class="line">mysql&gt; GRANT ALL PRIVILEGES ON *.* TO &apos;数据库用户名（一般是root）&apos;@&apos;%&apos; IDENTIFIED BY &apos;数据库密码&apos; WITH GRANT OPTION;</div></pre></td></tr></table></figure>
+<p>使用“flush privileges;”命令刷新刚才修改的权限，使其生效</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">mysql&gt; flush privileges;</div></pre></td></tr></table></figure>
+<h2 id="3-安装typecho"><a href="#3-安装typecho" class="headerlink" title="3.安装typecho"></a>3.安装typecho</h2><p>这个貌似过时的轻量级开源博客程序好像不更新了都，没办法，个人觉得挺好用<br>1.从官网下载压缩包<br><a href="http://typecho.org/" target="_blank" rel="external">http://typecho.org/</a><br>2.解压后，将“build”文件夹放进安装好的lamp环境的www目录下<br>3.修改Apache或者Nginx默认网站目录<br>Apache：<br>找到<br>DocumentRoot “/phpstudy/www”</p>
+<p><directory "="" phpstudy="" www"=""><br>修改为：<br>DocumentRoot “/phpstudy/www/build”</directory></p>
+<p><directory "="" phpstudy="" www="" build"=""><br>4.重启phpStudy<br>配置成功，剩下的就是根据typecho提示进行安装操作<br>注意：1.数据库需要自行手动创建<br>    2.安装typecho时，如果数据库连接配置失败，修改‘localhost’为’127.0.0.1‘，还不行的话，直接改为云主机的ip即可。</directory></p>
+<p>个人经验，供大家哦交流学习，有错的地方望大家不吝赐教。</p>
 
-
-    <!-- Tag Cloud Page -->
-    <hr>
-<br>
-
-
-<p class="count"></p>
-
-<div class="tags">
-    <a href="/tags/Javascript/" style="font-size: 35px; color: #000">Javascript</a> <a href="/tags/Linux/" style="font-size: 16px; color: #808080">Linux</a> <a href="/tags/html/" style="font-size: 16px; color: #808080">html</a> <a href="/tags/lamp/" style="font-size: 16px; color: #808080">lamp</a> <a href="/tags/lnmp/" style="font-size: 16px; color: #808080">lnmp</a>
-</div>
-<style>
-    .category-list li{
-        display: inline-block;
-        margin: 0 1em .5em 0;
-        padding: 4px;
-        border: 1px solid lightgray;
-        font-size: 1.2rem;
-    }
-    .category-list a { color: gray; }
-    .category-list-item:hover a {
-        color: gray;
-        text-decoration: none;
-    }
-    .category-list-count {
-        margin-left: 2px;
-        font-size: .9rem;
-    }
-    .article-entry ul li:before{ display: none; }
-    .article-inner { text-align: center; }
-    .tags {
-        max-width: 42em;
-        margin: 2em auto;
-        margin-top: 0em;
-    }
-    .tags a {
-        margin-right: 1em;
-        line-height: 65px;
-        border-bottom: 1px solid gray;
-        white-space: nowrap;
-        transition: border-bottom .5s;
-    }
-    .tags a:hover {
-        border-bottom: 3px dotted gray;
-        text-decoration: none;
-    }
-    #count > span {
-        margin: auto .2em;
-        font-weight: bold;
-    }
-</style>
-
-<!-- Count tags and categories -->
-<p id="count">
-        已有<span><script>document.write($(".category-list-item").length)</script></span>个分类，
-        共计<span><script>document.write($(".tags > a").length)</script></span>个标签
-</p>
-<script>
-    $('#count').appendTo('.count');
-</script>
-
-          
-        
       
     </div>
     
   </div>
   
     
+    <div class="copyright">
+        <p><span>本文标题:</span><a href="/2016/11/20/20161120/">lamp/lnmp搭建+typecho搭建</a></p>
+        <p><span>文章作者:</span><a href="/" title="回到主页">MagicYou</a></p>
+        <p><span>发布时间:</span>2016-11-20, 22:55:23</p>
+        <p><span>最后更新:</span>2016-11-20, 22:55:23</p>
+        <p>
+            <span>原始链接:</span><a class="post-url" href="/2016/11/20/20161120/" title="lamp/lnmp搭建+typecho搭建">http://yoursite.com/2016/11/20/20161120/</a>
+            <span class="copy-path" data-clipboard-text="原文: http://yoursite.com/2016/11/20/20161120/　　作者: MagicYou" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <script> var clipboard = new Clipboard('.copy-path'); </script>
+        </p>
+        <p>
+            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" title="CC BY-NC-SA 4.0 International" target = "_blank">"署名-非商用-相同方式共享 4.0"</a> 转载请保留原文链接及作者。
+        </p>
+    </div>
 
+
+
+    <nav id="article-nav">
+        
+        
+            <div id="article-nav-older" class="article-nav-title">
+                <a href="/2016/09/09/20160909/">
+                    放大镜的设计与实现
+                </a>
+            </div>
+        
+    </nav>
 
   
 </article>
+
+    <div id="toc" class="toc-article">
+        <strong class="toc-title">文章目录</strong>
+        
+            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-准备工作"><span class="toc-number">1.</span> <span class="toc-text">1.准备工作</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-安装lamp-lump"><span class="toc-number">2.</span> <span class="toc-text">2.安装lamp/lump</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-修改mysql"><span class="toc-number">3.</span> <span class="toc-text">3.修改mysql</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-安装typecho"><span class="toc-number">4.</span> <span class="toc-text">3.安装typecho</span></a></li></ol>
+        
+    </div>
+    <style>
+        .left-col .switch-btn,
+        .left-col .switch-area {
+            display: none;
+        }
+        .toc-level-3 i,
+        .toc-level-3 ol {
+            display: none !important;
+        }
+    </style>
+
+    <input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+
+    <script>
+        yiliaConfig.toc = ["隐藏目录", "显示目录", !!"false"];
+    </script>
 
 
 
@@ -395,7 +397,7 @@
         </div>
         <script>
             window._bd_share_config={
-                "common":{"bdSnsKey":{},"bdText":"tags　| MagicYou　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+                "common":{"bdSnsKey":{},"bdText":"lamp/lnmp搭建+typecho搭建　| MagicYou　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
         </script>
     
 
@@ -411,7 +413,7 @@
     
       <div class="duoshuo" id="comments">
     <div id="comment-box" ></div>
-    <div class="ds-thread" id="ds-thread" data-thread-key="tags/index.html" data-title="tags" data-url="http://yoursite.com/tags/index.html"></div>
+    <div class="ds-thread" id="ds-thread" data-thread-key="2016/11/20/20161120/" data-title="lamp/lnmp搭建+typecho搭建" data-url="http://yoursite.com/2016/11/20/20161120/"></div>
     <script>
         var duoshuoQuery = {short_name:"null"};
         var loadComment = function(){
@@ -429,6 +431,24 @@
 </div>
     
 
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a href="/" title="回到主页"><i class="fa fa-home"></i></a>
+        
+
+        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+
+        
+            <a href="/2016/09/09/20160909/" title="下一篇: 放大镜的设计与实现">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
+    </div>
+
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2016/11/20/20161120/">lamp/lnmp搭建+typecho搭建</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/09/09/20160909/">放大镜的设计与实现</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/09/01/20160901/">电梯导航</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/24/20160824/">轮播图（4）--基于JQ的3D轮播设计与实现</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/17/20160817/">轮播图（3）--基于jQ的左右缓动焦点究极版</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/10/20160810/">轮播图（2）--基于JQ的左右缓动</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/03/20160803/">轮播图（1）--原生js的淡入淡出</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/07/14/20160714/">购物车的加减</a></li></ul>
 
 
 

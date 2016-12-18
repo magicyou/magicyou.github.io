@@ -72,7 +72,7 @@
         isCategory: false,
         fancybox_js: "//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.js",
         scrollreveal: "//cdn.bootcss.com/scrollReveal.js/3.1.4/scrollreveal.min.js",
-        search: true
+        search: false
     }
 </script>
 
@@ -114,13 +114,6 @@
 
         
 
-        
-            <form id="search-form">
-            <input type="text" id="local-search-input" name="q" placeholder="search..." class="search form-control" autocomplete="off" autocorrect="off" searchonload="false" />
-            <i class="fa fa-times" onclick="resetSearch()"></i>
-            </form>
-            <div id="local-search-result"></div>
-            <p class='no-result'>No results found <i class='fa fa-spinner fa-pulse'></i></p>
         
 
 
@@ -193,7 +186,7 @@
                 
                 <section class="switch-part switch-part2">
                     <div class="widget tagcloud" id="js-tagcloud">
-                        <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Javascript/">Javascript</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Javascript-html/">Javascript,html</a></li></ul>
+                        <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Javascript/">Javascript</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux/">Linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/html/">html</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/lamp/">lamp</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/lnmp/">lnmp</a></li></ul>
                     </div>
                 </section>
                 
@@ -294,7 +287,7 @@
 
         
     <div class="article-tag tagcloud">
-        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Javascript-html/">Javascript,html</a></li></ul>
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Javascript/">Javascript</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/html/">html</a></li></ul>
     </div>
 
         <div class="clearfix"></div>
@@ -626,7 +619,7 @@
         
     </div>
 
-    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2016/08/17/20160817/">轮播图（3）--基于jQ的左右缓动焦点究极版</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/10/20160810/">轮播图（2）--基于JQ的左右缓动</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/03/20160803/">轮播图（1）--原生js的淡入淡出</a></li></ul>
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2016/11/20/20161120/">lamp/lnmp搭建+typecho搭建</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/09/09/20160909/">放大镜的设计与实现</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/09/01/20160901/">电梯导航</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/24/20160824/">轮播图（4）--基于JQ的3D轮播设计与实现</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/17/20160817/">轮播图（3）--基于jQ的左右缓动焦点究极版</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/10/20160810/">轮播图（2）--基于JQ的左右缓动</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/03/20160803/">轮播图（1）--原生js的淡入淡出</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/07/14/20160714/">购物车的加减</a></li></ul>
 
 
 
@@ -635,7 +628,8 @@
         
     </script>
 </div>
-      <footer id="footer">
+      
+<footer id="footer">
     <div class="outer">
         <div id="footer-info">
             <div class="footer-left">
@@ -653,7 +647,6 @@
                         <span id="site-visit" title="本站到访数"><i class="fa fa-user" aria-hidden="true"></i><span id="busuanzi_value_site_uv"></span>
                         </span>
                     </span>
-
                 
                 
                     <span>| </span>
@@ -663,6 +656,7 @@
                         <span id="page-visit"  title="本页阅读量"><i class="fa fa-eye animated infinite pulse" aria-hidden="true"></i><span id="busuanzi_value_page_pv"></span>
                         </span>
                     </span>
+
                 
             </div>
         

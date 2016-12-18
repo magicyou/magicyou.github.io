@@ -15,16 +15,16 @@
 
 
 
-<meta name="description" content="轮播图在网页中随处可见，几乎所有的大大小小的网站都有各式各样的轮播图，今天本渣渣在这里为小白们做一个最简单的轮播图效果。当然比较实用。">
+<meta name="description" content="对于专注于网站或者前端研究很久的同学来说，电商网站应该是再熟悉不过。毕竟经常拿来练手，电商网站不管是后台还是前端设计制作，绝对是练手的不二选择第一篇博客来个简单的电商网站常见的购物车商品数量加减，不要小看这个功能，对于刚入手js的同学，还是小有难度的">
 <meta property="og:type" content="article">
-<meta property="og:title" content="轮播图（1）--原生js的淡入淡出">
-<meta property="og:url" content="http://yoursite.com/2016/08/03/20160803/index.html">
+<meta property="og:title" content="购物车的加减">
+<meta property="og:url" content="http://yoursite.com/2016/07/14/20160714/index.html">
 <meta property="og:site_name" content="MagicYou">
-<meta property="og:description" content="轮播图在网页中随处可见，几乎所有的大大小小的网站都有各式各样的轮播图，今天本渣渣在这里为小白们做一个最简单的轮播图效果。当然比较实用。">
-<meta property="og:updated_time" content="2016-08-03T12:40:09.000Z">
+<meta property="og:description" content="对于专注于网站或者前端研究很久的同学来说，电商网站应该是再熟悉不过。毕竟经常拿来练手，电商网站不管是后台还是前端设计制作，绝对是练手的不二选择第一篇博客来个简单的电商网站常见的购物车商品数量加减，不要小看这个功能，对于刚入手js的同学，还是小有难度的">
+<meta property="og:updated_time" content="2016-07-14T14:55:23.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="轮播图（1）--原生js的淡入淡出">
-<meta name="twitter:description" content="轮播图在网页中随处可见，几乎所有的大大小小的网站都有各式各样的轮播图，今天本渣渣在这里为小白们做一个最简单的轮播图效果。当然比较实用。">
+<meta name="twitter:title" content="购物车的加减">
+<meta name="twitter:description" content="对于专注于网站或者前端研究很久的同学来说，电商网站应该是再熟悉不过。毕竟经常拿来练手，电商网站不管是后台还是前端设计制作，绝对是练手的不二选择第一篇博客来个简单的电商网站常见的购物车商品数量加减，不要小看这个功能，对于刚入手js的同学，还是小有难度的">
 
 <link rel="apple-touch-icon" href= "/apple-touch-icon.png">
 
@@ -54,7 +54,7 @@
 <link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
 
 
-<title>轮播图（1）--原生js的淡入淡出 | MagicYou</title>
+<title>购物车的加减 | MagicYou</title>
 
 <script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
 <script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
@@ -255,11 +255,11 @@
     </div>
     <link class="menu-list" tags="标签" friends="友情链接" about="关于我"/>
 </nav>
-      <div class="body-wrap"><article id="post-20160803" class="article article-type-post" itemscope itemprop="blogPost">
+      <div class="body-wrap"><article id="post-20160714" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/2016/08/03/20160803/" class="article-date">
-      <time datetime="2016-08-03T12:40:09.000Z" itemprop="datePublished">2016-08-03</time>
+      <a href="/2016/07/14/20160714/" class="article-date">
+      <time datetime="2016-07-14T14:55:23.000Z" itemprop="datePublished">2016-07-14</time>
 </a>
 
 
@@ -274,7 +274,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      轮播图（1）--原生js的淡入淡出
+      购物车的加减
     </h1>
   
 
@@ -295,130 +295,166 @@
     <div class="article-entry" itemprop="articleBody">
       
           
-        <p>轮播图在网页中随处可见，几乎所有的大大小小的网站都有各式各样的轮播图，今天本渣渣在这里为小白们做一个最简单的轮播图效果。当然比较实用。</p>
-<a id="more"></a>
-<h2 id="1-思路"><a href="#1-思路" class="headerlink" title="1.思路"></a>1.思路</h2><p>对于js特效，有一个正确的思路，事情就成功的了一半，剩下的一半就是代码加调试。</p>
-<h3 id="1-1、明确思路"><a href="#1-1、明确思路" class="headerlink" title="1.1、明确思路"></a>1.1、明确思路</h3><p>你要做一个什么样的轮播图，是一直从右向左的无缝滚动，还是一张又一张淡入淡出，还是，一张又一张的从右向左逐张滑动出现等等等（这几种轮播图都会在下几篇轮播图系列一个个介绍），明确下来之后就开始造！轮！子！</p>
-<h3 id="1-2、思路："><a href="#1-2、思路：" class="headerlink" title="1.2、思路："></a>1.2、思路：</h3><p>（1）html的布局:<br>首先来个最外层容器，往里面放两个子元素，一个是用来放图片，另一个自然是放焦点；<br>（2）css样式设置<br>最外层的容器添加上相对定位，里面的放图片的容器用相对定位，里面的每个图片元素或者放图片的元素都用绝对定位，并且top和left属性值都为‘0’。<br>放焦点的容器用绝对定位，防止出现叠放元素引起的覆盖，也是为了让焦点能更好控制布局，（注意：焦点一定要用”display:inline-block”，这样是为了让焦点都能自动居中，他的父级元素当然要有”text-align:center”，这样可以让不管有多少个焦点都能自动让焦点居中，为了好看嘛）<br>（3）js部分<br>实现得准备工作，用js创建相应个数的焦点（这个我认为很有必要）,然后就是用排他思想（先设置所有同类元素，再设置其中某一个使其不同于其他同类元素），和选项卡的思想一样，利用全局变量，定时器循环播放，so easy！代码中穿插相对详细备注说明</p>
-<h2 id="2-代码"><a href="#2-代码" class="headerlink" title="2.代码"></a>2.代码</h2><h3 id="2-1-先来摆上要用的html代码，下面的css和js都要围绕html展开的"><a href="#2-1-先来摆上要用的html代码，下面的css和js都要围绕html展开的" class="headerlink" title="2.1 先来摆上要用的html代码，下面的css和js都要围绕html展开的"></a>2.1 先来摆上要用的html代码，下面的css和js都要围绕html展开的</h3><pre><code>&lt;div class=&quot;banner&quot; id=&quot;banner1&quot;&gt;
-&lt;ul id=&quot;img&quot; class=&quot;img&quot;&gt;
-    &lt;li class=&quot;on&quot;&gt;&lt;img src=&quot;./img/1.jpg&quot;&gt;&lt;/li&gt;
-    &lt;li&gt;&lt;img src=&quot;./img/2.jpg&quot;&gt;&lt;/li&gt;
-    &lt;li&gt;&lt;img src=&quot;./img/3.jpg&quot;&gt;&lt;/li&gt;
-    &lt;li&gt;&lt;img src=&quot;./img/4.jpg&quot;&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;ul id=&quot;order&quot; class=&quot;order&quot;&gt;
-    &lt;!--
-    &lt;li class=&quot;on&quot;&gt;1&lt;/li&gt;
-    &lt;li&gt;2&lt;/li&gt;
-    &lt;li&gt;3&lt;/li&gt;
-    &lt;li&gt;4&lt;/li&gt;
-    --&gt;
-&lt;/ul&gt;
+        <p>对于专注于网站或者前端研究很久的同学来说，电商网站应该是再熟悉不过。毕竟经常拿来练手，电商网站不管是后台还是前端设计制作，绝对是练手的不二选择<br>第一篇博客来个简单的电商网站常见的购物车商品数量加减，不要小看这个功能，对于刚入手js的同学，还是小有难度的<br><a id="more"></a></p>
+<h3 id="首先简单的html按钮及表单"><a href="#首先简单的html按钮及表单" class="headerlink" title="首先简单的html按钮及表单"></a>首先简单的html按钮及表单</h3><pre><code>&lt;div&gt;
+    &lt;input type=&quot;button&quot; class=&quot;jian&quot; value=&quot;-&quot;/&gt;
+    &lt;input type=&quot;text&quot; class=&quot;num&quot; value=&quot;1&quot;/&gt;
+    &lt;input type=&quot;button&quot; class=&quot;jia&quot; value=&quot;+&quot;/&gt;
 &lt;/div&gt;
-</code></pre><h3 id="2-2样式"><a href="#2-2样式" class="headerlink" title="2.2样式"></a>2.2样式</h3><pre><code>工欲善其事必先利其器。首先布局得合理，必须得合理，绝对定位一定要有，当然，被赋予绝对定位元素的父级元素得有相对定位。（和二级菜单的相对套绝对是一样的道理），要不然你的页面就会乱掉。
-*{
-        padding:0;
-        margin:0;
-        list-style: none;
-        font-family: &quot;微软雅黑&quot;;
-        outline: none;
-    }
-    .banner{
-        width:720px;
-        height:480px;
-        margin:50px auto;
-        position:relative;
-    }
-    .img&gt;li{
-        position:absolute;
-        transition: all 1s ease;
-        opacity:0;
-    }
-    .order{
-        width:100%;
-        position:absolute;
-        top:430px;
-        text-align: center;
-    }
-    .order li{
-        display:inline-block;
-        width:20px;
-        height:20px;
-        background: white;
-        border-radius: 50%;
-        margin: 0 15px;
-        cursor: pointer;
-    }
-    #img .on{
-        display:block;
-        opacity:1;
-    }
-    #order .on{
-        background: chocolate;
-    }
-</code></pre><h3 id="2-3高端大气的js部分（请允许装个X）"><a href="#2-3高端大气的js部分（请允许装个X）" class="headerlink" title="2.3高端大气的js部分（请允许装个X）"></a>2.3高端大气的js部分（请允许装个X）</h3><pre><code>var banner = document.getElementById(&apos;banner&apos;);
-var img = document.getElementById(&apos;img&apos;);
-var lis = img.getElementsByTagName(&apos;li&apos;);
-var order = document.getElementById(&apos;order&apos;);
-
-//根据上面图片的数量创建相应个数的焦点
-for(i=0;i&lt;lis.length;i++){
-    var creLi = document.createElement(&apos;li&apos;);
-    order.appendChild(creLi);    
-}
-//获取焦点事件源，并将第一个添加类（class=&quot;on&quot;）
-var orderLis = order.getElementsByTagName(&apos;li&apos;);
-orderLis[0].className = &apos;on&apos;;
-
-//前期准备工作结束，开始正式的主要部分，让它动起来
-var num = 0; 
-var xh = null;
-function play(num){
-    for(i=0;i&lt;lis.length;i++){
-        lis[i].className = &apos;&apos;;
-        orderLis[i].className = &apos;&apos;;
-    }
-    lis[num].className = &apos;on&apos;;
-    orderLis[num].className = &apos;on&apos;;
-}
-//自动播放
-function autoPlay(){
-    xh = setInterval(function(){
-        num++;
-        if(num &gt;= lis.length){
-            num = 0;
-        }
-        play(num);
-
-
-        console.log(num);
-
-    },1000);
-}
-autoPlay();
-
-//添加鼠标移入暂停，移出继续轮播事件
-banner.onmouseover = function(){
-    clearInterval(xh);
-    xh = null;
-}
-banner.onmouseout = function(){
-    autoPlay();
-}
-
-//给焦点添加实时监控事件，鼠标移到哪个焦点，就显示那个对应的图片
-for(i=0;i&lt;orderLis.length;i++){
-    //万物皆对象，遍历出的所有orderLis都是一个个单独的对象，给每个orderLis添加index属性，利用它记忆每个orderLis自己的索引号
-    orderLis[i].index = i;
-    orderLis[i].onmouseover = function(){
-        //让全局变量num等于此时显示的图片的索引号，防止鼠标离开后继续播放不正常的事情发生
-        num = this.index;
-        play(this.index);
-    }
-}
-</code></pre><h2 id="3-完工"><a href="#3-完工" class="headerlink" title="3.完工"></a>3.完工</h2><p>是不是so easy 觉得不够好的自行优化一下，这里不再做过多的赘述，以后几篇会介绍如何优化，使其体验更好</p>
-<h2 id="4、在线演示"><a href="#4、在线演示" class="headerlink" title="4、在线演示"></a>4、在线演示</h2><p><a href="http://www.magicyou.cn/resource/20160803" target="_blank" rel="external">在线演示</a></p>
+&lt;div&gt;
+    &lt;input type=&quot;button&quot; class=&quot;jian&quot; value=&quot;-&quot;/&gt;
+    &lt;input type=&quot;text&quot; class=&quot;num&quot; value=&quot;1&quot;/&gt;
+    &lt;input type=&quot;button&quot; class=&quot;jia&quot; value=&quot;+&quot;/&gt;
+&lt;/div&gt;
+&lt;div&gt;
+    &lt;input type=&quot;button&quot; class=&quot;jian&quot; value=&quot;-&quot;/&gt;
+    &lt;input type=&quot;text&quot; class=&quot;num&quot; value=&quot;1&quot;/&gt;
+    &lt;input type=&quot;button&quot; class=&quot;jia&quot; value=&quot;+&quot;/&gt;
+&lt;/div&gt;
+&lt;div&gt;
+    &lt;input type=&quot;button&quot; class=&quot;jian&quot; value=&quot;-&quot;/&gt;
+    &lt;input type=&quot;text&quot; class=&quot;num&quot; value=&quot;1&quot;/&gt;
+    &lt;input type=&quot;button&quot; class=&quot;jia&quot; value=&quot;+&quot;/&gt;
+&lt;/div&gt;
+&lt;div&gt;
+    &lt;input type=&quot;button&quot; class=&quot;jian&quot; value=&quot;-&quot;/&gt;
+    &lt;input type=&quot;text&quot; class=&quot;num&quot; value=&quot;1&quot;/&gt;
+    &lt;input type=&quot;button&quot; class=&quot;jia&quot; value=&quot;+&quot;/&gt;
+&lt;/div&gt;
+&lt;div&gt;
+    &lt;input type=&quot;button&quot; class=&quot;jian&quot; value=&quot;-&quot;/&gt;
+    &lt;input type=&quot;text&quot; class=&quot;num&quot; value=&quot;1&quot;/&gt;
+    &lt;input type=&quot;button&quot; class=&quot;jia&quot; value=&quot;+&quot;/&gt;
+&lt;/div&gt;
+</code></pre><h4 id="给补充个小东西"><a href="#给补充个小东西" class="headerlink" title="给补充个小东西"></a>给补充个小东西</h4><pre><code>原生js获取同级节点元素的方法：
+  先获取父节点对象
+  然后再获取父节点对象的子元素
+这样就获取了包括原节点的所有同级节点元素
+代码如下：
+    var outer=this.parentNode;
+    var inner=outer.children;
+（不要诧异为啥是this，获取所点击节点本节点对象）
+然后就是jq获取方法：
+    jq就简单多了，毕竟jq的诞生就是为了方便快捷，原理一样，只不过可以直接获取需要的某个通同级节点元素
+代码如下：
+    var num = $(this).parent().children(&apos;.num&apos;);
+</code></pre><h3 id="然后的步骤就好说了"><a href="#然后的步骤就好说了" class="headerlink" title="然后的步骤就好说了"></a>然后的步骤就好说了</h3><pre><code>然后就是直接对相应的数值显示（商品数量）做加减
+原生代码：
+    加：inner[1].value++;
+    减：--inner[1].value;
+加加减减最方便，直接转化为number类型做运算
+jq代码：
+    加：num.val(num.val()*1+1);
+    减：num.val(num.val()*1-1);
+“num.val()*1”是为了将string类型直接转化为number类型
+</code></pre><p>###结尾<br>    别忘了给加个判断，不要让数值减到比1还小。这个简单，不做过多描述。</p>
+<p>####源代码：<br>原生js：</p>
+<pre><code>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+&lt;meta charset=&quot;UTF-8&quot;&gt;
+&lt;title&gt;购物车商品数量加减&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;div&gt;
+    &lt;input type=&quot;button&quot; class=&quot;jian&quot; value=&quot;-&quot;/&gt;
+    &lt;input type=&quot;text&quot; class=&quot;num&quot; value=&quot;1&quot;/&gt;
+    &lt;input type=&quot;button&quot; class=&quot;jia&quot; value=&quot;+&quot;/&gt;
+&lt;/div&gt;
+&lt;div&gt;
+    &lt;input type=&quot;button&quot; class=&quot;jian&quot; value=&quot;-&quot;/&gt;
+    &lt;input type=&quot;text&quot; class=&quot;num&quot; value=&quot;1&quot;/&gt;
+    &lt;input type=&quot;button&quot; class=&quot;jia&quot; value=&quot;+&quot;/&gt;
+&lt;/div&gt;
+&lt;div&gt;
+    &lt;input type=&quot;button&quot; class=&quot;jian&quot; value=&quot;-&quot;/&gt;
+    &lt;input type=&quot;text&quot; class=&quot;num&quot; value=&quot;1&quot;/&gt;
+    &lt;input type=&quot;button&quot; class=&quot;jia&quot; value=&quot;+&quot;/&gt;
+&lt;/div&gt;
+&lt;div&gt;
+    &lt;input type=&quot;button&quot; class=&quot;jian&quot; value=&quot;-&quot;/&gt;
+    &lt;input type=&quot;text&quot; class=&quot;num&quot; value=&quot;1&quot;/&gt;
+    &lt;input type=&quot;button&quot; class=&quot;jia&quot; value=&quot;+&quot;/&gt;
+&lt;/div&gt;
+&lt;div&gt;
+    &lt;input type=&quot;button&quot; class=&quot;jian&quot; value=&quot;-&quot;/&gt;
+    &lt;input type=&quot;text&quot; class=&quot;num&quot; value=&quot;1&quot;/&gt;
+    &lt;input type=&quot;button&quot; class=&quot;jia&quot; value=&quot;+&quot;/&gt;
+&lt;/div&gt;
+&lt;script&gt;
+    var jia=document.getElementsByClassName(&apos;jia&apos;);
+    var jian=document.getElementsByClassName(&apos;jian&apos;);
+    for(i=0;i&lt;jia.length;i++){
+            jia[i].onclick=function(){
+                var outer=this.parentNode;
+                var inner=outer.children;
+                inner[1].value++;
+            }
+            jian[i].onclick=function(){
+                var outer=this.parentNode;
+                var inner=outer.children;
+                if(inner[1].value&gt;1){
+                    --inner[1].value;
+                }                    
+            }                    
+        }    
+&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</code></pre><p>jq部分：</p>
+<pre><code>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+&lt;meta charset=&quot;UTF-8&quot;&gt;
+&lt;title&gt;购物车商品数量加减&lt;/title&gt;
+&lt;script src=&quot;./jquery-3.1.0.min.js&quot; type=&quot;text/javascript&quot;&gt;&lt;/script&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;div&gt;
+    &lt;input type=&quot;button&quot; class=&quot;jian&quot; value=&quot;-&quot;/&gt;
+    &lt;input type=&quot;text&quot; class=&quot;num&quot; value=&quot;1&quot;/&gt;
+    &lt;input type=&quot;button&quot; class=&quot;jia&quot; value=&quot;+&quot;/&gt;
+&lt;/div&gt;
+&lt;div&gt;
+    &lt;input type=&quot;button&quot; class=&quot;jian&quot; value=&quot;-&quot;/&gt;
+    &lt;input type=&quot;text&quot; class=&quot;num&quot; value=&quot;1&quot;/&gt;
+    &lt;input type=&quot;button&quot; class=&quot;jia&quot; value=&quot;+&quot;/&gt;
+&lt;/div&gt;
+&lt;div&gt;
+    &lt;input type=&quot;button&quot; class=&quot;jian&quot; value=&quot;-&quot;/&gt;
+    &lt;input type=&quot;text&quot; class=&quot;num&quot; value=&quot;1&quot;/&gt;
+    &lt;input type=&quot;button&quot; class=&quot;jia&quot; value=&quot;+&quot;/&gt;
+&lt;/div&gt;
+&lt;div&gt;
+    &lt;input type=&quot;button&quot; class=&quot;jian&quot; value=&quot;-&quot;/&gt;
+    &lt;input type=&quot;text&quot; class=&quot;num&quot; value=&quot;1&quot;/&gt;
+    &lt;input type=&quot;button&quot; class=&quot;jia&quot; value=&quot;+&quot;/&gt;
+&lt;/div&gt;
+&lt;div&gt;
+    &lt;input type=&quot;button&quot; class=&quot;jian&quot; value=&quot;-&quot;/&gt;
+    &lt;input type=&quot;text&quot; class=&quot;num&quot; value=&quot;1&quot;/&gt;
+    &lt;input type=&quot;button&quot; class=&quot;jia&quot; value=&quot;+&quot;/&gt;
+&lt;/div&gt;
+&lt;div&gt;
+    &lt;input type=&quot;button&quot; class=&quot;jian&quot; value=&quot;-&quot;/&gt;
+    &lt;input type=&quot;text&quot; class=&quot;num&quot; value=&quot;1&quot;/&gt;
+    &lt;input type=&quot;button&quot; class=&quot;jia&quot; value=&quot;+&quot;/&gt;
+&lt;/div&gt;
+&lt;script&gt;
+        $(document).ready(function(){
+            $(&apos;.jian&apos;).click(function(){
+                var num = $(this).parent().children(&apos;.num&apos;);
+                if(num.val()&gt;1)
+                    num.val(num.val()*1-1);
+            });
+            $(&apos;.jia&apos;).click(function(){
+                var num = $(this).parent().children(&apos;.num&apos;);
+                num.val(num.val()*1+1);
+            });
+        })
+&lt;/script&gt;
+&lt;/body&gt;
+</code></pre><p>######第一次发博客，格式什么的还不讲究，将就着看吧</p>
 
       
     </div>
@@ -427,13 +463,13 @@ for(i=0;i&lt;orderLis.length;i++){
   
     
     <div class="copyright">
-        <p><span>本文标题:</span><a href="/2016/08/03/20160803/">轮播图（1）--原生js的淡入淡出</a></p>
+        <p><span>本文标题:</span><a href="/2016/07/14/20160714/">购物车的加减</a></p>
         <p><span>文章作者:</span><a href="/" title="回到主页">MagicYou</a></p>
-        <p><span>发布时间:</span>2016-08-03, 20:40:09</p>
-        <p><span>最后更新:</span>2016-08-03, 20:40:09</p>
+        <p><span>发布时间:</span>2016-07-14, 22:55:23</p>
+        <p><span>最后更新:</span>2016-07-14, 22:55:23</p>
         <p>
-            <span>原始链接:</span><a class="post-url" href="/2016/08/03/20160803/" title="轮播图（1）--原生js的淡入淡出">http://yoursite.com/2016/08/03/20160803/</a>
-            <span class="copy-path" data-clipboard-text="原文: http://yoursite.com/2016/08/03/20160803/　　作者: MagicYou" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <span>原始链接:</span><a class="post-url" href="/2016/07/14/20160714/" title="购物车的加减">http://yoursite.com/2016/07/14/20160714/</a>
+            <span class="copy-path" data-clipboard-text="原文: http://yoursite.com/2016/07/14/20160714/　　作者: MagicYou" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
             <script> var clipboard = new Clipboard('.copy-path'); </script>
         </p>
         <p>
@@ -446,17 +482,11 @@ for(i=0;i&lt;orderLis.length;i++){
     <nav id="article-nav">
         
             <div id="article-nav-newer" class="article-nav-title">
-                <a href="/2016/08/10/20160810/">
-                    轮播图（2）--基于JQ的左右缓动
+                <a href="/2016/08/03/20160803/">
+                    轮播图（1）--原生js的淡入淡出
                 </a>
             </div>
         
-        
-            <div id="article-nav-older" class="article-nav-title">
-                <a href="/2016/07/14/20160714/">
-                    购物车的加减
-                </a>
-            </div>
         
     </nav>
 
@@ -466,7 +496,7 @@ for(i=0;i&lt;orderLis.length;i++){
     <div id="toc" class="toc-article">
         <strong class="toc-title">文章目录</strong>
         
-            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-思路"><span class="toc-number">1.</span> <span class="toc-text">1.思路</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-1、明确思路"><span class="toc-number">1.1.</span> <span class="toc-text">1.1、明确思路</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-2、思路："><span class="toc-number">1.2.</span> <span class="toc-text">1.2、思路：</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-代码"><span class="toc-number">2.</span> <span class="toc-text">2.代码</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-1-先来摆上要用的html代码，下面的css和js都要围绕html展开的"><span class="toc-number">2.1.</span> <span class="toc-text">2.1 先来摆上要用的html代码，下面的css和js都要围绕html展开的</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-2样式"><span class="toc-number">2.2.</span> <span class="toc-text">2.2样式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-3高端大气的js部分（请允许装个X）"><span class="toc-number">2.3.</span> <span class="toc-text">2.3高端大气的js部分（请允许装个X）</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-完工"><span class="toc-number">3.</span> <span class="toc-text">3.完工</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4、在线演示"><span class="toc-number">4.</span> <span class="toc-text">4、在线演示</span></a></li></ol>
+            <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#首先简单的html按钮及表单"><span class="toc-number">1.</span> <span class="toc-text">首先简单的html按钮及表单</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#给补充个小东西"><span class="toc-number">1.1.</span> <span class="toc-text">给补充个小东西</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#然后的步骤就好说了"><span class="toc-number">2.</span> <span class="toc-text">然后的步骤就好说了</span></a></li></ol>
         
     </div>
     <style>
@@ -502,7 +532,7 @@ for(i=0;i&lt;orderLis.length;i++){
         </div>
         <script>
             window._bd_share_config={
-                "common":{"bdSnsKey":{},"bdText":"轮播图（1）--原生js的淡入淡出　| MagicYou　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+                "common":{"bdSnsKey":{},"bdText":"购物车的加减　| MagicYou　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
         </script>
     
 
@@ -518,7 +548,7 @@ for(i=0;i&lt;orderLis.length;i++){
     
       <div class="duoshuo" id="comments">
     <div id="comment-box" ></div>
-    <div class="ds-thread" id="ds-thread" data-thread-key="2016/08/03/20160803/" data-title="轮播图（1）--原生js的淡入淡出" data-url="http://yoursite.com/2016/08/03/20160803/"></div>
+    <div class="ds-thread" id="ds-thread" data-thread-key="2016/07/14/20160714/" data-title="购物车的加减" data-url="http://yoursite.com/2016/07/14/20160714/"></div>
     <script>
         var duoshuoQuery = {short_name:"null"};
         var loadComment = function(){
@@ -541,7 +571,7 @@ for(i=0;i&lt;orderLis.length;i++){
 
     <div class="scroll" id="post-nav-button">
         
-            <a href="/2016/08/10/20160810/" title="上一篇: 轮播图（2）--基于JQ的左右缓动">
+            <a href="/2016/08/03/20160803/" title="上一篇: 轮播图（1）--原生js的淡入淡出">
                 <i class="fa fa-angle-left"></i>
             </a>
         
@@ -549,9 +579,7 @@ for(i=0;i&lt;orderLis.length;i++){
         <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
 
         
-            <a href="/2016/07/14/20160714/" title="下一篇: 购物车的加减">
-                <i class="fa fa-angle-right"></i>
-            </a>
+            <a href="/" title="回到主页"><i class="fa fa-home"></i></a>
         
     </div>
 
