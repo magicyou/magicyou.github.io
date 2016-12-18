@@ -1,0 +1,318 @@
+body {
+	font-family: "微软雅黑";
+	margin: 0px;
+	color: rgba(31, 37, 38, .75);
+}
+
+ul,
+ol {
+	list-style: none;
+}
+
+.container {
+	padding: 0;
+}
+
+.header {
+	background: rgba(255, 255, 255, 0.8);
+	border: none;
+	height: 60px;
+	padding: 0;
+	margin: 0;
+}
+
+.header .logo {
+	height: 60px;
+	padding: 10px;
+}
+
+.header .logo img {
+	height: 100%;
+}
+
+.header .container-fluid {
+	height: 60px;
+}
+
+.header .container {
+	height: 60px;
+}
+
+.header .navbar-header {
+	height: 60px;
+}
+
+.header .collapse ul li a {
+	padding: 20px;
+	font-size: 16px;
+}
+.header-fixed{
+	position:fixed;
+	top:0;
+	z-index:999;
+	width:100%;
+}
+.column {
+	padding-top: 5%;
+}
+
+.column .row1 h2 {
+	color: #696969;
+}
+
+.column .row1 h2 span,
+.column .row1 h5 span {
+	padding-left: 12px;
+}
+
+.column .row1 h5 {
+	color: #A9A9A9;
+}
+
+.column .row2 {
+	margin-top: 3%;
+}
+
+
+/*footer start*/
+
+.footer h4 {
+	font-size: 22px;
+	padding-bottom: 30px;
+}
+
+.footer .row2 {
+	border-top: 1px solid #A9A9A9;
+	text-align: center;
+	padding: 2%;
+	color: #A9A9A9;
+}
+
+.footer .row1>div {
+	padding-bottom: 30px;
+}
+
+.footer .row1 p>a {
+	color: rgba(31, 37, 38, .75);
+}
+
+.footer .footer-col-4,
+.footer .footer-col-4>div,
+.footer .footer-show {
+	padding: 0;
+}
+
+.footer .footer-col-4>div {
+	overflow: hidden;
+}
+
+.footer .footer-show {
+	position: relative;
+}
+
+.footer .footer-show li {
+	width: 33%;
+	float: left;
+	padding: 12px;
+	overflow: hidden;
+}
+
+.footer-show img {
+	width: 100%;
+	height: 20%;
+}
+
+.footer .control .ctrl-left {
+	float: left;
+	margin-left: 20px;
+	margin-top: -20%;
+}
+
+.footer .control .ctrl-right {
+	float: right;
+	margin-right: 20px;
+	margin-top: -20%;
+}
+
+
+/*footer end*/
+
+@media screen and (min-width:1201px) {
+	.header {
+		height: 60px;
+	}
+	.container {
+		width: 1200px;
+	}
+	.column .container {
+		width: 1200px;
+	}
+}
+
+@media screen and (min-width:993px) and (max-width:1200px) {
+	.column .container {
+		width: 95%;
+	}
+}
+
+@media screen and (min-width:769px) and (max-width:992px) {
+	.column .container {
+		width: 95%;
+	}
+}
+
+@media screen and (max-width:768px) {
+	.header {
+		height: 50px;
+	}
+	.header .logo {
+		height: 50px;
+		padding: 10px;
+	}
+	.header .logo img {
+		height: 100%;
+	}
+	.header .container-fluid {
+		height: 48px;
+	}
+	.header .container {
+		height: 48px;
+	}
+	.header .navbar-header {
+		height: 48px;
+	}
+	.header .collapse ul li a {
+		padding: 10px;
+		font-size: 16px;
+	}
+	.header .collapse {
+		background: #FFF;
+		display: block;
+		position: relative;
+		z-index: 3;
+	}
+	#header_toggle_target {
+		display: none;
+	}
+	.column .row1 h2 span,
+	.column .row1 h5 span {
+		padding-left: 4px;
+	}
+	/*	footer start*/
+	.footer .footer-show>li {
+		padding: 4px;
+	}
+	/*  footer end*/
+}
+
+@media screen and (max-width:640px) {
+	.footer .row1>div {
+		width: 100%;
+	}
+}
+
+
+/*轮播*/
+
+.swiper-container {
+	width: 100%;
+	height: 100%;
+}
+
+.swiper-slide {
+	text-align: center;
+	font-size: 18px;
+	background: #fff;
+	/* Center slide text vertically */
+	display: -webkit-box;
+	display: -ms-flexbox;
+	display: -webkit-flex;
+	display: flex;
+	-webkit-box-pack: center;
+	-ms-flex-pack: center;
+	-webkit-justify-content: center;
+	justify-content: center;
+	-webkit-box-align: center;
+	-ms-flex-align: center;
+	-webkit-align-items: center;
+	align-items: center;
+}
+
+.swiper-slide img {
+	width: 100%;
+}
+
+.swiper-button-prev {
+	background-image: none;
+	line-height: 44px;
+	text-align: center;
+	background-color: rgba(0, 0, 0, .5);
+	color: aliceblue;
+	border-radius: 4px;
+}
+
+.swiper-button-next {
+	background-image: none;
+	line-height: 44px;
+	text-align: center;
+	background-color: rgba(0, 0, 0, .5);
+	color: aliceblue;
+	border-radius: 4px;
+}
+
+
+/*轮播end*/
+
+
+/* 动画效果 */
+
+.animation {
+	visibility: hidden;
+	animation-name: none;
+	animation-duration: 1s;
+	animation-iteration-count: 1;
+	animation-direction: normal;
+	animation-fill-mode: both;
+}
+
+@keyframes fadeInUp {
+	from {
+		opacity: 0;
+		-webkit-transform: translate3d(0, 100%, 0);
+		transform: translate3d(0, 100%, 0);
+	}
+	to {
+		opacity: 1;
+		-webkit-transform: none;
+		transform: none;
+	}
+}
+
+@keyframes fadeInLeft {
+	from {
+		opacity: 0;
+		-webkit-transform: translate3d(-100%, 0, 0);
+		transform: translate3d(-100%, 0, 0);
+	}
+	to {
+		opacity: 1;
+		-webkit-transform: none;
+		transform: none;
+	}
+}
+
+@keyframes fadeInRight {
+	from {
+		opacity: 0;
+		-webkit-transform: translate3d(100%, 0, 0);
+		transform: translate3d(100%, 0, 0);
+	}
+	to {
+		opacity: 1;
+		-webkit-transform: none;
+		transform: none;
+	}
+}
+
+
+/*动画效果end*/

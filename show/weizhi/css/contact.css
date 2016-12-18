@@ -1,0 +1,78 @@
+.col-space-2{
+	padding:5%;
+}
+.col-space-1{
+	padding:2.5%;
+}
+.resetpadd{
+	padding:0;
+}
+/*title start*/
+.title{
+	color:#FFF;
+	background-image: url('../images/contact_bg.png');
+
+	background-repeat: no-repeat;
+	background-size: cover;
+	background-attachment: fixed;
+	background-position: 50% 50%;
+	position:relative;
+}
+.title .title-mb{
+	position:absolute;
+	top:0;left:0;
+	width:100%;
+	height:100%;
+	background-color: rgba(0,0,0,0.5);
+}
+.title-content{
+	padding-left:0;	
+}
+.title-content h2,
+.title-content h5
+{
+	position: relative;
+	z-index: 3;
+}
+
+/*title end*/
+/*content start*/
+.cont-02 .row h5{
+	text-align: center;
+	font-size: 16px;
+}
+.cont-02 .row img{
+	width:30px;
+	height:30px;
+}
+.cont-03 .row img{
+	width:30px;
+	height:30px;
+}
+/*content star*/
+
+@media screen and (min-width:1201px){
+	.content #map{
+		height:550px;	
+	}
+}
+@media screen and (min-width:993px) and (max-width:1200px){
+	.content #map{
+		height:500px;
+	}
+}
+@media screen and (min-width:769px) and (max-width:992px){
+	.content #map{
+		height:400px;
+	}
+}
+@media screen and (max-width:768px){
+	.content #map{
+		height:350px;
+	}
+}
+@media screen and (max-width:640px){
+	.content #map{
+		height:300px;
+	}
+}
