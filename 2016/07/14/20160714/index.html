@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+
+    <!--[if lt IE 9]>
+        <style>body {display: none; background: none !important} </style>
+        <meta http-equiv="Refresh" Content="0; url=//outdatedbrowser.com/" />
+    <![endif]-->
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="format-detection" content="telephone=no" />
+<meta name="author" content="MagicYou" />
+
+
+
+<meta name="description" content="对于专注于网站或者前端研究很久的同学来说，电商网站应该是再熟悉不过。毕竟经常拿来练手，电商网站不管是后台还是前端设计制作，绝对是练手的不二选择第一篇博客来个简单的电商网站常见的购物车商品数量加减，不要小看这个功能，对于刚入手js的同学，还是小有难度的">
+<meta property="og:type" content="article">
+<meta property="og:title" content="购物车的加减">
+<meta property="og:url" content="http://yoursite.com/2016/07/14/20160714/index.html">
+<meta property="og:site_name" content="MagicYou">
+<meta property="og:description" content="对于专注于网站或者前端研究很久的同学来说，电商网站应该是再熟悉不过。毕竟经常拿来练手，电商网站不管是后台还是前端设计制作，绝对是练手的不二选择第一篇博客来个简单的电商网站常见的购物车商品数量加减，不要小看这个功能，对于刚入手js的同学，还是小有难度的">
+<meta property="og:updated_time" content="2016-07-14T14:55:23.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="购物车的加减">
+<meta name="twitter:description" content="对于专注于网站或者前端研究很久的同学来说，电商网站应该是再熟悉不过。毕竟经常拿来练手，电商网站不管是后台还是前端设计制作，绝对是练手的不二选择第一篇博客来个简单的电商网站常见的购物车商品数量加减，不要小看这个功能，对于刚入手js的同学，还是小有难度的">
+
+<link rel="apple-touch-icon" href= "/apple-touch-icon.png">
+
+
+
+
+    <link rel="shortcut icon" href="/favicon.ico">
+
+
+
+    <link href="//cdn.bootcss.com/animate.css/3.5.1/animate.min.css" rel="stylesheet">
+
+
+
+    <link href="//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.css" rel="stylesheet">
+
+
+
+    <script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+    <link href="//cdn.bootcss.com/pace/1.0.2/themes/blue/pace-theme-minimal.css" rel="stylesheet">
+
+
+<link rel="stylesheet" href="/css/style.css">
+
+
+
+<link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+
+
+<title>购物车的加减 | MagicYou</title>
+
+<script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+<script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+
+<script>
+    var yiliaConfig = {
+        fancybox: true,
+        animate: true,
+        isHome: false,
+        isPost: true,
+        isArchive: false,
+        isTag: false,
+        isCategory: false,
+        fancybox_js: "//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.js",
+        scrollreveal: "//cdn.bootcss.com/scrollReveal.js/3.1.4/scrollreveal.min.js",
+        search: false
+    }
+</script>
+
+
+    <script> yiliaConfig.jquery_ui = [false]; </script>
+
+
+
+    <script> yiliaConfig.rootUrl = "\/";</script>
+
+
+
+
+
+    <script>
+        var _hmt = _hmt || [];
+        (function() {
+            var hm = document.createElement("script");
+            hm.src = "//hm.baidu.com/hm.js?http://sitecenter.baidu.com/sc-web/884e8d6826e0da4a2d413e6d000ef95a";
+            var s = document.getElementsByTagName("script")[0]; 
+            s.parentNode.insertBefore(hm, s);
+        })();
+    </script>
+
+
+</head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="/" class="profilepic">
+            <img src="http://tva3.sinaimg.cn/crop.0.0.180.180.180/a524faafjw1e8qgp5bmzyj2050050aa8.jpg" class="animated zoomIn">
+        </a>
+        <hgroup>
+          <h1 class="header-author"><a href="/">MagicYou</a></h1>
+        </hgroup>
+
+        
+
+        
+
+
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-ctn">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+                        
+                        <div class="icon-wrap icon-link hide" data-idx="2">
+                            <div class="loopback_l"></div>
+                            <div class="loopback_r"></div>
+                        </div>
+                        
+                        
+                    </div>
+                    
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>菜单</li>
+                        <li>标签</li>
+                        
+                        <li>友情链接</li>
+                        
+                        
+                    </ul>
+                </div>
+            </div>
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="/">主页</a></li>
+                        
+                            <li><a href="/archives/">所有文章</a></li>
+                        
+                            <li><a href="/tags/">标签云</a></li>
+                        
+                            <li><a href="/about/">关于我</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa Email" href="http://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email=uIqMi46MjIyLjfjJyZbb19U" title="Email"></a>
+                            
+                                <a class="fa 新浪微博" href="http://weibo.com/2770664111/profile?rightmod=1&wvr=6&mod=personinfo&is_all=1" title="新浪微博"></a>
+                            
+                                <a class="fa GitHub" href="#" title="GitHub"></a>
+                            
+                                <a class="fa 简书" href="http://www.jianshu.com/users/7adc8d609f97/timeline" title="简书"></a>
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Javascript/">Javascript</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux/">Linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/html/">html</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/lamp/">lamp</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/lnmp/">lnmp</a></li></ul>
+                    </div>
+                </section>
+                
+                
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a class="main-nav-link switch-friends-link" href="https://magicyou.cn">MagicYou</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="https://pages.github.com/">GitHub</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="http://moxfive.xyz/">MOxFIVE</a>
+                    
+                    </div>
+                </section>
+                
+
+                
+            </div>
+        </div>
+    </header>                
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">MagicYou</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic">
+                <img src="http://tva3.sinaimg.cn/crop.0.0.180.180.180/a524faafjw1e8qgp5bmzyj2050050aa8.jpg" class="animated zoomIn">
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="回到主页">MagicYou</a></h1>
+            </hgroup>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/">主页</a></li>
+                
+                    <li><a href="/archives/">所有文章</a></li>
+                
+                    <li><a href="/tags/">标签云</a></li>
+                
+                    <li><a href="/about/">关于我</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa Email" target="_blank" href="http://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email=uIqMi46MjIyLjfjJyZbb19U" title="Email"></a>
+                            
+                                <a class="fa 新浪微博" target="_blank" href="http://weibo.com/2770664111/profile?rightmod=1&wvr=6&mod=personinfo&is_all=1" title="新浪微博"></a>
+                            
+                                <a class="fa GitHub" target="_blank" href="#" title="GitHub"></a>
+                            
+                                <a class="fa 简书" target="_blank" href="http://www.jianshu.com/users/7adc8d609f97/timeline" title="简书"></a>
+                            
+                        </ul>
+            </nav>
+        </header>                
+    </div>
+    <link class="menu-list" tags="标签" friends="友情链接" about="关于我"/>
+</nav>
+      <div class="body-wrap"><article id="post-20160714" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/07/14/20160714/" class="article-date">
+      <time datetime="2016-07-14T14:55:23.000Z" itemprop="datePublished">2016-07-14</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      购物车的加减
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+
+        
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Javascript/">Javascript</a></li></ul>
+    </div>
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <p>对于专注于网站或者前端研究很久的同学来说，电商网站应该是再熟悉不过。毕竟经常拿来练手，电商网站不管是后台还是前端设计制作，绝对是练手的不二选择<br>第一篇博客来个简单的电商网站常见的购物车商品数量加减，不要小看这个功能，对于刚入手js的同学，还是小有难度的<br><a id="more"></a></p>
+<h3 id="首先简单的html按钮及表单"><a href="#首先简单的html按钮及表单" class="headerlink" title="首先简单的html按钮及表单"></a>首先简单的html按钮及表单</h3><pre><code>&lt;div&gt;
+    &lt;input type=&quot;button&quot; class=&quot;jian&quot; value=&quot;-&quot;/&gt;
+    &lt;input type=&quot;text&quot; class=&quot;num&quot; value=&quot;1&quot;/&gt;
+    &lt;input type=&quot;button&quot; class=&quot;jia&quot; value=&quot;+&quot;/&gt;
+&lt;/div&gt;
+&lt;div&gt;
+    &lt;input type=&quot;button&quot; class=&quot;jian&quot; value=&quot;-&quot;/&gt;
+    &lt;input type=&quot;text&quot; class=&quot;num&quot; value=&quot;1&quot;/&gt;
+    &lt;input type=&quot;button&quot; class=&quot;jia&quot; value=&quot;+&quot;/&gt;
+&lt;/div&gt;
+&lt;div&gt;
+    &lt;input type=&quot;button&quot; class=&quot;jian&quot; value=&quot;-&quot;/&gt;
+    &lt;input type=&quot;text&quot; class=&quot;num&quot; value=&quot;1&quot;/&gt;
+    &lt;input type=&quot;button&quot; class=&quot;jia&quot; value=&quot;+&quot;/&gt;
+&lt;/div&gt;
+&lt;div&gt;
+    &lt;input type=&quot;button&quot; class=&quot;jian&quot; value=&quot;-&quot;/&gt;
+    &lt;input type=&quot;text&quot; class=&quot;num&quot; value=&quot;1&quot;/&gt;
+    &lt;input type=&quot;button&quot; class=&quot;jia&quot; value=&quot;+&quot;/&gt;
+&lt;/div&gt;
+&lt;div&gt;
+    &lt;input type=&quot;button&quot; class=&quot;jian&quot; value=&quot;-&quot;/&gt;
+    &lt;input type=&quot;text&quot; class=&quot;num&quot; value=&quot;1&quot;/&gt;
+    &lt;input type=&quot;button&quot; class=&quot;jia&quot; value=&quot;+&quot;/&gt;
+&lt;/div&gt;
+&lt;div&gt;
+    &lt;input type=&quot;button&quot; class=&quot;jian&quot; value=&quot;-&quot;/&gt;
+    &lt;input type=&quot;text&quot; class=&quot;num&quot; value=&quot;1&quot;/&gt;
+    &lt;input type=&quot;button&quot; class=&quot;jia&quot; value=&quot;+&quot;/&gt;
+&lt;/div&gt;
+</code></pre><h4 id="给补充个小东西"><a href="#给补充个小东西" class="headerlink" title="给补充个小东西"></a>给补充个小东西</h4><pre><code>原生js获取同级节点元素的方法：
+  先获取父节点对象
+  然后再获取父节点对象的子元素
+这样就获取了包括原节点的所有同级节点元素
+代码如下：
+    var outer=this.parentNode;
+    var inner=outer.children;
+（不要诧异为啥是this，获取所点击节点本节点对象）
+然后就是jq获取方法：
+    jq就简单多了，毕竟jq的诞生就是为了方便快捷，原理一样，只不过可以直接获取需要的某个通同级节点元素
+代码如下：
+    var num = $(this).parent().children(&apos;.num&apos;);
+</code></pre><h3 id="然后的步骤就好说了"><a href="#然后的步骤就好说了" class="headerlink" title="然后的步骤就好说了"></a>然后的步骤就好说了</h3><pre><code>然后就是直接对相应的数值显示（商品数量）做加减
+原生代码：
+    加：inner[1].value++;
+    减：--inner[1].value;
+加加减减最方便，直接转化为number类型做运算
+jq代码：
+    加：num.val(num.val()*1+1);
+    减：num.val(num.val()*1-1);
+“num.val()*1”是为了将string类型直接转化为number类型
+</code></pre><p>###结尾<br>    别忘了给加个判断，不要让数值减到比1还小。这个简单，不做过多描述。</p>
+<p>####源代码：<br>原生js：</p>
+<pre><code>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+&lt;meta charset=&quot;UTF-8&quot;&gt;
+&lt;title&gt;购物车商品数量加减&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;div&gt;
+    &lt;input type=&quot;button&quot; class=&quot;jian&quot; value=&quot;-&quot;/&gt;
+    &lt;input type=&quot;text&quot; class=&quot;num&quot; value=&quot;1&quot;/&gt;
+    &lt;input type=&quot;button&quot; class=&quot;jia&quot; value=&quot;+&quot;/&gt;
+&lt;/div&gt;
+&lt;div&gt;
+    &lt;input type=&quot;button&quot; class=&quot;jian&quot; value=&quot;-&quot;/&gt;
+    &lt;input type=&quot;text&quot; class=&quot;num&quot; value=&quot;1&quot;/&gt;
+    &lt;input type=&quot;button&quot; class=&quot;jia&quot; value=&quot;+&quot;/&gt;
+&lt;/div&gt;
+&lt;div&gt;
+    &lt;input type=&quot;button&quot; class=&quot;jian&quot; value=&quot;-&quot;/&gt;
+    &lt;input type=&quot;text&quot; class=&quot;num&quot; value=&quot;1&quot;/&gt;
+    &lt;input type=&quot;button&quot; class=&quot;jia&quot; value=&quot;+&quot;/&gt;
+&lt;/div&gt;
+&lt;div&gt;
+    &lt;input type=&quot;button&quot; class=&quot;jian&quot; value=&quot;-&quot;/&gt;
+    &lt;input type=&quot;text&quot; class=&quot;num&quot; value=&quot;1&quot;/&gt;
+    &lt;input type=&quot;button&quot; class=&quot;jia&quot; value=&quot;+&quot;/&gt;
+&lt;/div&gt;
+&lt;div&gt;
+    &lt;input type=&quot;button&quot; class=&quot;jian&quot; value=&quot;-&quot;/&gt;
+    &lt;input type=&quot;text&quot; class=&quot;num&quot; value=&quot;1&quot;/&gt;
+    &lt;input type=&quot;button&quot; class=&quot;jia&quot; value=&quot;+&quot;/&gt;
+&lt;/div&gt;
+&lt;script&gt;
+    var jia=document.getElementsByClassName(&apos;jia&apos;);
+    var jian=document.getElementsByClassName(&apos;jian&apos;);
+    for(i=0;i&lt;jia.length;i++){
+            jia[i].onclick=function(){
+                var outer=this.parentNode;
+                var inner=outer.children;
+                inner[1].value++;
+            }
+            jian[i].onclick=function(){
+                var outer=this.parentNode;
+                var inner=outer.children;
+                if(inner[1].value&gt;1){
+                    --inner[1].value;
+                }                    
+            }                    
+        }    
+&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</code></pre><p>jq部分：</p>
+<pre><code>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+&lt;meta charset=&quot;UTF-8&quot;&gt;
+&lt;title&gt;购物车商品数量加减&lt;/title&gt;
+&lt;script src=&quot;./jquery-3.1.0.min.js&quot; type=&quot;text/javascript&quot;&gt;&lt;/script&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;div&gt;
+    &lt;input type=&quot;button&quot; class=&quot;jian&quot; value=&quot;-&quot;/&gt;
+    &lt;input type=&quot;text&quot; class=&quot;num&quot; value=&quot;1&quot;/&gt;
+    &lt;input type=&quot;button&quot; class=&quot;jia&quot; value=&quot;+&quot;/&gt;
+&lt;/div&gt;
+&lt;div&gt;
+    &lt;input type=&quot;button&quot; class=&quot;jian&quot; value=&quot;-&quot;/&gt;
+    &lt;input type=&quot;text&quot; class=&quot;num&quot; value=&quot;1&quot;/&gt;
+    &lt;input type=&quot;button&quot; class=&quot;jia&quot; value=&quot;+&quot;/&gt;
+&lt;/div&gt;
+&lt;div&gt;
+    &lt;input type=&quot;button&quot; class=&quot;jian&quot; value=&quot;-&quot;/&gt;
+    &lt;input type=&quot;text&quot; class=&quot;num&quot; value=&quot;1&quot;/&gt;
+    &lt;input type=&quot;button&quot; class=&quot;jia&quot; value=&quot;+&quot;/&gt;
+&lt;/div&gt;
+&lt;div&gt;
+    &lt;input type=&quot;button&quot; class=&quot;jian&quot; value=&quot;-&quot;/&gt;
+    &lt;input type=&quot;text&quot; class=&quot;num&quot; value=&quot;1&quot;/&gt;
+    &lt;input type=&quot;button&quot; class=&quot;jia&quot; value=&quot;+&quot;/&gt;
+&lt;/div&gt;
+&lt;div&gt;
+    &lt;input type=&quot;button&quot; class=&quot;jian&quot; value=&quot;-&quot;/&gt;
+    &lt;input type=&quot;text&quot; class=&quot;num&quot; value=&quot;1&quot;/&gt;
+    &lt;input type=&quot;button&quot; class=&quot;jia&quot; value=&quot;+&quot;/&gt;
+&lt;/div&gt;
+&lt;div&gt;
+    &lt;input type=&quot;button&quot; class=&quot;jian&quot; value=&quot;-&quot;/&gt;
+    &lt;input type=&quot;text&quot; class=&quot;num&quot; value=&quot;1&quot;/&gt;
+    &lt;input type=&quot;button&quot; class=&quot;jia&quot; value=&quot;+&quot;/&gt;
+&lt;/div&gt;
+&lt;script&gt;
+        $(document).ready(function(){
+            $(&apos;.jian&apos;).click(function(){
+                var num = $(this).parent().children(&apos;.num&apos;);
+                if(num.val()&gt;1)
+                    num.val(num.val()*1-1);
+            });
+            $(&apos;.jia&apos;).click(function(){
+                var num = $(this).parent().children(&apos;.num&apos;);
+                num.val(num.val()*1+1);
+            });
+        })
+&lt;/script&gt;
+&lt;/body&gt;
+</code></pre><p>######第一次发博客，格式什么的还不讲究，将就着看吧</p>
+
+      
+    </div>
+    
+  </div>
+  
+    
+    <div class="copyright">
+        <p><span>本文标题:</span><a href="/2016/07/14/20160714/">购物车的加减</a></p>
+        <p><span>文章作者:</span><a href="/" title="回到主页">MagicYou</a></p>
+        <p><span>发布时间:</span>2016-07-14, 22:55:23</p>
+        <p><span>最后更新:</span>2016-07-14, 22:55:23</p>
+        <p>
+            <span>原始链接:</span><a class="post-url" href="/2016/07/14/20160714/" title="购物车的加减">http://yoursite.com/2016/07/14/20160714/</a>
+            <span class="copy-path" data-clipboard-text="原文: http://yoursite.com/2016/07/14/20160714/　　作者: MagicYou" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <script> var clipboard = new Clipboard('.copy-path'); </script>
+        </p>
+        <p>
+            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" title="CC BY-NC-SA 4.0 International" target = "_blank">"署名-非商用-相同方式共享 4.0"</a> 转载请保留原文链接及作者。
+        </p>
+    </div>
+
+
+
+    <nav id="article-nav">
+        
+            <div id="article-nav-newer" class="article-nav-title">
+                <a href="/2016/08/03/20160803/">
+                    轮播图（1）--原生js的淡入淡出
+                </a>
+            </div>
+        
+        
+    </nav>
+
+  
+</article>
+
+    <div id="toc" class="toc-article">
+        <strong class="toc-title">文章目录</strong>
+        
+            <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#首先简单的html按钮及表单"><span class="toc-number">1.</span> <span class="toc-text">首先简单的html按钮及表单</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#给补充个小东西"><span class="toc-number">1.1.</span> <span class="toc-text">给补充个小东西</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#然后的步骤就好说了"><span class="toc-number">2.</span> <span class="toc-text">然后的步骤就好说了</span></a></li></ol>
+        
+    </div>
+    <style>
+        .left-col .switch-btn,
+        .left-col .switch-area {
+            display: none;
+        }
+        .toc-level-3 i,
+        .toc-level-3 ol {
+            display: none !important;
+        }
+    </style>
+
+    <input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+
+    <script>
+        yiliaConfig.toc = ["隐藏目录", "显示目录", !!"false"];
+    </script>
+
+
+
+    
+<div class="share">
+    
+        <div class="bdsharebuttonbox">
+            <!-- <a href="#" class="fa fa-twitter bds_twi" data-cmd="twi" title="分享到推特"></a> -->
+            <a href="#" class="fa fa-weibo bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+            <a href="#" class="fa fa-qq bds_sqq" data-cmd="sqq" title="分享给 QQ 好友"></a>
+            <a href="#" class="fa fa-files-o bds_copy" data-cmd="copy" title="复制网址"></a>
+           <!--  <a href="#" class="fa fa fa-envelope-o bds_mail" data-cmd="mail" title="通过邮件分享"></a> -->
+            <a href="#" class="fa fa-weixin bds_weixin" data-cmd="weixin" title="生成文章二维码"></a>
+            <!-- <a href="#" class="fa fa-share-alt bds_more" data-cmd="more"></i></a> -->
+        </div>
+        <script>
+            window._bd_share_config={
+                "common":{"bdSnsKey":{},"bdText":"购物车的加减　| MagicYou　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+        </script>
+    
+
+    
+</div>
+
+
+
+
+
+
+
+    
+      <div class="duoshuo" id="comments">
+    <div id="comment-box" ></div>
+    <div class="ds-thread" id="ds-thread" data-thread-key="2016/07/14/20160714/" data-title="购物车的加减" data-url="http://yoursite.com/2016/07/14/20160714/"></div>
+    <script>
+        var duoshuoQuery = {short_name:"null"};
+        var loadComment = function(){
+            var d = document, s = d.createElement('script');
+            s.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+            s.async = true; s.charset = 'UTF-8';
+            (d.head || d.body).appendChild(s);
+        }
+
+        
+    </script>
+    
+    <script> loadComment(); </script>
+
+</div>
+    
+
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a href="/2016/08/03/20160803/" title="上一篇: 轮播图（1）--原生js的淡入淡出">
+                <i class="fa fa-angle-left"></i>
+            </a>
+        
+
+        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+
+        
+            <a href="/" title="回到主页"><i class="fa fa-home"></i></a>
+        
+    </div>
+
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2016/11/20/20161120/">lamp/lnmp搭建+typecho搭建</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/09/09/20160909/">放大镜的设计与实现</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/09/01/20160901/">电梯导航</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/24/20160824/">轮播图（4）--基于JQ的3D轮播设计与实现</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/17/20160817/">轮播图（3）--基于jQ的左右缓动焦点究极版</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/10/20160810/">轮播图（2）--基于JQ的左右缓动</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/03/20160803/">轮播图（1）--原生js的淡入淡出</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/07/14/20160714/">购物车的加减</a></li></ul>
+
+
+
+
+    <script>
+        
+    </script>
+</div>
+      
+<footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                <i class="fa fa-copyright"></i> 
+                2016 MagicYou
+            </div>
+            <div class="footer-right">
+                <a href="http://hexo.io/" target="_blank" title="快速、简洁且高效的博客框架">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="简而不减 Hexo 双栏博客主题  v3.5">Yelee</a> by MOxFIVE <i class="fa fa-heart animated infinite pulse"></i>
+            </div>
+        </div>
+        
+            <div class="visit">
+                
+                    <span id="busuanzi_container_site_pv" style='display:none'>
+                        <span id="site-visit" title="本站到访数"><i class="fa fa-user" aria-hidden="true"></i><span id="busuanzi_value_site_uv"></span>
+                        </span>
+                    </span>
+                
+                
+                    <span>| </span>
+                
+                
+                    <span id="busuanzi_container_page_pv" style='display:none'>
+                        <span id="page-visit"  title="本页阅读量"><i class="fa fa-eye animated infinite pulse" aria-hidden="true"></i><span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    </span>
+
+                
+            </div>
+        
+    </div>
+</footer>
+    </div>
+    
+<script data-main="/js/main.js" src="//cdn.bootcss.com/require.js/2.2.0/require.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            var iPad = window.navigator.userAgent.indexOf('iPad');
+            if (iPad > -1 || $(".left-col").css("display") === "none") {
+                var bgColorList = ["#9db3f4", "#414141", "#e5a859", "#f5dfc6", "#c084a0", "#847e72", "#cd8390", "#996731"];
+                var bgColor = Math.ceil(Math.random() * (bgColorList.length - 1));
+                $("body").css({"background-color": bgColorList[bgColor], "background-size": "cover"});
+            }
+            else {
+                var backgroundnum = 2;
+                var backgroundimg = "url(/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
+                $("body").css({"background": backgroundimg, "background-attachment": "fixed", "background-size": "cover"});
+            }
+        })
+    </script>
+
+
+
+
+
+<div class="scroll" id="scroll">
+    <a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" onclick="load$hide();" title="查看评论"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
+</div>
+<script>
+    // Open in New Window
+    
+        var oOpenInNew = {
+            
+            
+            
+            
+            
+            
+             archives: ".archive-article-title", 
+             miniArchives: "a.post-list-link", 
+            
+             friends: "#js-friends a", 
+             socail: ".social a" 
+        }
+        for (var x in oOpenInNew) {
+            $(oOpenInNew[x]).attr("target", "_blank");
+        }
+    
+</script>
+
+    <script>
+        var originTitle = document.title;
+        var titleTime;
+        document.addEventListener("visibilitychange", function() {
+            if (document.hidden) {
+                document.title = "(つェ⊂) 我藏好了哦~ " + originTitle;
+                clearTimeout(titleTime);
+            }
+            else {
+                document.title = "(*´∇｀*) 被你发现啦~ " + originTitle;
+                titleTime = setTimeout(function() {
+                    document.title = originTitle;
+                }, 2000);
+            }
+        })
+    </script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+  </div>
+</body>
+</html>
