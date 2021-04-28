@@ -1,0 +1,228 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="description"><title>我是怎么维护更新两个环境的四份代码的 | MagicYou</title><link rel="stylesheet" type="text/css" href="/css/style.css?v=1.0.0"><link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/normalize.css/normalize.min.css"><link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/purecss/build/pure-min.min.css"><link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/purecss/build/grids-responsive-min.css"><link rel="stylesheet" href="//cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css"><script type="text/javascript" src="//cdn.jsdelivr.net/npm/jquery/dist/jquery.min.js"></script><link rel="icon" mask="" sizes="any" href="/favicon.ico"><link rel="Shortcut Icon" type="image/x-icon" href="/favicon.ico"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="apple-touch-icon-precomposed" href="/apple-touch-icon.png"><script type="text/javascript" src="//cdn.jsdelivr.net/npm/clipboard/dist/clipboard.min.js"></script><script type="text/javascript" src="//cdn.jsdelivr.net/gh/codeseven/toastr/build/toastr.min.js"></script><link rel="stylesheet" href="//cdn.jsdelivr.net/gh/codeseven/toastr/build/toastr.min.css"><meta name="generator" content="Hexo 5.4.0"></head><body><div class="body_container"><div id="header"><div class="site-name"><h1 class="hidden">我是怎么维护更新两个环境的四份代码的</h1><a id="logo" href="/.">MagicYou</a><p class="description"></p></div><div id="nav-menu"><a class="current" href="/."><i class="fa fa-home"> 首页</i></a><a href="/archives/"><i class="fa fa-archive"> 归档</i></a><a href="/tags/"><i class="fa fa-tag"> 标签</i></a><a href="/about/"><i class="fa fa-user"> 关于</i></a></div></div><div class="pure-g" id="layout"><div class="pure-u-1 pure-u-md-3-4"><div class="content_container"><div class="post"><h1 class="post-title">我是怎么维护更新两个环境的四份代码的</h1><div class="post-meta">2018-07-03<span> | </span><span class="category"><a href="/categories/Linux/">Linux</a></span></div><div class="post-content"><p>公司的系统都是内网访问，服务器也不能访问外网，所以git更新维护代码是不现实的。顺便学习几个新命令</p>
+<span id="more"></span>
+
+<h4 id="学习两个命令"><a href="#学习两个命令" class="headerlink" title="学习两个命令"></a>学习两个命令</h4><h4 id="1-scp"><a href="#1-scp" class="headerlink" title="1. scp"></a>1. scp</h4><p>   Linux scp命令用于Linux之间复制文件和目录。</p>
+<p>   scp是 secure copy的缩写, scp是linux系统下基于ssh登陆进行安全的远程文件拷贝命令。</p>
+<h5 id="命令格式"><a href="#命令格式" class="headerlink" title="命令格式"></a>命令格式</h5><p>scp [可选参数] [原路径] [目标路径]</p>
+<h5 id="参数说明"><a href="#参数说明" class="headerlink" title="参数说明"></a>参数说明</h5><ul>
+<li>-1： 强制scp命令使用协议ssh1</li>
+<li>-2： 强制scp命令使用协议ssh2</li>
+<li>-4： 强制scp命令只使用IPv4寻址</li>
+<li>-6： 强制scp命令只使用IPv6寻址</li>
+<li>-B： 使用批处理模式（传输过程中不询问传输口令或短语）</li>
+<li>-C： 允许压缩。（将-C标志传递给ssh，从而打开压缩功能）</li>
+<li>-p：保留原文件的修改时间，访问时间和访问权限。</li>
+<li>-q： 不显示传输进度条。</li>
+<li>-r： 递归复制整个目录。</li>
+<li>-v：详细方式显示输出。scp和ssh(1)会显示出整个过程的调试信息。这些信息用于调试连接，验证和配置问题。</li>
+<li>-c cipher： 以cipher将数据传输进行加密，这个选项将直接传递给ssh。</li>
+<li>-F ssh_config： 指定一个替代的ssh配置文件，此参数直接传递给ssh。</li>
+<li>-i identity_file： 从指定文件中读取传输时使用的密钥文件，此参数直接传递给ssh。</li>
+<li>-l limit： 限定用户所能使用的带宽，以Kbit/s为单位。</li>
+<li>-o ssh_option： 如果习惯于使用ssh_config(5)中的参数传递方式，</li>
+<li>-P port：注意是大写的P, port是指定数据传输用到的端口号</li>
+<li>-S program： 指定加密传输时所使用的程序。此程序必须能够理解ssh(1)的选项</li>
+</ul>
+<p>使用方法</p>
+<h5 id="从本地复制到远程"><a href="#从本地复制到远程" class="headerlink" title="从本地复制到远程"></a>从本地复制到远程</h5><p>命令格式：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">scp local_file remote_username@remote_ip:remote_folder </span><br><span class="line">或者 </span><br><span class="line">scp local_file remote_username@remote_ip:remote_file </span><br><span class="line">或者 </span><br><span class="line">scp local_file remote_ip:remote_folder </span><br><span class="line">或者 </span><br><span class="line">scp local_file remote_ip:remote_file </span><br></pre></td></tr></table></figure>
+
+<p>复制目录命令格式：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">scp -r local_folder remote_username@remote_ip:remote_folder </span><br><span class="line">或者 </span><br><span class="line">scp -r local_folder remote_ip:remote_folder </span><br></pre></td></tr></table></figure>
+
+<h5 id="从远程复制到本地"><a href="#从远程复制到本地" class="headerlink" title="从远程复制到本地"></a>从远程复制到本地</h5><p>从远程复制到本地，只要将从本地复制到远程的命令的后2个参数调换顺序即可，如下实例</p>
+<p>应用实例：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">scp root@www.magicyou.cn:&#x2F;home&#x2F;root&#x2F;others&#x2F;music &#x2F;home&#x2F;space&#x2F;music&#x2F;1.mp3 </span><br><span class="line">scp -r www.magicyou.cn:&#x2F;home&#x2F;root&#x2F;others&#x2F; &#x2F;home&#x2F;space&#x2F;music&#x2F;</span><br></pre></td></tr></table></figure>
+
+<h5 id="指定端口"><a href="#指定端口" class="headerlink" title="指定端口"></a>指定端口</h5><p>1.如果远程服务器防火墙有为scp命令设置了指定的端口，我们需要使用 -P 参数来设置命令的端口号，命令格式如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">#scp 命令使用端口号 4588</span><br><span class="line">scp -P 4588 remote@www.magicyou.cn:&#x2F;usr&#x2F;local&#x2F;sin.sh &#x2F;home&#x2F;administrator</span><br></pre></td></tr></table></figure>
+
+
+
+<h5 id="2-rsync"><a href="#2-rsync" class="headerlink" title="2. rsync"></a>2. rsync</h5><p>rsync的目的是实现本地主机和远程主机上的文件同步(包括本地推到远程，远程拉到本地两种同步方式)，也可以实现本地不同路径下文件的同步，但不能实现远程路径1到远程路径2之间的同步(scp可以实现)。</p>
+<h5 id="命令格式-1"><a href="#命令格式-1" class="headerlink" title="命令格式"></a>命令格式</h5><p>rsync [可选参数] [原路径] [目标路径]</p>
+<h5 id="参数说明-1"><a href="#参数说明-1" class="headerlink" title="参数说明"></a>参数说明</h5><ul>
+<li> -v：显示rsync过程中详细信息。可以使用”-vvvv”获取更详细信息。</li>
+<li> -P：显示文件传输的进度信息。(实际上”-P”=”–partial –progress”，其中的”–progress”才是显示进度信息的)。</li>
+<li> -n –dry-run  ：仅测试传输，而不实际传输。常和”-vvvv”配合使用来查看rsync是如何工作的。</li>
+<li> -a –archive  ：归档模式，表示递归传输并保持文件属性。等同于”-rtopgDl”。</li>
+<li> -r –recursive：递归到目录中去。</li>
+<li> -t –times：保持mtime属性。强烈建议任何时候都加上”-t”，否则目标文件mtime会设置为系统时间，导致下次更新</li>
+<li><pre><code>       ：检查出mtime不同从而导致增量传输无效。
+</code></pre>
+</li>
+<li> -o –owner：保持owner属性(属主)。</li>
+<li> -g –group：保持group属性(属组)。</li>
+<li> -p –perms：保持perms属性(权限，不包括特殊权限)。</li>
+<li> -D        ：是”–device –specials”选项的组合，即也拷贝设备文件和特殊文件。</li>
+<li> -l –links：如果文件是软链接文件，则拷贝软链接本身而非软链接所指向的对象。</li>
+<li> -z        ：传输时进行压缩提高效率。</li>
+<li> -R –relative：使用相对路径。意味着将命令行中指定的全路径而非路径最尾部的文件名发送给服务端，包括它们的属性。用法见下文示例。</li>
+<li> –size-only ：默认算法是检查文件大小和mtime不同的文件，使用此选项将只检查文件大小。</li>
+<li> -u –update ：仅在源mtime比目标已存在文件的mtime新时才拷贝。注意，该选项是接收端判断的，不会影响删除行为。</li>
+<li> -d –dirs   ：以不递归的方式拷贝目录本身。默认递归时，如果源为”dir1/file1”，则不会拷贝dir1目录，使用该选项将拷贝dir1但不拷贝file1。</li>
+<li> –max-size  ：限制rsync传输的最大文件大小。可以使用单位后缀，还可以是一个小数值(例如：”–max-size=1.5m”)</li>
+<li> –min-size  ：限制rsync传输的最小文件大小。这可以用于禁止传输小文件或那些垃圾文件。</li>
+<li> –exclude   ：指定排除规则来排除不需要传输的文件。</li>
+<li> –delete    ：以SRC为主，对DEST进行同步。多则删之，少则补之。注意”–delete”是在接收端执行的，所以它是在</li>
+<li><pre><code>         ：exclude/include规则生效之后才执行的。
+</code></pre>
+</li>
+<li> -b –backup ：对目标上已存在的文件做一个备份，备份的文件名后默认使用”~”做后缀。</li>
+<li> –backup-dir：指定备份文件的保存路径。不指定时默认和待备份文件保存在同一目录下。</li>
+<li> -e          ：指定所要使用的远程shell程序，默认为ssh。</li>
+<li> –port      ：连接daemon时使用的端口号，默认为873端口。</li>
+<li> –password-file：daemon模式时的密码文件，可以从中读取密码实现非交互式。注意，这不是远程shell认证的密码，而是rsync模块认证的密码。</li>
+<li> -W –whole-file：rsync将不再使用增量传输，而是全量传输。在网络带宽高于磁盘带宽时，该选项比增量传输更高效。</li>
+<li> –existing  ：要求只更新目标端已存在的文件，目标端还不存在的文件不传输。注意，使用相对路径时如果上层目录不存在也不会传输。</li>
+<li> –ignore-existing：要求只更新目标端不存在的文件。和”–existing”结合使用有特殊功能，见下文示例。</li>
+<li> –remove-source-files：要求删除源端已经成功传输的文件。</li>
+</ul>
+<p>使用方法</p>
+<h5 id="从本地复制到远程-1"><a href="#从本地复制到远程-1" class="headerlink" title="从本地复制到远程"></a>从本地复制到远程</h5><p>命令格式：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">rsync local_file remote_username@remote_ip:remote_folder </span><br><span class="line">或者 </span><br><span class="line">rsync local_file remote_username@remote_ip:remote_file </span><br><span class="line">或者 </span><br><span class="line">rsync local_file remote_ip:remote_folder </span><br><span class="line">或者 </span><br><span class="line">rsync local_file remote_ip:remote_file </span><br></pre></td></tr></table></figure>
+
+<p>复制目录命令格式：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">rsync -r local_folder remote_username@remote_ip:remote_folder </span><br><span class="line">或者 </span><br><span class="line">rsync -r local_folder remote_ip:remote_folder </span><br></pre></td></tr></table></figure>
+
+<h5 id="从远程复制到本地-1"><a href="#从远程复制到本地-1" class="headerlink" title="从远程复制到本地"></a>从远程复制到本地</h5><p>从远程复制到本地，只要将从本地复制到远程的命令的后2个参数调换顺序即可，如下实例</p>
+<p>应用实例：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">rsync root@www.magicyou.cn:&#x2F;home&#x2F;root&#x2F;others&#x2F;music &#x2F;home&#x2F;space&#x2F;music&#x2F;1.mp3 </span><br><span class="line">rsync -r www.magicyou.cn:&#x2F;home&#x2F;root&#x2F;others&#x2F; &#x2F;home&#x2F;space&#x2F;music&#x2F;</span><br></pre></td></tr></table></figure>
+
+<h5 id="指定端口-1"><a href="#指定端口-1" class="headerlink" title="指定端口"></a>指定端口</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rsync -r --port 8888 www.magicyou.cn:&#x2F;home&#x2F;root&#x2F;others&#x2F; &#x2F;home&#x2F;space&#x2F;music&#x2F;</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="3-scp-和-rsync-的区别"><a href="#3-scp-和-rsync-的区别" class="headerlink" title="3. scp 和 rsync 的区别"></a>3. scp 和 rsync 的区别</h2><p>scp是相当于复制，黏贴，如果有的话是覆盖，比较耗时间，不智能。</p>
+<p>rsync是复制，如果有重复的文件，会直接跳过，而且他自己的算法优化。</p>
+<p>scp是把文件全部复制过去，当文件修改后还是把所有文件复制过去，rsync 第一次是把所有文件同步过去，当文件修改后，只把修改的文件同步过去。</p>
+<p>进入正题</p>
+<p>列出目前已经有的环境以及路径</p>
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>本地路径</th>
+<th>所在服务器</th>
+<th>服务器路径</th>
+<th>nginx端口</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>演示环境</td>
+<td>/Applications/MAMP/htdocs/modou_obj/xxxx-web-osp/</td>
+<td>10.0.111.217</td>
+<td>/www/xxxx-web-ceshi/</td>
+<td>9009</td>
+</tr>
+<tr>
+<td>测试环境</td>
+<td>/Applications/MAMP/htdocs/modou_obj/xxxx-web-ceshi/</td>
+<td>10.0.111.217</td>
+<td>/www/xxxx-web-osp/</td>
+<td>9010</td>
+</tr>
+<tr>
+<td>校验数据的生产环境</td>
+<td>/Applications/MAMP/htdocs/modou_obj/xxxx-web_test/</td>
+<td>10.0.112.222</td>
+<td>/opt/www/xxxx-web_new/</td>
+<td>9006</td>
+</tr>
+<tr>
+<td>生产环境</td>
+<td>/Applications/MAMP/htdocs/modou_obj/xxxx-web_new/</td>
+<td>10.0.112.222</td>
+<td>/opt/www/xxxx-web_new/</td>
+<td>8080</td>
+</tr>
+<tr>
+<td>本地环境</td>
+<td>/Applications/MAMP/htdocs/modou_obj/xxxx-web/</td>
+<td>—————</td>
+<td>—————</td>
+<td>80</td>
+</tr>
+</tbody></table>
+<p>情况介绍</p>
+<p>由于环境很多，而且是在内网访问，服务器也不能连接外网，git就无能为力。按照之前，每次更新代码或者深夜上线新功能，都要远程联系运维，运维再连上vpn，更新代码。</p>
+<p>麻烦不，后来技术总监推给我，让我维护这几个环境。</p>
+<p>内网怎么去把代码传到服务器呢？</p>
+<ul>
+<li>工具不太好使，而且每次都要打开，然后文件往里面拖。很容易传输过程缺文件，系统崩溃，用户又要反馈；</li>
+<li>工具更新也慢，每次都要全部拖进去，文件多了耗时间；</li>
+<li>scp这个命令也不是不可以，就是每次都要全量同步</li>
+</ul>
+<p>最后当然是用rsync命令了，妥妥的。</p>
+<ol>
+<li>首先，复制几套代码，放一块，文件夹名字尽可能和服务器项目所在文件夹保持一致，防止混乱；</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th>————</th>
+<th>——————</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>xxxx-web</td>
+<td>本地开发代码</td>
+</tr>
+<tr>
+<td>xxxx-web-ceshi</td>
+<td>本地开发代码复制，对应测试环境</td>
+</tr>
+<tr>
+<td>xxxx-web-osp</td>
+<td>本地开发代码复制，演示环境</td>
+</tr>
+<tr>
+<td>xxxx-web_test</td>
+<td>本地开发代码复制，校验数据的内测环境</td>
+</tr>
+<tr>
+<td>xxxx-web_new</td>
+<td>本地开发代码复制，生产环境</td>
+</tr>
+</tbody></table>
+<ol start="2">
+<li>然后，代码当然是放在git上，git忽略代码需要针对各个项目分别做维护</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th>文件名</th>
+<th>文件相对项目目录所在路径</th>
+<th>git忽略原因</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>dev.php</td>
+<td>数据库配置，redis配置等</td>
+<td>测试对应测试数据库，生产对应生产数据库</td>
+</tr>
+<tr>
+<td>orginfo.php</td>
+<td>各个万象城基本配置信息</td>
+<td>项目需要在不同项目下先是不同的名称，比如在演示环境不允许出现真实地名，大区，其他环境正常，就在演示环境下改名称为演示大区</td>
+</tr>
+</tbody></table>
+<p>基本完美，每次都要打命令，我干脆简单点，吧命令记录在文本里，每次更新代码复制粘贴</p>
+<ul>
+<li><p> 正式环境更新   2.0.0-prod</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">rsync -r &#x2F;Applications&#x2F;MAMP&#x2F;htdocs&#x2F;modou_obj&#x2F;xxxx-web_new&#x2F;Application&#x2F; marketing@10.0.112.222:&#x2F;data02&#x2F;dmp&#x2F;www&#x2F;xxxx-web_new&#x2F;Application&#x2F;</span><br><span class="line"></span><br><span class="line">rsync -r &#x2F;Applications&#x2F;MAMP&#x2F;htdocs&#x2F;modou_obj&#x2F;xxxx-web_new&#x2F;Public&#x2F; marketing@10.0.112.222:&#x2F;data02&#x2F;dmp&#x2F;www&#x2F;xxxx-web_new&#x2F;Public&#x2F;</span><br><span class="line"></span><br><span class="line">rsync -r &#x2F;Applications&#x2F;MAMP&#x2F;htdocs&#x2F;modou_obj&#x2F;xxxx-web_new&#x2F;ThinkPHP&#x2F; marketing@10.0.112.222:&#x2F;data02&#x2F;dmp&#x2F;www&#x2F;xxxx-web_new&#x2F;ThinkPHP&#x2F;</span><br><span class="line"></span><br></pre></td></tr></table></figure></li>
+<li><p>正式环境（内测） 9006   2.0.0-dev</p>
+</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">rsync -r &#x2F;Applications&#x2F;MAMP&#x2F;htdocs&#x2F;modou_obj&#x2F;xxxx-web_test&#x2F;Application&#x2F; marketing@10.0.112.222:&#x2F;data02&#x2F;dmp&#x2F;www&#x2F;xxxx-web_test&#x2F;Application&#x2F;</span><br><span class="line"></span><br><span class="line">rsync -r &#x2F;Applications&#x2F;MAMP&#x2F;htdocs&#x2F;modou_obj&#x2F;xxxx-web_test&#x2F;Public&#x2F; marketing@10.0.112.222:&#x2F;data02&#x2F;dmp&#x2F;www&#x2F;xxxx-web_test&#x2F;Public&#x2F;</span><br><span class="line"></span><br><span class="line">rsync -r &#x2F;Applications&#x2F;MAMP&#x2F;htdocs&#x2F;modou_obj&#x2F;xxxx-web_test&#x2F;ThinkPHP&#x2F; marketing@10.0.112.222:&#x2F;data02&#x2F;dmp&#x2F;www&#x2F;xxxx-web_test&#x2F;ThinkPHP&#x2F;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li> 测试环境 9010</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">rsync -r &#x2F;Applications&#x2F;MAMP&#x2F;htdocs&#x2F;modou_obj&#x2F;xxxx-web-ceshi&#x2F;Application&#x2F; appuser@10.0.111.217:&#x2F;www&#x2F;xxxx-web-ceshi&#x2F;Application&#x2F;</span><br><span class="line"></span><br><span class="line">rsync -r &#x2F;Applications&#x2F;MAMP&#x2F;htdocs&#x2F;modou_obj&#x2F;xxxx-web-ceshi&#x2F;Public&#x2F; appuser@10.0.111.217:&#x2F;www&#x2F;xxxx-web-ceshi&#x2F;Public&#x2F;</span><br><span class="line"></span><br><span class="line">rsync -r &#x2F;Applications&#x2F;MAMP&#x2F;htdocs&#x2F;modou_obj&#x2F;xxxx-web-ceshi&#x2F;ThinkPHP&#x2F; appuser@10.0.111.217:&#x2F;www&#x2F;xxxx-web-ceshi&#x2F;ThinkPHP&#x2F;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li> 演示环境 9009<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">rsync -r &#x2F;Applications&#x2F;MAMP&#x2F;htdocs&#x2F;modou_obj&#x2F;xxxx-web-osp&#x2F;Application&#x2F; appuser@10.0.111.217:&#x2F;www&#x2F;xxxx-web-osp&#x2F;Application&#x2F;</span><br><span class="line"></span><br><span class="line">rsync -r &#x2F;Applications&#x2F;MAMP&#x2F;htdocs&#x2F;modou_obj&#x2F;xxxx-web-osp&#x2F;Public&#x2F; appuser@10.0.111.217:&#x2F;www&#x2F;xxxx-web-osp&#x2F;Public&#x2F;</span><br><span class="line"></span><br><span class="line">rsync -r &#x2F;Applications&#x2F;MAMP&#x2F;htdocs&#x2F;modou_obj&#x2F;xxxx-web-osp&#x2F;ThinkPHP&#x2F; appuser@10.0.111.217:&#x2F;www&#x2F;xxxx-web-osp&#x2F;Public&#x2F;ThinkPHP&#x2F;</span><br><span class="line"></span><br></pre></td></tr></table></figure></li>
+</ul>
+<p>懒人模式开启，不好的是不容易记忆这几个命令，多打几遍应该没坏处，emmmmm….</p>
+</div><div class="tags"><a href="/tags/Linux/"><i class="fa fa-tag"></i>Linux</a><a href="/tags/MacOS/"><i class="fa fa-tag"></i>MacOS</a></div><div class="post-nav"><a class="pre" href="/2018/07/06/Python-pyinstaller%E7%BC%96%E8%AF%91python%E8%84%9A%E6%9C%AC%E4%B8%BA%E5%8D%95%E6%96%87%E4%BB%B6%E5%8F%AF%E6%89%A7%E8%A1%8C%E6%96%87%E4%BB%B6%E9%81%87%E5%88%B0%E7%9A%84%E9%97%AE%E9%A2%98/">pyinstaller编译python脚本为单文件可执行文件遇到的问题</a><a class="next" href="/2018/07/03/php-PHP%E6%89%A7%E8%A1%8C%E7%B3%BB%E7%BB%9F%E5%91%BD%E4%BB%A4%E7%9A%84%E6%9C%89%E5%87%A0%E4%B8%AA%E5%B8%B8%E7%94%A8%E7%9A%84%E5%87%BD%E6%95%B0/">PHP执行系统命令的有几个常用的函数</a></div></div></div></div><div class="pure-u-1-4 hidden_mid_and_down"><div id="sidebar"><div class="widget"><form class="search-form" action="//www.google.com/search" method="get" accept-charset="utf-8" target="_blank"><input type="text" name="q" maxlength="20" placeholder="Search"/><input type="hidden" name="sitesearch" value="http://example.com"/></form></div><div class="widget"><div class="widget-title"><i class="fa fa-folder-o"> 分类</i></div><ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/JavaScript/">JavaScript</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Linux/">Linux</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/MacOS/">MacOS</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/PHP/">PHP</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Python/">Python</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Vue/">Vue</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/uni-app/">uni-app</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%A0%91%E8%8E%93%E6%B4%BE/">树莓派</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-star-o"> 标签</i></div><div class="tagcloud"><a href="/tags/Vue/" style="font-size: 15px;">Vue</a> <a href="/tags/JavaScript/" style="font-size: 15px;">JavaScript</a> <a href="/tags/%E6%A0%91%E8%8E%93%E6%B4%BE/" style="font-size: 15px;">树莓派</a> <a href="/tags/Linux/" style="font-size: 15px;">Linux</a> <a href="/tags/Centos/" style="font-size: 15px;">Centos</a> <a href="/tags/PHP/" style="font-size: 15px;">PHP</a> <a href="/tags/Nginx/" style="font-size: 15px;">Nginx</a> <a href="/tags/Apache/" style="font-size: 15px;">Apache</a> <a href="/tags/MacOS/" style="font-size: 15px;">MacOS</a> <a href="/tags/Python/" style="font-size: 15px;">Python</a> <a href="/tags/CSS3/" style="font-size: 15px;">CSS3</a> <a href="/tags/git/" style="font-size: 15px;">git</a> <a href="/tags/HTML5/" style="font-size: 15px;">HTML5</a> <a href="/tags/%E5%BE%AE%E4%BF%A1/" style="font-size: 15px;">微信</a> <a href="/tags/%E5%B0%8F%E7%A8%8B%E5%BA%8F/" style="font-size: 15px;">小程序</a> <a href="/tags/jQuery/" style="font-size: 15px;">jQuery</a> <a href="/tags/%E5%BE%AE%E4%BF%A1%E5%B0%8F%E7%A8%8B%E5%BA%8F/" style="font-size: 15px;">微信小程序</a> <a href="/tags/canvas/" style="font-size: 15px;">canvas</a> <a href="/tags/other/" style="font-size: 15px;">other</a> <a href="/tags/react/" style="font-size: 15px;">react</a> <a href="/tags/%E5%BE%AE%E4%BF%A1%E5%85%AC%E4%BC%97%E5%8F%B7/" style="font-size: 15px;">微信公众号</a> <a href="/tags/uni-app/" style="font-size: 15px;">uni-app</a> <a href="/tags/CSS/" style="font-size: 15px;">CSS</a> <a href="/tags/HTML/" style="font-size: 15px;">HTML</a> <a href="/tags/scrapy/" style="font-size: 15px;">scrapy</a></div></div><div class="widget"><div class="widget-title"><i class="fa fa-file-o"> 最近文章</i></div><ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2021/04/13/react-%E7%AE%80%E5%8D%95%E5%85%A5%E9%97%A8/">React 简单入门</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/08/03/%20%E6%A0%91%E8%8E%93%E6%B4%BE-%E9%85%8D%E7%BD%AE%E5%85%8D%E5%AF%86%E7%99%BB%E5%BD%95%E4%BA%91%E4%B8%BB%E6%9C%BA/">树莓派-配置免密登录云主机</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/04/03/git-%E6%96%B0%E4%BB%93%E5%BA%93%E5%87%86%E5%A4%87/">git-新仓库准备</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/01/04/uni-app-%E5%BC%80%E5%8F%91%E5%BE%AE%E4%BF%A1%E5%85%AC%E4%BC%97%E5%8F%B7/">uni-app开发微信公众号</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/09/03/javascript-%E7%8E%AF%E5%BD%A2%E6%B8%A9%E5%BA%A6%E8%B0%83%E8%8A%82%E5%AE%9E%E7%8E%B0/">环形温度调节实现</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/08/03/%20vue-%E7%BB%84%E4%BB%B6%E5%B0%81%E8%A3%85%E4%B8%AD%E4%B9%8Bslot%E6%8F%92%E6%A7%BD%E4%BD%BF%E7%94%A8/">vue-组件封装中之slot插槽使用</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/08/03/javascript-%E5%86%92%E6%B3%A1%E6%8E%92%E5%BA%8F%E5%92%8C%E5%BF%AB%E9%80%9F%E6%8E%92%E5%BA%8F/">冒泡排序和快速排序</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/07/03/php-PHP%E8%8E%B7%E5%8F%96%E5%BE%AE%E4%BF%A1%E5%B0%8F%E7%A8%8B%E5%BA%8F%E7%A0%81/">微信小程序---PHP获取微信小程序码</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/07/03/wx-%E5%BE%AE%E4%BF%A1%E5%B0%8F%E7%A8%8B%E5%BA%8F%E5%90%88%E6%88%90%E6%B5%B7%E6%8A%A5/">微信小程序---合成海报分享到朋友圈</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/02/24/Linux-%E5%8D%95%E7%82%B9%E7%99%BB%E5%BD%95%E9%85%8D%E7%BD%AE%20%E8%AE%B0%E5%BD%95/">配置webgate拦截跳转到ldap登录页实现单点登录</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-external-link"> 友情链接</i></div><ul></ul><a href="https://hexo.io/" title="Hexo" target="_blank">Hexo</a><ul></ul><a href="http://moxfive.xyz/" title="MOxFIVE" target="_blank">MOxFIVE</a><ul></ul><a href="https://coolshell.cn/" title="左耳朵耗子的酷壳" target="_blank">左耳朵耗子的酷壳</a></div></div></div><div class="pure-u-1 pure-u-md-3-4"><div id="footer">Copyright © 2021 <a href="/." rel="nofollow">MagicYou.</a> Powered by<a rel="nofollow" target="_blank" href="https://hexo.io"> Hexo.</a><a rel="nofollow" target="_blank" href="https://github.com/tufu9441/maupassant-hexo"> Theme</a> by<a rel="nofollow" target="_blank" href="https://github.com/pagecho"> Cho.</a></div></div></div><a class="show" id="rocket" href="#top"></a><script type="text/javascript" src="/js/totop.js?v=1.0.0" async></script><script type="text/javascript" src="//cdn.jsdelivr.net/gh/fancyapps/fancybox/dist/jquery.fancybox.min.js" async></script><script type="text/javascript" src="/js/fancybox.js?v=1.0.0" async></script><link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox/dist/jquery.fancybox.min.css"><script type="text/javascript" src="/js/copycode.js" successtext="复制成功!"></script><link rel="stylesheet" type="text/css" href="/css/copycode.css"><script type="text/javascript" src="/js/codeblock-resizer.js?v=1.0.0"></script><script type="text/javascript" src="/js/smartresize.js?v=1.0.0"></script></div></body></html>

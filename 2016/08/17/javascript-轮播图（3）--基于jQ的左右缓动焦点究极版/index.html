@@ -1,0 +1,217 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="description"><title>轮播图（3）--基于jQ的左右缓动焦点究极版 | MagicYou</title><link rel="stylesheet" type="text/css" href="/css/style.css?v=1.0.0"><link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/normalize.css/normalize.min.css"><link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/purecss/build/pure-min.min.css"><link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/purecss/build/grids-responsive-min.css"><link rel="stylesheet" href="//cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css"><script type="text/javascript" src="//cdn.jsdelivr.net/npm/jquery/dist/jquery.min.js"></script><link rel="icon" mask="" sizes="any" href="/favicon.ico"><link rel="Shortcut Icon" type="image/x-icon" href="/favicon.ico"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="apple-touch-icon-precomposed" href="/apple-touch-icon.png"><script type="text/javascript" src="//cdn.jsdelivr.net/npm/clipboard/dist/clipboard.min.js"></script><script type="text/javascript" src="//cdn.jsdelivr.net/gh/codeseven/toastr/build/toastr.min.js"></script><link rel="stylesheet" href="//cdn.jsdelivr.net/gh/codeseven/toastr/build/toastr.min.css"><meta name="generator" content="Hexo 5.4.0"></head><body><div class="body_container"><div id="header"><div class="site-name"><h1 class="hidden">轮播图（3）--基于jQ的左右缓动焦点究极版</h1><a id="logo" href="/.">MagicYou</a><p class="description"></p></div><div id="nav-menu"><a class="current" href="/."><i class="fa fa-home"> 首页</i></a><a href="/archives/"><i class="fa fa-archive"> 归档</i></a><a href="/tags/"><i class="fa fa-tag"> 标签</i></a><a href="/about/"><i class="fa fa-user"> 关于</i></a></div></div><div class="pure-g" id="layout"><div class="pure-u-1 pure-u-md-3-4"><div class="content_container"><div class="post"><h1 class="post-title">轮播图（3）--基于jQ的左右缓动焦点究极版</h1><div class="post-meta">2016-08-17<span> | </span><span class="category"><a href="/categories/JavaScript/">JavaScript</a></span></div><div class="post-content"><p>上回埋下的伏笔今天来补上，前两个轮播图显然不太好用（但是在一些场景下还是可以用的，比如不需要焦点的左右轮播，可以用轮播图（2），嗨淘的轮播图，是淡入淡出的轮播图（1），网上还是有很多同款轮播图的），今天这个轮播还是左右滑动的轮播图，但是在体验上相对最为优秀，尤其是对焦点点击效果的处理，绝对好用。</p>
+<span id="more"></span>
+
+<h2 id="1、思路"><a href="#1、思路" class="headerlink" title="1、思路"></a>1、思路</h2><p>我知道没有图你不会来的，嘿嘿<br><img src="http://www.magicyou.cn/usr/uploads/2016/12/2627920201.jpg"></p>
+<h3 id="1-1-css样式布局"><a href="#1-1-css样式布局" class="headerlink" title="1.1 css样式布局"></a>1.1 css样式布局</h3><p>介绍一下上图的布局思路<br>容器banner当然有个相对固定的宽高（说相对固定是针对响应式布局），ul的大小和最大的容器一致，不过有个相对定位属性，里面的每个盛放img的li宽高当然都和ul相同（按照自己需要设定），所有的li都绝对定位，第一个li放在ul中，其余的li都用相对定位定于容器外部的正右边，</p>
+<h3 id="1-2-js的大致思路"><a href="#1-2-js的大致思路" class="headerlink" title="1.2 js的大致思路"></a>1.2 js的大致思路</h3><p>自动循环轮播的图片，当前图片向左滑动，下一张图片就紧接着向左滑动进入可视区域banner，以此类推，用全局索引实现循环来回播放，当然需要借助animate()方法和css()方法。<br>大致流程如下：<br>①自动轮播和点击下一张流程<br>当前图片(index)滑向左边，移出可视区域-&gt;下一张图片(index+1)用css()方法回到最右边，做滑动准备-&gt;下一张图片(index+1)滑向容器，移入可视区域<br>②点击上一张流程<br>当前图片(index)滑向右边，移出可视区域-&gt;下一张图片(index-1)用css()方法回到最左边，做滑动准备-&gt;下一张图片(index-1)滑向容器，移入可视区域<br>当然，自动轮播和点击下一张流程，点击上一张流程都需要判断索引号是否过大或者过小，做出相应的重新赋值准备<br>③点击焦点时<br>当点击的焦点索引大于当前在可视区域图片（li）的索引<br>当前图片(index)滑向左边，移出可视区域-&gt;下一张图片(焦点索引对应的图片)用css()方法回到最右边，做滑动准备-&gt;下一张图片(焦点索引对应的图片）滑向容器，移入可视区域<br>当点击的焦点索引小于当前在可视区域图片（li）的索引<br>当前图片(index)滑向右边，移出可视区域-&gt;下一张图片(焦点索引对应的图片)用css()方法回到最左边，做滑动准备-&gt;下一张图片(焦点索引对应的图片）滑向容器，移入可视区域<br>注意：注意animate()方法和css()方法的使用，animate()方法有过渡的效果，用来做滑动效果最合适，css()没有任何过渡效果，用来做不动声色的li转移</p>
+<h2 id="2、开搞"><a href="#2、开搞" class="headerlink" title="2、开搞"></a>2、开搞</h2><h3 id="2-1-html代码"><a href="#2-1-html代码" class="headerlink" title="2.1 html代码"></a>2.1 html代码</h3><pre><code>&lt;div class=&quot;lunbo&quot; id=&quot;banner&quot;&gt;
+    &lt;ul&gt;
+        &lt;li&gt;&lt;a href=&quot;#&quot;&gt;&lt;img src=&quot;images/1.jpg&quot;&gt;&lt;/a&gt;&lt;/li&gt;
+        &lt;li&gt;&lt;a href=&quot;#&quot;&gt;&lt;img src=&quot;images/2.jpg&quot;&gt;&lt;/a&gt;&lt;/li&gt;
+        &lt;li&gt;&lt;a href=&quot;#&quot;&gt;&lt;img src=&quot;images/3.jpg&quot;&gt;&lt;/a&gt;&lt;/li&gt;
+        &lt;li&gt;&lt;a href=&quot;#&quot;&gt;&lt;img src=&quot;images/4.jpg&quot;&gt;&lt;/a&gt;&lt;/li&gt;
+        &lt;li&gt;&lt;a href=&quot;#&quot;&gt;&lt;img src=&quot;images/5.jpg&quot;&gt;&lt;/a&gt;&lt;/li&gt;
+        &lt;li&gt;&lt;a href=&quot;#&quot;&gt;&lt;img src=&quot;images/6.jpg&quot;&gt;&lt;/a&gt;&lt;/li&gt;
+        &lt;li&gt;&lt;a href=&quot;#&quot;&gt;&lt;img src=&quot;images/7.jpg&quot;&gt;&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+    &lt;div&gt;
+        &lt;span class=&quot;contr&quot;&gt;
+            &lt;!-- &lt;i class=&quot;on&quot;&gt;&lt;/i&gt;&lt;i&gt;&lt;/i&gt;&lt;i&gt;&lt;/i&gt;&lt;i&gt;&lt;/i&gt;&lt;i&gt;&lt;/i&gt;&lt;i&gt;&lt;/i&gt;&lt;i&gt;&lt;/i&gt; --&gt;    
+        &lt;/span&gt;
+    &lt;/div&gt;
+    &lt;div&gt;
+        &lt;button title=&quot;上一张&quot; class=&quot;prev&quot;&gt;&amp;lt;&lt;/button&gt;
+        &lt;button title=&quot;下一张&quot; class=&quot;next&quot;&gt;&amp;gt;&lt;/button&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+</code></pre>
+<h3 id="2-2-css代码"><a href="#2-2-css代码" class="headerlink" title="2.2 css代码"></a>2.2 css代码</h3><pre><code>*&#123;padding:0;margin:0;list-style: none;&#125;
+    .lunbo&#123;
+        width:500px;
+        height:312px;
+        overflow: hidden;
+        margin:0 auto;
+        position:relative;
+    &#125;
+    .lunbo&gt;ul&#123;
+        height:312px;
+        position: relative;
+    &#125;
+    .lunbo&gt;ul li&#123;
+        float:left;
+        position: absolute;
+        left:500px;
+        top:0;
+    &#125;
+    .lunbo&gt;ul li:nth-child(1)&#123;
+        left:0px;
+    &#125;
+    .lunbo div:nth-child(2)&#123;
+        width:100%;
+        height:20px;
+        position: absolute;
+        margin:0 auto;
+        top:280px;
+    &#125;
+    .lunbo div span&#123;
+        display: block;
+        height:30px;
+        width:210px;
+        padding: 0px 10px;
+        margin: 0 auto;
+    &#125;
+    .lunbo&gt;div&gt;span i&#123;
+        display:block;
+        width:16px;
+        height:16px;
+        border-radius: 50%;
+        background:chocolate;
+        border:2px solid chocolate;
+        margin-right:10px;
+        float:left;
+        cursor:pointer;
+    &#125;
+    .lunbo div span i:last-child&#123;
+        margin-right: 0;
+    &#125;
+    .lunbo&gt;div&gt;span .on&#123;
+        background:white;
+    &#125;
+    .lunbo div:nth-child(3)&#123;
+        width:100%;
+        position: absolute;
+        top:110px;
+        left:0;
+    &#125;
+    .lunbo div:nth-child(3) button&#123;
+        width:40px;
+        height:60px;
+        background: #ccc;
+        color:#FFF;
+        border:0;
+        outline:none;
+        opacity: 0.5;
+        font-size: 30px;
+        cursor:pointer;
+    &#125;
+    .lunbo div:nth-child(3) button:first-child&#123;
+        float:left;
+        margin-left:10px;
+    &#125;
+    .lunbo div:nth-child(3) button:last-child&#123;
+        float:right;
+        margin-right:10px;
+    &#125;
+</code></pre>
+<h3 id="2-3-js代码"><a href="#2-3-js代码" class="headerlink" title="2.3 js代码"></a>2.3 js代码</h3><pre><code>$(function()&#123;
+        //创建控制小圆点
+        var is=$(&#39;#banner&gt;ul li&#39;).length;
+        for(i=0;i&lt;is;i++)&#123;
+            $(&#39;&lt;i order=&#39;+i+&#39;&gt;&lt;/i&gt;&#39;).appendTo(&#39;.contr&#39;);
+        &#125;
+        //给予第一个小圆点class属性
+        $(&#39;#banner .contr i&#39;).first().addClass(&#39;on&#39;);
+        //定义一个全局索引
+        var index = 0;
+        //封装一个函数，使当前索引对应的焦点（小圆点）显示不同于其他焦点的状态，方便下边的一次次调用
+        function focus()&#123;
+            $(&#39;#banner .contr i&#39;).removeClass(&#39;on&#39;);
+            $(&#39;#banner .contr i&#39;).eq(index).addClass(&#39;on&#39;);
+        &#125;
+        //给每个焦点添加点击事件
+        $(&#39;#banner .contr i&#39;).click(function()&#123;
+            //获取当前点击的焦点的索引值
+            var thisIndex = $(this).index();
+            //判断当前点击的焦点索引与现在显示图片的索引关系
+            //当点击的焦点索引 大于 现在显示图片的索引时
+            if(thisIndex &gt; index)&#123;
+                $(&#39;#banner&gt;ul li&#39;).eq(index).animate(&#123;left:&#39;-500px&#39;&#125;);
+                $(&#39;#banner&gt;ul li&#39;).eq(thisIndex).css(&#123;left:&#39;500px&#39;&#125;);
+                $(&#39;#banner&gt;ul li&#39;).eq(thisIndex).animate(&#123;left:&#39;0px&#39;&#125;);
+                index = thisIndex;
+                focus();
+                
+                //当点击的焦点索引 小于 现在显示图片的索引时
+            &#125;else if(thisIndex &lt; index)&#123;
+                $(&#39;#banner&gt;ul li&#39;).eq(index).animate(&#123;left:&#39;500px&#39;&#125;);
+                $(&#39;#banner&gt;ul li&#39;).eq(thisIndex).css(&#123;left:&#39;-500px&#39;&#125;);
+                $(&#39;#banner&gt;ul li&#39;).eq(thisIndex).animate(&#123;left:&#39;0px&#39;&#125;);
+                index = thisIndex;
+                focus();
+            &#125;
+        &#125;);
+        //播放函数，主要是为了自动播放的调用
+        function play()&#123;
+            $(&#39;#banner&gt;ul li&#39;).eq(index).animate(&#123;left:&#39;-500px&#39;&#125;);
+            index++;
+            if(index == $(&#39;#banner&gt;ul li&#39;).length)&#123;
+                index = 0;
+                $(&#39;#banner&gt;ul li&#39;).eq(index).css(&#123;left:&#39;500px&#39;&#125;);
+            &#125;
+            $(&#39;#banner&gt;ul li&#39;).eq(index).css(&#123;left:&#39;500px&#39;&#125;);
+            $(&#39;#banner&gt;ul li&#39;).eq(index).animate(&#123;left:&#39;0px&#39;&#125;);
+            focus();
+            
+        &#125;
+        //定义一个值为null的全局变量
+        var timer = null;
+        //自动播放函数
+        function autoPlay()&#123;
+            timer = setInterval(play,1000);
+        &#125;
+        //添加鼠标移入轮播图容器时，自动播放停止
+        $(&#39;#banner&#39;).bind(&#39;mouseover&#39;,function()&#123;
+            clearInterval(timer);
+            timer = null;
+        &#125;);
+        //添加鼠标移出轮播图容器时，自动播放继续
+        $(&#39;#banner&#39;).bind(&#39;mouseout&#39;,function()&#123;
+            autoPlay();
+        &#125;);
+        //添加一个状态当为true时，可以点击，false时点击无效，这样可以防止多次点击按钮获得更好的客户体验，
+        var statu = true;
+        $(&#39;#banner .prev&#39;).click(function()&#123;
+            if(statu == true)&#123;
+                //    给状态值改为false
+                statu = false;
+                //当前图片滑向右边，全局索引index减1
+                $(&#39;#banner&gt;ul li&#39;).eq(index).animate(&#123;left:&#39;500px&#39;&#125;);
+                index--;
+                //判断此时全局索引是否为或者小于最小索引值，是，则使全局索引值改为最大索引值，
+                if(index &lt; 0)&#123;
+                    index = $(&#39;#banner&gt;ul li&#39;).length-1;
+                &#125;
+                //将改变后的全局索引所对应的图片用css()方法将其“拉”回，最左边。然后用animate()方法滑向当前可视区域(容器区域内)
+                $(&#39;#banner&gt;ul li&#39;).eq(index).css(&#123;left:&#39;-500px&#39;&#125;);
+                                                                //动画完成后将状态值改为true，以便下一次的点击
+                $(&#39;#banner&gt;ul li&#39;).eq(index).animate(&#123;left:&#39;0px&#39;&#125;,function()&#123;statu = true;&#125;);
+                focus();
+            &#125;
+        &#125;);
+        $(&#39;#banner .next&#39;).click(function()&#123;
+            if(statu == true)&#123;
+                //    给状态值改为false
+                statu = false;
+                //当前图片滑向左边，全局索引index加1
+                $(&#39;#banner&gt;ul li&#39;).eq(index).animate(&#123;left:&#39;-500px&#39;&#125;);
+                index++;
+                //判断此时全局索引是否大于最大索引值（最大索引值是$(&#39;#banner&gt;ul li&#39;).length-1 ），是，则使全局索引值改为最大索引值，
+                if(index == $(&#39;#banner&gt;ul li&#39;).length)&#123;
+                    index = 0;
+                    
+                &#125;
+                //将改变后的全局索引所对应的图片用css()方法将其“拉”回最右边。然后用animate()方法滑向当前可视区域(容器区域内)
+                $(&#39;#banner&gt;ul li&#39;).eq(index).css(&#123;left:&#39;500px&#39;&#125;);
+                                                                //动画完成后将状态值改为true，以便下一次的点击
+                $(&#39;#banner&gt;ul li&#39;).eq(index).animate(&#123;left:&#39;0px&#39;&#125;,function()&#123;statu = true;&#125;);
+                focus();
+            &#125;
+        &#125;)
+        //页面打开时，默认调用自动轮播函数
+        autoPlay();
+        
+    &#125;);
+</code></pre>
+<h2 id="3、注意"><a href="#3、注意" class="headerlink" title="3、注意"></a>3、注意</h2><p>记得要引入jq，否则无法运行</p>
+<h2 id="4、在线演示"><a href="#4、在线演示" class="headerlink" title="4、在线演示"></a>4、在线演示</h2><p><a target="_blank" rel="noopener" href="http://www.magicyou.cn/resource/20160817">在线演示</a></p>
+</div><div class="tags"><a href="/tags/JavaScript/"><i class="fa fa-tag"></i>JavaScript</a></div><div class="post-nav"><a class="pre" href="/2016/08/24/javascript-%E8%BD%AE%E6%92%AD%E5%9B%BE%EF%BC%884%EF%BC%89--%E5%9F%BA%E4%BA%8EJQ%E7%9A%843D%E8%BD%AE%E6%92%AD%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B0/">轮播图（4）--基于JQ的3D轮播设计与实现</a><a class="next" href="/2016/08/10/javascript-%E8%BD%AE%E6%92%AD%E5%9B%BE%EF%BC%882%EF%BC%89--%E5%9F%BA%E4%BA%8EJQ%E7%9A%84%E5%B7%A6%E5%8F%B3%E7%BC%93%E5%8A%A8/">轮播图（2）--基于JQ的左右缓动</a></div></div></div></div><div class="pure-u-1-4 hidden_mid_and_down"><div id="sidebar"><div class="widget"><form class="search-form" action="//www.google.com/search" method="get" accept-charset="utf-8" target="_blank"><input type="text" name="q" maxlength="20" placeholder="Search"/><input type="hidden" name="sitesearch" value="http://example.com"/></form></div><div class="widget"><div class="widget-title"><i class="fa fa-folder-o"> 分类</i></div><ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/JavaScript/">JavaScript</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Linux/">Linux</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/MacOS/">MacOS</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/PHP/">PHP</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Python/">Python</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Vue/">Vue</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/uni-app/">uni-app</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%A0%91%E8%8E%93%E6%B4%BE/">树莓派</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-star-o"> 标签</i></div><div class="tagcloud"><a href="/tags/Vue/" style="font-size: 15px;">Vue</a> <a href="/tags/JavaScript/" style="font-size: 15px;">JavaScript</a> <a href="/tags/%E6%A0%91%E8%8E%93%E6%B4%BE/" style="font-size: 15px;">树莓派</a> <a href="/tags/Linux/" style="font-size: 15px;">Linux</a> <a href="/tags/Centos/" style="font-size: 15px;">Centos</a> <a href="/tags/PHP/" style="font-size: 15px;">PHP</a> <a href="/tags/Nginx/" style="font-size: 15px;">Nginx</a> <a href="/tags/Apache/" style="font-size: 15px;">Apache</a> <a href="/tags/MacOS/" style="font-size: 15px;">MacOS</a> <a href="/tags/Python/" style="font-size: 15px;">Python</a> <a href="/tags/CSS3/" style="font-size: 15px;">CSS3</a> <a href="/tags/git/" style="font-size: 15px;">git</a> <a href="/tags/HTML5/" style="font-size: 15px;">HTML5</a> <a href="/tags/%E5%BE%AE%E4%BF%A1/" style="font-size: 15px;">微信</a> <a href="/tags/%E5%B0%8F%E7%A8%8B%E5%BA%8F/" style="font-size: 15px;">小程序</a> <a href="/tags/jQuery/" style="font-size: 15px;">jQuery</a> <a href="/tags/%E5%BE%AE%E4%BF%A1%E5%B0%8F%E7%A8%8B%E5%BA%8F/" style="font-size: 15px;">微信小程序</a> <a href="/tags/canvas/" style="font-size: 15px;">canvas</a> <a href="/tags/other/" style="font-size: 15px;">other</a> <a href="/tags/react/" style="font-size: 15px;">react</a> <a href="/tags/%E5%BE%AE%E4%BF%A1%E5%85%AC%E4%BC%97%E5%8F%B7/" style="font-size: 15px;">微信公众号</a> <a href="/tags/uni-app/" style="font-size: 15px;">uni-app</a> <a href="/tags/CSS/" style="font-size: 15px;">CSS</a> <a href="/tags/HTML/" style="font-size: 15px;">HTML</a> <a href="/tags/scrapy/" style="font-size: 15px;">scrapy</a></div></div><div class="widget"><div class="widget-title"><i class="fa fa-file-o"> 最近文章</i></div><ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2021/04/13/react-%E7%AE%80%E5%8D%95%E5%85%A5%E9%97%A8/">React 简单入门</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/08/03/%20%E6%A0%91%E8%8E%93%E6%B4%BE-%E9%85%8D%E7%BD%AE%E5%85%8D%E5%AF%86%E7%99%BB%E5%BD%95%E4%BA%91%E4%B8%BB%E6%9C%BA/">树莓派-配置免密登录云主机</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/04/03/git-%E6%96%B0%E4%BB%93%E5%BA%93%E5%87%86%E5%A4%87/">git-新仓库准备</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/01/04/uni-app-%E5%BC%80%E5%8F%91%E5%BE%AE%E4%BF%A1%E5%85%AC%E4%BC%97%E5%8F%B7/">uni-app开发微信公众号</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/09/03/javascript-%E7%8E%AF%E5%BD%A2%E6%B8%A9%E5%BA%A6%E8%B0%83%E8%8A%82%E5%AE%9E%E7%8E%B0/">环形温度调节实现</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/08/03/%20vue-%E7%BB%84%E4%BB%B6%E5%B0%81%E8%A3%85%E4%B8%AD%E4%B9%8Bslot%E6%8F%92%E6%A7%BD%E4%BD%BF%E7%94%A8/">vue-组件封装中之slot插槽使用</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/08/03/javascript-%E5%86%92%E6%B3%A1%E6%8E%92%E5%BA%8F%E5%92%8C%E5%BF%AB%E9%80%9F%E6%8E%92%E5%BA%8F/">冒泡排序和快速排序</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/07/03/php-PHP%E8%8E%B7%E5%8F%96%E5%BE%AE%E4%BF%A1%E5%B0%8F%E7%A8%8B%E5%BA%8F%E7%A0%81/">微信小程序---PHP获取微信小程序码</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/07/03/wx-%E5%BE%AE%E4%BF%A1%E5%B0%8F%E7%A8%8B%E5%BA%8F%E5%90%88%E6%88%90%E6%B5%B7%E6%8A%A5/">微信小程序---合成海报分享到朋友圈</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/02/24/Linux-%E5%8D%95%E7%82%B9%E7%99%BB%E5%BD%95%E9%85%8D%E7%BD%AE%20%E8%AE%B0%E5%BD%95/">配置webgate拦截跳转到ldap登录页实现单点登录</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-external-link"> 友情链接</i></div><ul></ul><a href="https://hexo.io/" title="Hexo" target="_blank">Hexo</a><ul></ul><a href="http://moxfive.xyz/" title="MOxFIVE" target="_blank">MOxFIVE</a><ul></ul><a href="https://coolshell.cn/" title="左耳朵耗子的酷壳" target="_blank">左耳朵耗子的酷壳</a></div></div></div><div class="pure-u-1 pure-u-md-3-4"><div id="footer">Copyright © 2021 <a href="/." rel="nofollow">MagicYou.</a> Powered by<a rel="nofollow" target="_blank" href="https://hexo.io"> Hexo.</a><a rel="nofollow" target="_blank" href="https://github.com/tufu9441/maupassant-hexo"> Theme</a> by<a rel="nofollow" target="_blank" href="https://github.com/pagecho"> Cho.</a></div></div></div><a class="show" id="rocket" href="#top"></a><script type="text/javascript" src="/js/totop.js?v=1.0.0" async></script><script type="text/javascript" src="//cdn.jsdelivr.net/gh/fancyapps/fancybox/dist/jquery.fancybox.min.js" async></script><script type="text/javascript" src="/js/fancybox.js?v=1.0.0" async></script><link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox/dist/jquery.fancybox.min.css"><script type="text/javascript" src="/js/copycode.js" successtext="复制成功!"></script><link rel="stylesheet" type="text/css" href="/css/copycode.css"><script type="text/javascript" src="/js/codeblock-resizer.js?v=1.0.0"></script><script type="text/javascript" src="/js/smartresize.js?v=1.0.0"></script></div></body></html>
