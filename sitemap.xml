@@ -9,14 +9,14 @@
   </url>
   
   <url>
-    <loc>https://blog.magicyou.cn/repository/index.html</loc>
+    <loc>https://blog.magicyou.cn/links/index.html</loc>
     
     <lastmod>2022-09-03</lastmod>
     
   </url>
   
   <url>
-    <loc>https://blog.magicyou.cn/links/index.html</loc>
+    <loc>https://blog.magicyou.cn/repository/index.html</loc>
     
     <lastmod>2022-09-03</lastmod>
     
@@ -177,14 +177,14 @@
   </url>
   
   <url>
-    <loc>https://blog.magicyou.cn/2020/04/07/javascript%E5%A4%8D%E4%B9%A0%EF%BC%9A%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/</loc>
+    <loc>https://blog.magicyou.cn/2020/04/07/javascript%E5%A4%8D%E4%B9%A0%EF%BC%9A%E9%A1%B5%E9%9D%A2%E5%8A%A0%E8%BD%BD/</loc>
     
     <lastmod>2020-04-07</lastmod>
     
   </url>
   
   <url>
-    <loc>https://blog.magicyou.cn/2020/04/07/javascript%E5%A4%8D%E4%B9%A0%EF%BC%9A%E9%A1%B5%E9%9D%A2%E5%8A%A0%E8%BD%BD/</loc>
+    <loc>https://blog.magicyou.cn/2020/04/07/javascript%E5%A4%8D%E4%B9%A0%EF%BC%9A%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/</loc>
     
     <lastmod>2020-04-07</lastmod>
     
@@ -620,14 +620,14 @@
   </url>
   
   <url>
-    <loc>https://blog.magicyou.cn/tags/Linux/</loc>
+    <loc>https://blog.magicyou.cn/tags/%E6%A0%91%E8%8E%93%E6%B4%BE/</loc>
     <lastmod>2022-09-03</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
-    <loc>https://blog.magicyou.cn/tags/%E6%A0%91%E8%8E%93%E6%B4%BE/</loc>
+    <loc>https://blog.magicyou.cn/tags/Linux/</loc>
     <lastmod>2022-09-03</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -690,7 +690,7 @@
   </url>
   
   <url>
-    <loc>https://blog.magicyou.cn/tags/JAVA/</loc>
+    <loc>https://blog.magicyou.cn/tags/git/</loc>
     <lastmod>2022-09-03</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -704,7 +704,7 @@
   </url>
   
   <url>
-    <loc>https://blog.magicyou.cn/tags/git/</loc>
+    <loc>https://blog.magicyou.cn/tags/JAVA/</loc>
     <lastmod>2022-09-03</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -825,14 +825,14 @@
   </url>
   
   <url>
-    <loc>https://blog.magicyou.cn/categories/Linux/</loc>
+    <loc>https://blog.magicyou.cn/categories/%E6%A0%91%E8%8E%93%E6%B4%BE/</loc>
     <lastmod>2022-09-03</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
-    <loc>https://blog.magicyou.cn/categories/%E6%A0%91%E8%8E%93%E6%B4%BE/</loc>
+    <loc>https://blog.magicyou.cn/categories/Linux/</loc>
     <lastmod>2022-09-03</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -846,13 +846,6 @@
   </url>
   
   <url>
-    <loc>https://blog.magicyou.cn/categories/JAVA/</loc>
-    <lastmod>2022-09-03</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
     <loc>https://blog.magicyou.cn/categories/JavaScript/</loc>
     <lastmod>2022-09-03</lastmod>
     <changefreq>daily</changefreq>
@@ -860,7 +853,7 @@
   </url>
   
   <url>
-    <loc>https://blog.magicyou.cn/categories/MacOS/</loc>
+    <loc>https://blog.magicyou.cn/categories/JAVA/</loc>
     <lastmod>2022-09-03</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -868,6 +861,13 @@
   
   <url>
     <loc>https://blog.magicyou.cn/categories/PHP/</loc>
+    <lastmod>2022-09-03</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.magicyou.cn/categories/MacOS/</loc>
     <lastmod>2022-09-03</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
