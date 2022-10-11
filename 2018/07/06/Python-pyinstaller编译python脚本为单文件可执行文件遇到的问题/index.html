@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+  <meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="Cache-Control" content="no-transform" />
+  <meta http-equiv="Cache-Control" content="no-siteapp" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="format-detection" content="telephone=no,email=no,adress=no">
+  <!-- Color theme for statusbar -->
+  <meta name="theme-color" content="#000000" />
+  <!-- 强制页面在当前窗口以独立页面显示,防止别人在框架里调用页面 -->
+  <meta http-equiv="window-target" content="_top" />
+  
+  
+  <title>pyinstaller编译python脚本为单文件可执行文件遇到的问题 | Hexo</title>
+  <meta name="description" content="编译python脚本为单文件可执行文件(python3)">
+<meta property="og:type" content="article">
+<meta property="og:title" content="pyinstaller编译python脚本为单文件可执行文件遇到的问题">
+<meta property="og:url" content="https://blog.magicyou.cn/2018/07/06/Python-pyinstaller%E7%BC%96%E8%AF%91python%E8%84%9A%E6%9C%AC%E4%B8%BA%E5%8D%95%E6%96%87%E4%BB%B6%E5%8F%AF%E6%89%A7%E8%A1%8C%E6%96%87%E4%BB%B6%E9%81%87%E5%88%B0%E7%9A%84%E9%97%AE%E9%A2%98/index.html">
+<meta property="og:site_name" content="MagicYou">
+<meta property="og:description" content="编译python脚本为单文件可执行文件(python3)">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2018-07-06T07:23:00.000Z">
+<meta property="article:modified_time" content="2018-07-06T07:23:00.000Z">
+<meta property="article:author" content="magicyou">
+<meta property="article:tag" content="Python">
+<meta name="twitter:card" content="summary">
+  <!-- Canonical links -->
+  <link rel="canonical" href="https://blog.magicyou.cn/2018/07/06/Python-pyinstaller%E7%BC%96%E8%AF%91python%E8%84%9A%E6%9C%AC%E4%B8%BA%E5%8D%95%E6%96%87%E4%BB%B6%E5%8F%AF%E6%89%A7%E8%A1%8C%E6%96%87%E4%BB%B6%E9%81%87%E5%88%B0%E7%9A%84%E9%97%AE%E9%A2%98/index.html">
+  
+    <link rel="alternate" href="/atom.xml" title="MagicYou" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png" type="image/x-icon">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+  
+  
+  
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1.4.0/dist/gitalk.min.css">
+  
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body class="main-center" itemscope itemtype="http://schema.org/WebPage">
+  <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+  <div class="slimContent">
+    <div class="navbar-header">
+      
+      
+      <div class="profile-block text-center">
+        <a id="avatar" href="https://github.com/magicyou" target="_blank">
+          <img class="img-circle img-rotate" src="http://tva3.sinaimg.cn/crop.0.0.180.180.180/a524faafjw1e8qgp5bmzyj2050050aa8.jpg" width="200" height="200">
+        </a>
+        <h2 id="name" class="hidden-xs hidden-sm">BruceLee</h2>
+        <h3 id="title" class="hidden-xs hidden-sm hidden-md">Web Developer</h3>
+        <small id="location" class="text-muted hidden-xs hidden-sm"><i class="icon icon-map-marker"></i> Beijing, China</small>
+      </div>
+      
+      <div class="search" id="search-form-wrap">
+
+    <form class="search-form sidebar-form">
+        <div class="input-group">
+            <input type="text" class="search-form-input form-control" placeholder="搜索" />
+            <span class="input-group-btn">
+                <button type="submit" class="search-form-submit btn btn-flat" onclick="return false;"><i class="icon icon-search"></i></button>
+            </span>
+        </div>
+    </form>
+    <div class="ins-search">
+  <div class="ins-search-mask"></div>
+  <div class="ins-search-container">
+    <div class="ins-input-wrapper">
+      <input type="text" class="ins-search-input" placeholder="想要查找什么..." x-webkit-speech />
+      <button type="button" class="close ins-close ins-selectable" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+    </div>
+    <div class="ins-section-wrapper">
+      <div class="ins-section-container"></div>
+    </div>
+  </div>
+</div>
+
+
+</div>
+      <button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target="#main-navbar" aria-controls="main-navbar" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+    <nav id="main-navbar" class="collapse navbar-collapse" itemscope itemtype="http://schema.org/SiteNavigationElement" role="navigation">
+      <ul class="nav navbar-nav main-nav ">
+        
+        
+        <li class="menu-item menu-item-home">
+          <a href="/.">
+            
+            <i class="icon icon-home-fill"></i>
+            
+            <span class="menu-title">首页</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives">
+            
+            <i class="icon icon-archives-fill"></i>
+            
+            <span class="menu-title">归档</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories">
+            
+            <i class="icon icon-folder"></i>
+            
+            <span class="menu-title">分类</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags">
+            
+            <i class="icon icon-tags"></i>
+            
+            <span class="menu-title">标签</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-repository">
+          <a href="/repository">
+            
+            <i class="icon icon-project"></i>
+            
+            <span class="menu-title">项目</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-books">
+          <a href="/books">
+            
+            <i class="icon icon-book-fill"></i>
+            
+            <span class="menu-title">书单</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-links">
+          <a href="/links">
+            
+            <i class="icon icon-friendship"></i>
+            
+            <span class="menu-title">友链</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about">
+            
+            <i class="icon icon-cup-fill"></i>
+            
+            <span class="menu-title">关于</span>
+          </a>
+        </li>
+        
+      </ul>
+      
+	
+    <ul class="social-links">
+    	
+        <li><a href="https://github.com/magicyou" target="_blank" title="Github" data-toggle=tooltip data-placement=top><i class="icon icon-github"></i></a></li>
+        
+        <li><a href="https://weibo.com/p/1005052770664111/home?from=page_100505&mod=TAB&is_all=1#place" target="_blank" title="Weibo" data-toggle=tooltip data-placement=top><i class="icon icon-weibo"></i></a></li>
+        
+    </ul>
+
+    </nav>
+  </div>
+</header>
+
+  
+    <aside class="sidebar" itemscope itemtype="http://schema.org/WPSideBar">
+  <div class="slimContent">
+    
+      <div class="widget">
+    <h3 class="widget-title">公告</h3>
+    <div class="widget-body">
+        <div id="board">
+            <div class="content">
+                <p>欢迎交流与分享经验!</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">分类</h3>
+    <div class="widget-body">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/JAVA/">JAVA</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/JavaScript/">JavaScript</a><span class="category-list-count">28</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Linux/">Linux</a><span class="category-list-count">9</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/MacOS/">MacOS</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/PHP/">PHP</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Python/">Python</a><span class="category-list-count">7</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Vue/">Vue</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/uni-app/">uni-app</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a><span class="category-list-count">13</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%A0%91%E8%8E%93%E6%B4%BE/">树莓派</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/">算法</a><span class="category-list-count">6</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80/">计算机基础</a><span class="category-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget-body">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Apache/" rel="tag">Apache</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CSS/" rel="tag">CSS</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CSS3/" rel="tag">CSS3</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Centos/" rel="tag">Centos</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/HTML/" rel="tag">HTML</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/HTML5/" rel="tag">HTML5</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/JAVA/" rel="tag">JAVA</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/JavaScript/" rel="tag">JavaScript</a><span class="tag-list-count">40</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux/" rel="tag">Linux</a><span class="tag-list-count">11</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MacOS/" rel="tag">MacOS</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Next-js/" rel="tag">Next.js</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Nginx/" rel="tag">Nginx</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PHP/" rel="tag">PHP</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Python/" rel="tag">Python</a><span class="tag-list-count">7</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/React/" rel="tag">React</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Vue/" rel="tag">Vue</a><span class="tag-list-count">6</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/canvas/" rel="tag">canvas</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/git/" rel="tag">git</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jQuery/" rel="tag">jQuery</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/other/" rel="tag">other</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/react/" rel="tag">react</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/scrapy/" rel="tag">scrapy</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/uni-app/" rel="tag">uni-app</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%B0%8F%E7%A8%8B%E5%BA%8F/" rel="tag">小程序</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%BE%AE%E4%BF%A1/" rel="tag">微信</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%BE%AE%E4%BF%A1%E5%85%AC%E4%BC%97%E5%8F%B7/" rel="tag">微信公众号</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%BE%AE%E4%BF%A1%E5%B0%8F%E7%A8%8B%E5%BA%8F/" rel="tag">微信小程序</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%A0%91%E8%8E%93%E6%B4%BE/" rel="tag">树莓派</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%AE%97%E6%B3%95/" rel="tag">算法</a><span class="tag-list-count">6</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80/" rel="tag">计算机基础</a><span class="tag-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget-body tagcloud">
+      <a href="/tags/Apache/" style="font-size: 13px;">Apache</a> <a href="/tags/CSS/" style="font-size: 13px;">CSS</a> <a href="/tags/CSS3/" style="font-size: 13.43px;">CSS3</a> <a href="/tags/Centos/" style="font-size: 13.43px;">Centos</a> <a href="/tags/HTML/" style="font-size: 13px;">HTML</a> <a href="/tags/HTML5/" style="font-size: 13px;">HTML5</a> <a href="/tags/JAVA/" style="font-size: 13px;">JAVA</a> <a href="/tags/JavaScript/" style="font-size: 14px;">JavaScript</a> <a href="/tags/Linux/" style="font-size: 13.86px;">Linux</a> <a href="/tags/MacOS/" style="font-size: 13px;">MacOS</a> <a href="/tags/Next-js/" style="font-size: 13px;">Next.js</a> <a href="/tags/Nginx/" style="font-size: 13px;">Nginx</a> <a href="/tags/PHP/" style="font-size: 13.43px;">PHP</a> <a href="/tags/Python/" style="font-size: 13.71px;">Python</a> <a href="/tags/React/" style="font-size: 13px;">React</a> <a href="/tags/Vue/" style="font-size: 13.57px;">Vue</a> <a href="/tags/canvas/" style="font-size: 13px;">canvas</a> <a href="/tags/git/" style="font-size: 13px;">git</a> <a href="/tags/jQuery/" style="font-size: 13.14px;">jQuery</a> <a href="/tags/other/" style="font-size: 13px;">other</a> <a href="/tags/react/" style="font-size: 13px;">react</a> <a href="/tags/scrapy/" style="font-size: 13px;">scrapy</a> <a href="/tags/uni-app/" style="font-size: 13.14px;">uni-app</a> <a href="/tags/%E5%B0%8F%E7%A8%8B%E5%BA%8F/" style="font-size: 13px;">小程序</a> <a href="/tags/%E5%BE%AE%E4%BF%A1/" style="font-size: 13.14px;">微信</a> <a href="/tags/%E5%BE%AE%E4%BF%A1%E5%85%AC%E4%BC%97%E5%8F%B7/" style="font-size: 13px;">微信公众号</a> <a href="/tags/%E5%BE%AE%E4%BF%A1%E5%B0%8F%E7%A8%8B%E5%BA%8F/" style="font-size: 13.29px;">微信小程序</a> <a href="/tags/%E6%A0%91%E8%8E%93%E6%B4%BE/" style="font-size: 13.14px;">树莓派</a> <a href="/tags/%E7%AE%97%E6%B3%95/" style="font-size: 13.57px;">算法</a> <a href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80/" style="font-size: 13px;">计算机基础</a>
+    </div>
+  </div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget-body">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/08/">八月 2022</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/03/">三月 2022</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/12/">十二月 2021</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/11/">十一月 2021</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/10/">十月 2021</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/09/">九月 2021</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/04/">四月 2021</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/02/">二月 2021</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">十二月 2020</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">十月 2020</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">八月 2020</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">六月 2020</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">四月 2020</a><span class="archive-list-count">11</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">三月 2020</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">一月 2020</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">十二月 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/09/">九月 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/08/">八月 2019</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/07/">七月 2019</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/02/">二月 2019</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/10/">十月 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">九月 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">七月 2018</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">五月 2018</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">四月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/03/">三月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/02/">二月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/01/">一月 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/11/">十一月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/10/">十月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/08/">八月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/06/">六月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/04/">四月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/03/">三月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/02/">二月 2017</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/01/">一月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">十二月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/11/">十一月 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">九月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">八月 2016</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/07/">七月 2016</a><span class="archive-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget-body">
+      <ul class="recent-post-list list-unstyled no-thumbnail">
+        
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a>
+              </p>
+              <p class="item-title">
+                <a href="/2022/08/31/react-Next.js%20%E4%B8%80%E4%BA%9B%E4%B8%9C%E8%A5%BF/" class="title">Next.js 一些东西</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2022-08-31T13:33:00.000Z" itemprop="datePublished">2022-08-31</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/Vue/">Vue</a>
+              </p>
+              <p class="item-title">
+                <a href="/2022/03/11/vue-%E7%89%B9%E6%80%A7/" class="title">vue-</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2022-03-11T14:13:02.000Z" itemprop="datePublished">2022-03-11</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80/">计算机基础</a>
+              </p>
+              <p class="item-title">
+                <a href="/2021/12/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80-%E8%BF%9B%E5%88%B6%E8%BD%AC%E6%8D%A2/" class="title">计算机基础-进制转换</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2021-12-10T05:34:12.000Z" itemprop="datePublished">2021-12-10</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/Vue/">Vue</a>
+              </p>
+              <p class="item-title">
+                <a href="/2021/11/15/vue-%E9%80%9A%E4%BF%A1%E6%96%B9%E5%BC%8F/" class="title">vue-通信方式</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2021-11-15T14:13:02.000Z" itemprop="datePublished">2021-11-15</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/Vue/">Vue</a>
+              </p>
+              <p class="item-title">
+                <a href="/2021/10/11/vue-%E9%87%8D%E6%96%B0%E7%A0%94%E7%A9%B6%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F/" class="title">vue-重新研究生命周期</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2021-10-11T14:13:02.000Z" itemprop="datePublished">2021-10-11</time>
+              </p>
+            </div>
+          </li>
+          
+      </ul>
+    </div>
+  </div>
+  
+
+    
+  </div>
+</aside>
+
+  
+  
+<main class="main" role="main">
+  <div class="content">
+  <article id="post-Python-pyinstaller编译python脚本为单文件可执行文件遇到的问题" class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
+    
+    <div class="article-header">
+      
+        
+  
+    <h1 class="article-title" itemprop="name">
+      pyinstaller编译python脚本为单文件可执行文件遇到的问题
+    </h1>
+  
+
+      
+      <div class="article-meta">
+        <span class="article-date">
+    <i class="icon icon-calendar-check"></i>
+	<a href="/2018/07/06/Python-pyinstaller%E7%BC%96%E8%AF%91python%E8%84%9A%E6%9C%AC%E4%B8%BA%E5%8D%95%E6%96%87%E4%BB%B6%E5%8F%AF%E6%89%A7%E8%A1%8C%E6%96%87%E4%BB%B6%E9%81%87%E5%88%B0%E7%9A%84%E9%97%AE%E9%A2%98/" class="article-date">
+	  <time datetime="2018-07-06T07:23:00.000Z" itemprop="datePublished">2018-07-06</time>
+	</a>
+</span>
+        
+  <span class="article-category">
+    <i class="icon icon-folder"></i>
+    <a class="article-category-link" href="/categories/Python/">Python</a>
+  </span>
+
+        
+  <span class="article-tag">
+    <i class="icon icon-tags"></i>
+	<a class="article-tag-link-link" href="/tags/Python/" rel="tag">Python</a>
+  </span>
+
+
+        
+	<span class="article-read hidden-xs">
+	    <i class="icon icon-eye-fill" aria-hidden="true"></i>
+	    <span id="busuanzi_container_page_pv">
+			<span id="busuanzi_value_page_pv">0</span>
+		</span>
+	</span>
+
+
+        <span class="post-comment"><i class="icon icon-comment"></i> <a href="/2018/07/06/Python-pyinstaller%E7%BC%96%E8%AF%91python%E8%84%9A%E6%9C%AC%E4%B8%BA%E5%8D%95%E6%96%87%E4%BB%B6%E5%8F%AF%E6%89%A7%E8%A1%8C%E6%96%87%E4%BB%B6%E9%81%87%E5%88%B0%E7%9A%84%E9%97%AE%E9%A2%98/#comments" class="article-comment-link">评论</a></span>
+        
+	
+		<span class="post-wordcount hidden-xs" itemprop="wordCount">字数统计: 2.4k(字)</span>
+	
+	
+		<span class="post-readcount hidden-xs" itemprop="timeRequired">阅读时长: 12(分)</span>
+	
+
+      </div>
+    </div>
+    <div class="article-entry marked-body" itemprop="articleBody">
+      
+        <p>编译python脚本为单文件可执行文件(python3)</p>
+<span id="more"></span>
+
+<p>环境概况</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">系统：CentOS Linux release 7.5</span><br><span class="line">python版本：3.6.1</span><br><span class="line">注：已安装pip</span><br></pre></td></tr></table></figure>
+<p>安装pyinstaller<br>​<code> pip install pyinstaller pyinstaller --onefile testCsv.py  #编译好的文件在dist目录下 ​</code></p>
+<p>激动的开始做成可执行单文件，这是什么鬼…</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line">[root@magicYou signal]# pyinstaller --onefile testCsv.py</span><br><span class="line">204 INFO: PyInstaller: 3.3.1</span><br><span class="line">205 INFO: Python: 3.6.1</span><br><span class="line">206 INFO: Platform: Linux-3.10.0-693.17.1.el7.x86_64-x86_64-with-centos-7.5.1804-Core</span><br><span class="line">206 INFO: wrote &#x2F;python&#x2F;signal&#x2F;testCsv.spec</span><br><span class="line">209 INFO: UPX is not available.</span><br><span class="line">210 INFO: Extending PYTHONPATH with paths</span><br><span class="line">[&#39;&#x2F;python&#x2F;signal&#39;, &#39;&#x2F;python&#x2F;signal&#39;]</span><br><span class="line">210 INFO: checking Analysis</span><br><span class="line">210 INFO: Building Analysis because out00-Analysis.toc is non existent</span><br><span class="line">210 INFO: Initializing module dependency graph...</span><br><span class="line">211 INFO: Initializing module graph hooks...</span><br><span class="line">212 INFO: Analyzing base_library.zip ...</span><br><span class="line">3827 INFO: running Analysis out00-Analysis.toc</span><br><span class="line">3840 INFO: Caching module hooks...</span><br><span class="line">3844 INFO: Analyzing &#x2F;python&#x2F;signal&#x2F;testCsv.py</span><br><span class="line">3867 INFO: Loading module hooks...</span><br><span class="line">3868 INFO: Loading module hook &quot;hook-encodings.py&quot;...</span><br><span class="line">3937 INFO: Loading module hook &quot;hook-pydoc.py&quot;...</span><br><span class="line">3938 INFO: Loading module hook &quot;hook-xml.py&quot;...</span><br><span class="line">4206 INFO: Looking for ctypes DLLs</span><br><span class="line">4206 INFO: Analyzing run-time hooks ...</span><br><span class="line">4213 INFO: Looking for dynamic libraries</span><br><span class="line">4753 INFO: Looking for eggs</span><br><span class="line">4753 INFO: Python library not in binary dependencies. Doing additional searching...</span><br><span class="line">Traceback (most recent call last):</span><br><span class="line">  File &quot;&#x2F;usr&#x2F;local&#x2F;python3&#x2F;bin&#x2F;pyinstaller&quot;, line 11, in &lt;module&gt;</span><br><span class="line">    sys.exit(run())</span><br><span class="line">  File &quot;&#x2F;usr&#x2F;local&#x2F;python3&#x2F;lib&#x2F;python3.6&#x2F;site-packages&#x2F;PyInstaller&#x2F;__main__.py&quot;, line 94, in run</span><br><span class="line">    run_build(pyi_config, spec_file, **vars(args))</span><br><span class="line">  File &quot;&#x2F;usr&#x2F;local&#x2F;python3&#x2F;lib&#x2F;python3.6&#x2F;site-packages&#x2F;PyInstaller&#x2F;__main__.py&quot;, line 46, in run_build</span><br><span class="line">    PyInstaller.building.build_main.main(pyi_config, spec_file, **kwargs)</span><br><span class="line">  File &quot;&#x2F;usr&#x2F;local&#x2F;python3&#x2F;lib&#x2F;python3.6&#x2F;site-packages&#x2F;PyInstaller&#x2F;building&#x2F;build_main.py&quot;, line 791, in main</span><br><span class="line">    build(specfile, kw.get(&#39;distpath&#39;), kw.get(&#39;workpath&#39;), kw.get(&#39;clean_build&#39;))</span><br><span class="line">  File &quot;&#x2F;usr&#x2F;local&#x2F;python3&#x2F;lib&#x2F;python3.6&#x2F;site-packages&#x2F;PyInstaller&#x2F;building&#x2F;build_main.py&quot;, line 737, in build</span><br><span class="line">    exec(text, spec_namespace)</span><br><span class="line">  File &quot;&lt;string&gt;&quot;, line 16, in &lt;module&gt;</span><br><span class="line">  File &quot;&#x2F;usr&#x2F;local&#x2F;python3&#x2F;lib&#x2F;python3.6&#x2F;site-packages&#x2F;PyInstaller&#x2F;building&#x2F;build_main.py&quot;, line 213, in __init__</span><br><span class="line">    self.__postinit__()</span><br><span class="line">  File &quot;&#x2F;usr&#x2F;local&#x2F;python3&#x2F;lib&#x2F;python3.6&#x2F;site-packages&#x2F;PyInstaller&#x2F;building&#x2F;datastruct.py&quot;, line 161, in __postinit__</span><br><span class="line">    self.assemble()</span><br><span class="line">  File &quot;&#x2F;usr&#x2F;local&#x2F;python3&#x2F;lib&#x2F;python3.6&#x2F;site-packages&#x2F;PyInstaller&#x2F;building&#x2F;build_main.py&quot;, line 545, in assemble</span><br><span class="line">    self._check_python_library(self.binaries)</span><br><span class="line">  File &quot;&#x2F;usr&#x2F;local&#x2F;python3&#x2F;lib&#x2F;python3.6&#x2F;site-packages&#x2F;PyInstaller&#x2F;building&#x2F;build_main.py&quot;, line 629, in _check_python_library</span><br><span class="line">    raise IOError(msg)</span><br><span class="line">OSError: Python library not found: libpython3.6.so.1.0, libpython3.6mu.so.1.0, libpython3.6m.so.1.0</span><br><span class="line">This would mean your Python installation doesn&#39;t come with proper library files.</span><br><span class="line">This usually happens by missing development package, or unsuitable build parameters of Python installation.</span><br><span class="line"></span><br><span class="line">* On Debian&#x2F;Ubuntu, you would need to install Python development packages</span><br><span class="line">  * apt-get install python3-dev</span><br><span class="line">  * apt-get install python-dev</span><br><span class="line">* If you&#39;re building Python by yourself, please rebuild your Python with &#96;--enable-shared&#96; (or, &#96;--enable-framework&#96; on Darwin)</span><br></pre></td></tr></table></figure>
+
+<p>按照一贯做法，百度谷歌一波</p>
+<h3 id="尝试解决方案一："><a href="#尝试解决方案一：" class="headerlink" title="尝试解决方案一："></a>尝试解决方案一：</h3><p> 搜来的原话是这样说的</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">大概意思就是pyinstaller报错找不到python动态库，也提示说升级python-dev。因为我是centos，各种yum install python-devel和yum install python-dev都不行，什么升级&#x2F;重装python、sudo、su甚至重装系统都不行！！！我又必须在centos6.2环境下编译，如果我在其他高版本的环境下打包后拿到centos6.2就会报错,言归正传！其实处理起来很简单。只需要复制python安装目录下的动态库到系统地动态库目录即可。</span><br><span class="line">cp -R &#x2F;usr&#x2F;local&#x2F;python3.4&#x2F;lib&#x2F;* &#x2F;usr&#x2F;lib64&#x2F; 这样就搞定了！</span><br></pre></td></tr></table></figure>
+
+<p>我的是python3.6，要不就试试呗。</p>
+<p>看了一下，python安装位置，没毛病，</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cp -R &#x2F;usr&#x2F;local&#x2F;python3.6&#x2F;lib&#x2F;* &#x2F;usr&#x2F;lib64&#x2F;</span><br></pre></td></tr></table></figure>
+
+<p>再次生成可执行单文件，依然报错，问题一样，接着找解决办法</p>
+<h3 id="尝试解决方案二："><a href="#尝试解决方案二：" class="headerlink" title="尝试解决方案二："></a>尝试解决方案二：</h3><p>仔细看报错的信息，有这么一段很醒目：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">SError: Python library not found: libpython3.6.so.1.0, libpython3.6mu.so.1.0, libpython3.6m.so.1.0</span><br><span class="line">This would mean your Python installation doesn&#39;t come with proper library files.</span><br><span class="line">This usually happens by missing development package, or unsuitable build parameters of Python installation.</span><br><span class="line"></span><br><span class="line">* On Debian&#x2F;Ubuntu, you would need to install Python development packages</span><br><span class="line">  * apt-get install python3-dev</span><br><span class="line">  * apt-get install python-dev</span><br></pre></td></tr></table></figure>
+
+<p>是在说我缺少了某个东西，让我安装python3-dev云云的。深入了解一下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">linux发行版通常会把类库的头文件和相关的pkg-config分拆成一个单独的xxx-dev(el)包.    &#x2F;&#x2F;pkg&#x3D;package,包裹</span><br><span class="line"></span><br><span class="line">以python为例, 以下情况你是需要python-dev的</span><br><span class="line"></span><br><span class="line">你需要自己安装一个源外的python类库, 而这个类库内含需要编译的调用python api的c&#x2F;c++文件  &#x2F;&#x2F;如：安装使用WiringpisPi库需要python-dev</span><br><span class="line">你自己写的一个程序编译需要链接libpythonXX.(a|so)</span><br><span class="line">(注:以上不含使用ctypes&#x2F;ffi或者裸dlsym方式直接调用libpython.so)</span><br><span class="line">其他正常使用python或者通过安装源内的python类库的不需要python-dev.</span><br></pre></td></tr></table></figure>
+
+<p>后再来找一一个靠谱的回答</p>
+<p>原话是这样说的：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">You must install python-dev for your python&#39;s version</span><br><span class="line">for example:</span><br><span class="line">Debian&#x2F;Ubuntu - Python 2.7 ---&gt; python2.7-dev</span><br><span class="line">CentOs&#x2F;RedHat - Python 3.4 ---&gt; python34-devel</span><br><span class="line">CentOs&#x2F;RedHat - Python 2.7 ---&gt; python27-devel</span><br></pre></td></tr></table></figure>
+
+<p>各个python版本对应的python-dev版本，推测我的是python36-devel，动手试试</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">[root@magicYou signal]# yum install python36-devel</span><br><span class="line">已加载插件：fastestmirror, langpacks</span><br><span class="line">Repository base is listed more than once in the configuration</span><br><span class="line">Repository updates is listed more than once in the configuration</span><br><span class="line">Repository extras is listed more than once in the configuration</span><br><span class="line">Repository centosplus is listed more than once in the configuration</span><br><span class="line">Loading mirror speeds from cached hostfile</span><br><span class="line">正在解决依赖关系</span><br><span class="line">--&gt; 正在检查事务</span><br><span class="line">---&gt; 软件包 python36-devel.x86_64.0.3.6.5-3.el7 将被 安装</span><br><span class="line">--&gt; 正在处理依赖关系 python36-libs(x86-64) &#x3D; 3.6.5-3.el7，它被软件包 python36-devel-3.6.5-3.el7.x86_64 需要</span><br><span class="line">--&gt; 正在处理依赖关系 python36 &#x3D; 3.6.5-3.el7，它被软件包 python36-devel-3.6.5-3.el7.x86_64 需要</span><br><span class="line">--&gt; 正在处理依赖关系 python(abi) &#x3D; 3.6，它被软件包 python36-devel-3.6.5-3.el7.x86_64 需要</span><br><span class="line">......</span><br><span class="line">......</span><br><span class="line">  python36-devel.x86_64 0:3.6.5-3.el7</span><br><span class="line"></span><br><span class="line">作为依赖被安装:</span><br><span class="line">  dwz.x86_64 0:0.11-3.el7</span><br><span class="line">  perl-srpm-macros.noarch 0:1-8.el7</span><br><span class="line">  python-rpm-macros.noarch 0:3-22.el7</span><br><span class="line">  python-srpm-macros.noarch 0:3-22.el7</span><br><span class="line">  python36.x86_64 0:3.6.5-3.el7</span><br><span class="line">  python36-libs.x86_64 0:3.6.5-3.el7</span><br><span class="line">  redhat-rpm-config.noarch 0:9.1.0-80.el7.centos</span><br><span class="line"></span><br><span class="line">完毕！</span><br></pre></td></tr></table></figure>
+
+<p>再次尝试pyinstaller生成可执行单文件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line">root@magicYou signal]# pyinstaller --onefile testCsv.py</span><br><span class="line">234 INFO: PyInstaller: 3.3.1</span><br><span class="line">234 INFO: Python: 3.6.1</span><br><span class="line">235 INFO: Platform: Linux-3.10.0-693.17.1.el7.x86_64-x86_64-with-centos-7.5.1804-Core</span><br><span class="line">236 INFO: wrote &#x2F;python&#x2F;signal&#x2F;testCsv.spec</span><br><span class="line">239 INFO: UPX is not available.</span><br><span class="line">240 INFO: Extending PYTHONPATH with paths</span><br><span class="line">[&#39;&#x2F;python&#x2F;signal&#39;, &#39;&#x2F;python&#x2F;signal&#39;]</span><br><span class="line">240 INFO: checking Analysis</span><br><span class="line">240 INFO: Building Analysis because out00-Analysis.toc is non existent</span><br><span class="line">240 INFO: Initializing module dependency graph...</span><br><span class="line">241 INFO: Initializing module graph hooks...</span><br><span class="line">243 INFO: Analyzing base_library.zip ...</span><br><span class="line">3891 INFO: running Analysis out00-Analysis.toc</span><br><span class="line">3904 INFO: Caching module hooks...</span><br><span class="line">3908 INFO: Analyzing &#x2F;python&#x2F;signal&#x2F;testCsv.py</span><br><span class="line">3933 INFO: Loading module hooks...</span><br><span class="line">3934 INFO: Loading module hook &quot;hook-encodings.py&quot;...</span><br><span class="line">4006 INFO: Loading module hook &quot;hook-pydoc.py&quot;...</span><br><span class="line">4007 INFO: Loading module hook &quot;hook-xml.py&quot;...</span><br><span class="line">4292 INFO: Looking for ctypes DLLs</span><br><span class="line">4292 INFO: Analyzing run-time hooks ...</span><br><span class="line">4299 INFO: Looking for dynamic libraries</span><br><span class="line">4864 INFO: Looking for eggs</span><br><span class="line">4864 INFO: Python library not in binary dependencies. Doing additional searching...</span><br><span class="line">4901 INFO: Using Python library &#x2F;usr&#x2F;lib64&#x2F;libpython3.6m.so.1.0</span><br><span class="line">4905 INFO: Warnings written to &#x2F;python&#x2F;signal&#x2F;build&#x2F;testCsv&#x2F;warntestCsv.txt</span><br><span class="line">4936 INFO: Graph cross-reference written to &#x2F;python&#x2F;signal&#x2F;build&#x2F;testCsv&#x2F;xref-testCsv.html</span><br><span class="line">4949 INFO: checking PYZ</span><br><span class="line">4949 INFO: Building PYZ because out00-PYZ.toc is non existent</span><br><span class="line">4949 INFO: Building PYZ (ZlibArchive) &#x2F;python&#x2F;signal&#x2F;build&#x2F;testCsv&#x2F;out00-PYZ.pyz</span><br><span class="line">5320 INFO: Building PYZ (ZlibArchive) &#x2F;python&#x2F;signal&#x2F;build&#x2F;testCsv&#x2F;out00-PYZ.pyz completed successfully.</span><br><span class="line">5323 INFO: checking PKG</span><br><span class="line">5323 INFO: Building PKG because out00-PKG.toc is non existent</span><br><span class="line">5323 INFO: Building PKG (CArchive) out00-PKG.pkg</span><br><span class="line">10523 INFO: Building PKG (CArchive) out00-PKG.pkg completed successfully.</span><br><span class="line">10526 INFO: Bootloader &#x2F;usr&#x2F;local&#x2F;python3&#x2F;lib&#x2F;python3.6&#x2F;site-packages&#x2F;PyInstaller&#x2F;bootloader&#x2F;Linux-64bit&#x2F;run</span><br><span class="line">10526 INFO: checking EXE</span><br><span class="line">10526 INFO: Building EXE because out00-EXE.toc is non existent</span><br><span class="line">10526 INFO: Building EXE from out00-EXE.toc</span><br><span class="line">10526 INFO: Appending archive to ELF section in EXE &#x2F;python&#x2F;signal&#x2F;dist&#x2F;testCsv</span><br><span class="line">10555 INFO: Building EXE from out00-EXE.toc completed successfully.</span><br></pre></td></tr></table></figure>
+
+<p>问题解决，很棒很棒！</p>
+<h2 id="续集"><a href="#续集" class="headerlink" title="续集"></a>续集</h2><p>后来又在centos6.8，发现上述办法不能解决这个问题</p>
+<p>Centos6.8上如下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[root@magicYou &#x2F;]# yum install python36-devel</span><br><span class="line">已加载插件：fastestmirror</span><br><span class="line">设置安装进程</span><br><span class="line">Loading mirror speeds from cached hostfile</span><br><span class="line">base                                                                                                                                                          | 3.7 kB     00:00</span><br><span class="line">extras                                                                                                                                                        | 3.4 kB     00:00</span><br><span class="line">updates                                                                                                                                                       | 3.4 kB     00:00</span><br><span class="line">No package python36-devel available.</span><br><span class="line">错误：无须任何处理</span><br></pre></td></tr></table></figure>
+
+<p>后来又在centos7.2 上看了一下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[root@VM_0_12_centos ~]# yum install python36-devel</span><br><span class="line">已加载插件：fastestmirror, langpacks</span><br><span class="line">epel                                                                                                                                                          | 3.2 kB  00:00:00</span><br><span class="line">extras                                                                                                                                                        | 3.4 kB  00:00:00</span><br><span class="line">os                                                                                                                                                            | 3.6 kB  00:00:00</span><br><span class="line">updates                                                                                                                                                       | 3.4 kB  00:00:00</span><br><span class="line">Loading mirror speeds from cached hostfile</span><br><span class="line">软件包 python36-devel-3.6.6-1.el7.x86_64 已安装并且是最新版本</span><br><span class="line">无须任何处理</span><br></pre></td></tr></table></figure>
+
+<p>为啥不一样呢，依然解决不了问题。后来在一个角落找到一个靠谱的，如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">I have solved this in the way below:</span><br><span class="line">1st. check your system if it has libpython3.4m.so.1.0. If yes, go to step 2nd. If no, download it(I&#39;m using anaconda python, so I have it in anaconda folder.)</span><br><span class="line">2nd. sudo cp &#x2F;folder&#x2F;to&#x2F;your&#x2F;libpython3.4m.so.1.0 &#x2F;usr&#x2F;lib</span><br><span class="line"></span><br><span class="line"># 翻译一下</span><br><span class="line"></span><br><span class="line">我用下面的方法解决了这个问题:</span><br><span class="line">1. 检查系统是否具有libpython3.4.so.1.0。如果有，请转到步骤2。如果没有，下载它(我使用的是anaconda python，所以我把它放在anaconda文件夹中)。</span><br><span class="line">2. sudo cp &#x2F;folder&#x2F;to&#x2F;your&#x2F;libpython3.4.so.1.0 &#x2F;usr&#x2F;lib</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>比葫芦画瓢，find一下，还真找到了</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">find &#x2F; -name libpython3.6mu.so.1.0</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cp &#x2F;folder&#x2F;to&#x2F;your&#x2F;libpython3.6mu.so.1.0 &#x2F;usr&#x2F;lib</span><br></pre></td></tr></table></figure>
+
+<p>再次解决问题，十分坎坷</p>
+<h2 id="总结："><a href="#总结：" class="headerlink" title="总结："></a>总结：</h2><ol>
+<li>pyinstaller的问题在不同的系统上都不一样；</li>
+<li>还有一个比较严重的问题就是在高版本的centos上生成的可执行单文件在低版本上可能无法运行，我自己的第一个虚拟机是centos7.2费了老劲搞好环境生成单文件放在生产环境centos6.8报错，查找问题是说一个系统的库版本太高导致；</li>
+</ol>
+
+      
+    </div>
+    <div class="article-footer">
+      <blockquote class="mt-2x">
+  <ul class="post-copyright list-unstyled">
+    
+    <li class="post-copyright-link hidden-xs">
+      <strong>本文链接：</strong>
+      <a href="https://blog.magicyou.cn/2018/07/06/Python-pyinstaller%E7%BC%96%E8%AF%91python%E8%84%9A%E6%9C%AC%E4%B8%BA%E5%8D%95%E6%96%87%E4%BB%B6%E5%8F%AF%E6%89%A7%E8%A1%8C%E6%96%87%E4%BB%B6%E9%81%87%E5%88%B0%E7%9A%84%E9%97%AE%E9%A2%98/" title="pyinstaller编译python脚本为单文件可执行文件遇到的问题" target="_blank" rel="external">https://blog.magicyou.cn/2018/07/06/Python-pyinstaller编译python脚本为单文件可执行文件遇到的问题/</a>
+    </li>
+    
+    <li class="post-copyright-license">
+      <strong>版权声明： </strong> 本博客所有文章除特别声明外，均采用 <a href="http://creativecommons.org/licenses/by/4.0/deed.zh" target="_blank" rel="external">CC BY 4.0 CN协议</a> 许可协议。转载请注明出处！
+    </li>
+  </ul>
+</blockquote>
+
+
+<div class="panel panel-default panel-badger">
+  <div class="panel-body">
+    <figure class="media">
+      <div class="media-left">
+        <a href="https://github.com/magicyou" target="_blank" class="img-burn thumb-sm visible-lg">
+          <img src="http://tva3.sinaimg.cn/crop.0.0.180.180.180/a524faafjw1e8qgp5bmzyj2050050aa8.jpg" class="img-rounded w-full" alt="">
+        </a>
+      </div>
+      <div class="media-body">
+        <h3 class="media-heading"><a href="https://github.com/magicyou" target="_blank"><span class="text-dark">BruceLee</span><small class="ml-1x">Web Developer</small></a></h3>
+        <div>个人简介。</div>
+      </div>
+    </figure>
+  </div>
+</div>
+
+
+    </div>
+  </article>
+  
+    
+  <section id="comments">
+  	
+           
+    
+  </section>
+
+
+  
+</div>
+
+  <nav class="bar bar-footer clearfix" data-stick-bottom>
+  <div class="bar-inner">
+  
+  <ul class="pager pull-left">
+    
+    <li class="prev">
+      <a href="/2018/07/06/Linux-centos%E9%98%B2%E7%81%AB%E5%A2%99%E8%AE%BE%E7%BD%AE/" title="centos防火墙设置"><i class="icon icon-angle-left" aria-hidden="true"></i><span>&nbsp;&nbsp;上一篇</span></a>
+    </li>
+    
+    
+    <li class="next">
+      <a href="/2018/07/03/Linux-%E6%88%91%E6%98%AF%E6%80%8E%E4%B9%88%E7%BB%B4%E6%8A%A4%E6%9B%B4%E6%96%B0%E4%B8%A4%E4%B8%AA%E7%8E%AF%E5%A2%83%E7%9A%84%E5%9B%9B%E4%BB%BD%E4%BB%A3%E7%A0%81%E7%9A%84/" title="我是怎么维护更新两个环境的四份代码的"><span>下一篇&nbsp;&nbsp;</span><i class="icon icon-angle-right" aria-hidden="true"></i></a>
+    </li>
+    
+    
+  </ul>
+  
+  
+  <!-- Button trigger modal -->
+  <button type="button" class="btn btn-fancy btn-donate pop-onhover bg-gradient-warning" data-toggle="modal" data-target="#donateModal"><span>赏</span></button>
+  <!-- <div class="wave-icon wave-icon-danger btn-donate" data-toggle="modal" data-target="#donateModal">
+    <div class="wave-circle"><span class="icon"><i class="icon icon-bill"></i></span></div>
+  </div> -->
+  
+  
+  <div class="bar-right">
+    
+    <div class="share-component" data-sites="weibo,qq,wechat" data-mobile-sites="weibo,qq,wechat"></div>
+    
+  </div>
+  </div>
+</nav>
+  
+<!-- Modal -->
+<div class="modal modal-center modal-small modal-xs-full fade" id="donateModal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content donate">
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      <div class="modal-body">
+        <div class="donate-box">
+          <div class="donate-head">
+            <p>感谢您的支持，我会继续努力的!</p>
+          </div>
+          <div class="tab-content">
+            <div role="tabpanel" class="tab-pane fade active in" id="alipay">
+              <div class="donate-payimg">
+                <img src="/images/donate/alipayimg.jpg" alt="扫码支持" title="扫一扫" />
+              </div>
+              <p class="text-muted mv">扫码打赏，你说多少就多少</p>
+              <p class="text-grey">打开支付宝扫一扫，即可进行扫码打赏哦</p>
+            </div>
+            <div role="tabpanel" class="tab-pane fade" id="wechatpay">
+              <div class="donate-payimg">
+                <img src="/images/donate/wechatpayimg.jpg" alt="扫码支持" title="扫一扫" />
+              </div>
+              <p class="text-muted mv">扫码打赏，你说多少就多少</p>
+              <p class="text-grey">打开微信扫一扫，即可进行扫码打赏哦</p>
+            </div>
+          </div>
+          <div class="donate-footer">
+            <ul class="nav nav-tabs nav-justified" role="tablist">
+              <li role="presentation" class="active">
+                <a href="#alipay" id="alipay-tab" role="tab" data-toggle="tab" aria-controls="alipay" aria-expanded="true"><i class="icon icon-alipay"></i> 支付宝</a>
+              </li>
+              <li role="presentation" class="">
+                <a href="#wechatpay" role="tab" id="wechatpay-tab" data-toggle="tab" aria-controls="wechatpay" aria-expanded="false"><i class="icon icon-wepay"></i> 微信支付</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+</main>
+
+  <footer class="footer" itemscope itemtype="http://schema.org/WPFooter">
+    <script src="http://127.0.0.1:7001/client.js"></script>
+    <span id="site_uv">
+        local 本站访客数<span id="web_site_uv_tips"></span>人
+    </span>
+
+	
+	
+    <ul class="social-links">
+    	
+        <li><a href="https://github.com/magicyou" target="_blank" title="Github" data-toggle=tooltip data-placement=top><i class="icon icon-github"></i></a></li>
+        
+        <li><a href="https://weibo.com/p/1005052770664111/home?from=page_100505&mod=TAB&is_all=1#place" target="_blank" title="Weibo" data-toggle=tooltip data-placement=top><i class="icon icon-weibo"></i></a></li>
+        
+    </ul>
+
+    
+    
+        <!-- 不蒜子统计 -->
+        <!-- <span id="busuanzi_container_site_pv">
+                本站总访问量<span id="busuanzi_value_site_pv"></span>次
+        </span> -->
+        <!-- <span class="post-meta-divider">|</span> -->
+        <span id="busuanzi_container_site_uv">
+                本站访客数<span id="busuanzi_value_site_uv"></span>人
+        </span>
+  
+    <div class="copyright">
+    	
+        <div class="publishby">
+        	Theme by <a href="https://github.com/cofess" target="_blank"> cofess </a>base on <a href="https://github.com/cofess/hexo-theme-pure" target="_blank">pure</a>.
+        </div>
+    </div>
+</footer>
+  <script src="//cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
+<script>
+window.jQuery || document.write('<script src="js/jquery.min.js"><\/script>')
+</script>
+
+<script src="/js/plugin.min.js"></script>
+
+
+<script src="/js/application.js"></script>
+
+
+    <script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+
+<script src="/js/insight.js"></script>
+
+
+
+
+
+
+   
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+   
+    
+  <!-- <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css"> -->
+  <script src="//cdn.jsdelivr.net/npm/gitalk@1.4.0/dist/gitalk.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/blueimp-md5@2.10.0/js/md5.min.js"></script>
+  <script type="text/javascript">
+  var gitalk = new Gitalk({
+    clientID: 'e6bd9b1c9667be2eba71',
+    clientSecret: '0749dfe86f83d7fb16beb133646555d83d5d7fc7',
+    repo: 'gitalk_comment',
+    owner: 'magicyou',
+    admin: ['magicyou'],
+    id: md5(location.pathname),
+    distractionFreeMode: true
+  })
+  gitalk.render('comments')
+  </script>
+
+      
+
+
+
+
+
+
+
+</body>
+</html>
+
+<script type="text/javascript">document.write(unescape("%3Cspan id='cnzz_stat_icon_1280958573'%3E%3C/span%3E%3Cscript src='https://s9.cnzz.com/z_stat.php%3Fid%3D1280958573%26show%3Dpic' type='text/javascript'%3E%3C/script%3E"));</script>

@@ -1,0 +1,808 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+  <meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="Cache-Control" content="no-transform" />
+  <meta http-equiv="Cache-Control" content="no-siteapp" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="format-detection" content="telephone=no,email=no,adress=no">
+  <!-- Color theme for statusbar -->
+  <meta name="theme-color" content="#000000" />
+  <!-- 强制页面在当前窗口以独立页面显示,防止别人在框架里调用页面 -->
+  <meta http-equiv="window-target" content="_top" />
+  
+  
+  <title>Next.js 一些东西 | Hexo</title>
+  <meta name="description" content="Next.js 一些东西 Next.js 一些东西一. 疑问：为什么要用 Next.js需要ssrssr是什么，发展历程 服务端渲染：后端先调用数据库，获取数据之后，将数据和页面元素进行拼装，组合成完整的html页面，在直接返回给浏览器，以便用户浏览 客户端渲染：数据有浏览器通过ajax动态获取，在通过js将数据填充到dom元素最终展示到网页中，这样的过程叫做客户端渲染。 服务端渲染 VS 客户端">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Next.js 一些东西">
+<meta property="og:url" content="https://blog.magicyou.cn/2022/08/31/react-Next.js%20%E4%B8%80%E4%BA%9B%E4%B8%9C%E8%A5%BF/index.html">
+<meta property="og:site_name" content="MagicYou">
+<meta property="og:description" content="Next.js 一些东西 Next.js 一些东西一. 疑问：为什么要用 Next.js需要ssrssr是什么，发展历程 服务端渲染：后端先调用数据库，获取数据之后，将数据和页面元素进行拼装，组合成完整的html页面，在直接返回给浏览器，以便用户浏览 客户端渲染：数据有浏览器通过ajax动态获取，在通过js将数据填充到dom元素最终展示到网页中，这样的过程叫做客户端渲染。 服务端渲染 VS 客户端">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-08-31T13:33:00.000Z">
+<meta property="article:modified_time" content="2022-08-31T13:33:00.000Z">
+<meta property="article:author" content="magicyou">
+<meta property="article:tag" content="React">
+<meta property="article:tag" content="Next.js">
+<meta name="twitter:card" content="summary">
+  <!-- Canonical links -->
+  <link rel="canonical" href="https://blog.magicyou.cn/2022/08/31/react-Next.js%20%E4%B8%80%E4%BA%9B%E4%B8%9C%E8%A5%BF/index.html">
+  
+    <link rel="alternate" href="/atom.xml" title="MagicYou" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png" type="image/x-icon">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+  
+  
+  
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1.4.0/dist/gitalk.min.css">
+  
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body class="main-center" itemscope itemtype="http://schema.org/WebPage">
+  <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+  <div class="slimContent">
+    <div class="navbar-header">
+      
+      
+      <div class="profile-block text-center">
+        <a id="avatar" href="https://github.com/magicyou" target="_blank">
+          <img class="img-circle img-rotate" src="http://tva3.sinaimg.cn/crop.0.0.180.180.180/a524faafjw1e8qgp5bmzyj2050050aa8.jpg" width="200" height="200">
+        </a>
+        <h2 id="name" class="hidden-xs hidden-sm">BruceLee</h2>
+        <h3 id="title" class="hidden-xs hidden-sm hidden-md">Web Developer</h3>
+        <small id="location" class="text-muted hidden-xs hidden-sm"><i class="icon icon-map-marker"></i> Beijing, China</small>
+      </div>
+      
+      <div class="search" id="search-form-wrap">
+
+    <form class="search-form sidebar-form">
+        <div class="input-group">
+            <input type="text" class="search-form-input form-control" placeholder="搜索" />
+            <span class="input-group-btn">
+                <button type="submit" class="search-form-submit btn btn-flat" onclick="return false;"><i class="icon icon-search"></i></button>
+            </span>
+        </div>
+    </form>
+    <div class="ins-search">
+  <div class="ins-search-mask"></div>
+  <div class="ins-search-container">
+    <div class="ins-input-wrapper">
+      <input type="text" class="ins-search-input" placeholder="想要查找什么..." x-webkit-speech />
+      <button type="button" class="close ins-close ins-selectable" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+    </div>
+    <div class="ins-section-wrapper">
+      <div class="ins-section-container"></div>
+    </div>
+  </div>
+</div>
+
+
+</div>
+      <button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target="#main-navbar" aria-controls="main-navbar" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+    <nav id="main-navbar" class="collapse navbar-collapse" itemscope itemtype="http://schema.org/SiteNavigationElement" role="navigation">
+      <ul class="nav navbar-nav main-nav ">
+        
+        
+        <li class="menu-item menu-item-home">
+          <a href="/.">
+            
+            <i class="icon icon-home-fill"></i>
+            
+            <span class="menu-title">首页</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives">
+            
+            <i class="icon icon-archives-fill"></i>
+            
+            <span class="menu-title">归档</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories">
+            
+            <i class="icon icon-folder"></i>
+            
+            <span class="menu-title">分类</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags">
+            
+            <i class="icon icon-tags"></i>
+            
+            <span class="menu-title">标签</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-repository">
+          <a href="/repository">
+            
+            <i class="icon icon-project"></i>
+            
+            <span class="menu-title">项目</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-books">
+          <a href="/books">
+            
+            <i class="icon icon-book-fill"></i>
+            
+            <span class="menu-title">书单</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-links">
+          <a href="/links">
+            
+            <i class="icon icon-friendship"></i>
+            
+            <span class="menu-title">友链</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about">
+            
+            <i class="icon icon-cup-fill"></i>
+            
+            <span class="menu-title">关于</span>
+          </a>
+        </li>
+        
+      </ul>
+      
+	
+    <ul class="social-links">
+    	
+        <li><a href="https://github.com/magicyou" target="_blank" title="Github" data-toggle=tooltip data-placement=top><i class="icon icon-github"></i></a></li>
+        
+        <li><a href="https://weibo.com/p/1005052770664111/home?from=page_100505&mod=TAB&is_all=1#place" target="_blank" title="Weibo" data-toggle=tooltip data-placement=top><i class="icon icon-weibo"></i></a></li>
+        
+    </ul>
+
+    </nav>
+  </div>
+</header>
+
+  
+    <aside class="sidebar" itemscope itemtype="http://schema.org/WPSideBar">
+  <div class="slimContent">
+    
+      <div class="widget">
+    <h3 class="widget-title">公告</h3>
+    <div class="widget-body">
+        <div id="board">
+            <div class="content">
+                <p>欢迎交流与分享经验!</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">分类</h3>
+    <div class="widget-body">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/JAVA/">JAVA</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/JavaScript/">JavaScript</a><span class="category-list-count">28</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Linux/">Linux</a><span class="category-list-count">9</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/MacOS/">MacOS</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/PHP/">PHP</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Python/">Python</a><span class="category-list-count">7</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Vue/">Vue</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/uni-app/">uni-app</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a><span class="category-list-count">13</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%A0%91%E8%8E%93%E6%B4%BE/">树莓派</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/">算法</a><span class="category-list-count">6</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80/">计算机基础</a><span class="category-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget-body">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Apache/" rel="tag">Apache</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CSS/" rel="tag">CSS</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CSS3/" rel="tag">CSS3</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Centos/" rel="tag">Centos</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/HTML/" rel="tag">HTML</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/HTML5/" rel="tag">HTML5</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/JAVA/" rel="tag">JAVA</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/JavaScript/" rel="tag">JavaScript</a><span class="tag-list-count">40</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux/" rel="tag">Linux</a><span class="tag-list-count">11</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MacOS/" rel="tag">MacOS</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Next-js/" rel="tag">Next.js</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Nginx/" rel="tag">Nginx</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PHP/" rel="tag">PHP</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Python/" rel="tag">Python</a><span class="tag-list-count">7</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/React/" rel="tag">React</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Vue/" rel="tag">Vue</a><span class="tag-list-count">6</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/canvas/" rel="tag">canvas</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/git/" rel="tag">git</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jQuery/" rel="tag">jQuery</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/other/" rel="tag">other</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/react/" rel="tag">react</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/scrapy/" rel="tag">scrapy</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/uni-app/" rel="tag">uni-app</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%B0%8F%E7%A8%8B%E5%BA%8F/" rel="tag">小程序</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%BE%AE%E4%BF%A1/" rel="tag">微信</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%BE%AE%E4%BF%A1%E5%85%AC%E4%BC%97%E5%8F%B7/" rel="tag">微信公众号</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%BE%AE%E4%BF%A1%E5%B0%8F%E7%A8%8B%E5%BA%8F/" rel="tag">微信小程序</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%A0%91%E8%8E%93%E6%B4%BE/" rel="tag">树莓派</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%AE%97%E6%B3%95/" rel="tag">算法</a><span class="tag-list-count">6</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80/" rel="tag">计算机基础</a><span class="tag-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget-body tagcloud">
+      <a href="/tags/Apache/" style="font-size: 13px;">Apache</a> <a href="/tags/CSS/" style="font-size: 13px;">CSS</a> <a href="/tags/CSS3/" style="font-size: 13.43px;">CSS3</a> <a href="/tags/Centos/" style="font-size: 13.43px;">Centos</a> <a href="/tags/HTML/" style="font-size: 13px;">HTML</a> <a href="/tags/HTML5/" style="font-size: 13px;">HTML5</a> <a href="/tags/JAVA/" style="font-size: 13px;">JAVA</a> <a href="/tags/JavaScript/" style="font-size: 14px;">JavaScript</a> <a href="/tags/Linux/" style="font-size: 13.86px;">Linux</a> <a href="/tags/MacOS/" style="font-size: 13px;">MacOS</a> <a href="/tags/Next-js/" style="font-size: 13px;">Next.js</a> <a href="/tags/Nginx/" style="font-size: 13px;">Nginx</a> <a href="/tags/PHP/" style="font-size: 13.43px;">PHP</a> <a href="/tags/Python/" style="font-size: 13.71px;">Python</a> <a href="/tags/React/" style="font-size: 13px;">React</a> <a href="/tags/Vue/" style="font-size: 13.57px;">Vue</a> <a href="/tags/canvas/" style="font-size: 13px;">canvas</a> <a href="/tags/git/" style="font-size: 13px;">git</a> <a href="/tags/jQuery/" style="font-size: 13.14px;">jQuery</a> <a href="/tags/other/" style="font-size: 13px;">other</a> <a href="/tags/react/" style="font-size: 13px;">react</a> <a href="/tags/scrapy/" style="font-size: 13px;">scrapy</a> <a href="/tags/uni-app/" style="font-size: 13.14px;">uni-app</a> <a href="/tags/%E5%B0%8F%E7%A8%8B%E5%BA%8F/" style="font-size: 13px;">小程序</a> <a href="/tags/%E5%BE%AE%E4%BF%A1/" style="font-size: 13.14px;">微信</a> <a href="/tags/%E5%BE%AE%E4%BF%A1%E5%85%AC%E4%BC%97%E5%8F%B7/" style="font-size: 13px;">微信公众号</a> <a href="/tags/%E5%BE%AE%E4%BF%A1%E5%B0%8F%E7%A8%8B%E5%BA%8F/" style="font-size: 13.29px;">微信小程序</a> <a href="/tags/%E6%A0%91%E8%8E%93%E6%B4%BE/" style="font-size: 13.14px;">树莓派</a> <a href="/tags/%E7%AE%97%E6%B3%95/" style="font-size: 13.57px;">算法</a> <a href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80/" style="font-size: 13px;">计算机基础</a>
+    </div>
+  </div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget-body">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/08/">八月 2022</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/03/">三月 2022</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/12/">十二月 2021</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/11/">十一月 2021</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/10/">十月 2021</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/09/">九月 2021</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/04/">四月 2021</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/02/">二月 2021</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">十二月 2020</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">十月 2020</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">八月 2020</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">六月 2020</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">四月 2020</a><span class="archive-list-count">11</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">三月 2020</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">一月 2020</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">十二月 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/09/">九月 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/08/">八月 2019</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/07/">七月 2019</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/02/">二月 2019</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/10/">十月 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">九月 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">七月 2018</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">五月 2018</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">四月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/03/">三月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/02/">二月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/01/">一月 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/11/">十一月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/10/">十月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/08/">八月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/06/">六月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/04/">四月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/03/">三月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/02/">二月 2017</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/01/">一月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">十二月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/11/">十一月 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">九月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">八月 2016</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/07/">七月 2016</a><span class="archive-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget-body">
+      <ul class="recent-post-list list-unstyled no-thumbnail">
+        
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a>
+              </p>
+              <p class="item-title">
+                <a href="/2022/08/31/react-Next.js%20%E4%B8%80%E4%BA%9B%E4%B8%9C%E8%A5%BF/" class="title">Next.js 一些东西</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2022-08-31T13:33:00.000Z" itemprop="datePublished">2022-08-31</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/Vue/">Vue</a>
+              </p>
+              <p class="item-title">
+                <a href="/2022/03/11/vue-%E7%89%B9%E6%80%A7/" class="title">vue-</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2022-03-11T14:13:02.000Z" itemprop="datePublished">2022-03-11</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80/">计算机基础</a>
+              </p>
+              <p class="item-title">
+                <a href="/2021/12/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80-%E8%BF%9B%E5%88%B6%E8%BD%AC%E6%8D%A2/" class="title">计算机基础-进制转换</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2021-12-10T05:34:12.000Z" itemprop="datePublished">2021-12-10</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/Vue/">Vue</a>
+              </p>
+              <p class="item-title">
+                <a href="/2021/11/15/vue-%E9%80%9A%E4%BF%A1%E6%96%B9%E5%BC%8F/" class="title">vue-通信方式</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2021-11-15T14:13:02.000Z" itemprop="datePublished">2021-11-15</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/Vue/">Vue</a>
+              </p>
+              <p class="item-title">
+                <a href="/2021/10/11/vue-%E9%87%8D%E6%96%B0%E7%A0%94%E7%A9%B6%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F/" class="title">vue-重新研究生命周期</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2021-10-11T14:13:02.000Z" itemprop="datePublished">2021-10-11</time>
+              </p>
+            </div>
+          </li>
+          
+      </ul>
+    </div>
+  </div>
+  
+
+    
+  </div>
+</aside>
+
+  
+  
+<main class="main" role="main">
+  <div class="content">
+  <article id="post-react-Next.js 一些东西" class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
+    
+    <div class="article-header">
+      
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Next.js 一些东西
+    </h1>
+  
+
+      
+      <div class="article-meta">
+        <span class="article-date">
+    <i class="icon icon-calendar-check"></i>
+	<a href="/2022/08/31/react-Next.js%20%E4%B8%80%E4%BA%9B%E4%B8%9C%E8%A5%BF/" class="article-date">
+	  <time datetime="2022-08-31T13:33:00.000Z" itemprop="datePublished">2022-08-31</time>
+	</a>
+</span>
+        
+  <span class="article-category">
+    <i class="icon icon-folder"></i>
+    <a class="article-category-link" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a>
+  </span>
+
+        
+  <span class="article-tag">
+    <i class="icon icon-tags"></i>
+	<a class="article-tag-link-link" href="/tags/Next-js/" rel="tag">Next.js</a>, <a class="article-tag-link-link" href="/tags/React/" rel="tag">React</a>
+  </span>
+
+
+        
+	<span class="article-read hidden-xs">
+	    <i class="icon icon-eye-fill" aria-hidden="true"></i>
+	    <span id="busuanzi_container_page_pv">
+			<span id="busuanzi_value_page_pv">0</span>
+		</span>
+	</span>
+
+
+        <span class="post-comment"><i class="icon icon-comment"></i> <a href="/2022/08/31/react-Next.js%20%E4%B8%80%E4%BA%9B%E4%B8%9C%E8%A5%BF/#comments" class="article-comment-link">评论</a></span>
+        
+	
+		<span class="post-wordcount hidden-xs" itemprop="wordCount">字数统计: 2k(字)</span>
+	
+	
+		<span class="post-readcount hidden-xs" itemprop="timeRequired">阅读时长: 8(分)</span>
+	
+
+      </div>
+    </div>
+    <div class="article-entry marked-body" itemprop="articleBody">
+      
+        <p>Next.js 一些东西</p>
+<h1 id="Next-js-一些东西"><a href="#Next-js-一些东西" class="headerlink" title="Next.js 一些东西"></a>Next.js 一些东西</h1><h2 id="一-疑问：为什么要用-Next-js"><a href="#一-疑问：为什么要用-Next-js" class="headerlink" title="一. 疑问：为什么要用 Next.js"></a>一. 疑问：为什么要用 Next.js</h2><h3 id="需要ssr"><a href="#需要ssr" class="headerlink" title="需要ssr"></a>需要ssr</h3><p>ssr是什么，发展历程</p>
+<p>服务端渲染：后端先调用数据库，获取数据之后，将数据和页面元素进行拼装，组合成完整的html页面，在直接返回给浏览器，以便用户浏览</p>
+<p>客户端渲染：数据有浏览器通过ajax动态获取，在通过js将数据填充到dom元素最终展示到网页中，这样的过程叫做客户端渲染。</p>
+<p>服务端渲染 VS 客户端渲染</p>
+<ol>
+<li>服务端渲染需要消耗更多的服务器资源（CPU，内存等）</li>
+<li>客户端渲染可以将静态资源部署到cdn上，实现实现高并发</li>
+<li>服务端渲染对SEO更友好</li>
+</ol>
+<h3 id="如今的react和Vue"><a href="#如今的react和Vue" class="headerlink" title="如今的react和Vue"></a>如今的react和Vue</h3><ol>
+<li>同样都是前后端分离</li>
+<li>客户端页面渲染</li>
+</ol>
+<h2 id="二-Next-js-初始化"><a href="#二-Next-js-初始化" class="headerlink" title="二. Next.js 初始化"></a>二. Next.js 初始化</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yarn create next-app</span><br></pre></td></tr></table></figure>
+
+<h2 id="三-路由"><a href="#三-路由" class="headerlink" title="三. 路由"></a>三. 路由</h2><p>在 Next.js 中，一个 page（页面） 就是一个从 .js、jsx、.ts 或 .tsx 文件导出（export）的 React 组件 ，这些文件存放在 pages 目录下。每个 page（页面）都使用其文件名作为路由（route）。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">|- pages</span><br><span class="line">    |- index.js</span><br><span class="line">    |- help.js</span><br><span class="line">    |- about.js</span><br></pre></td></tr></table></figure>
+
+<h3 id="路由基本使用"><a href="#路由基本使用" class="headerlink" title="路由基本使用"></a>路由基本使用</h3><p>link跳转(next/link)</p>
+<ul>
+<li><p>属性 href 添加跳转路径（默认是history的push模式，向历史纪录添加一条）</p>
+<ul>
+<li>字符串：“ /news?newsId=123 ”</li>
+<li>对象： “ {pathname: ‘/news’, query: {newsId: ‘123’} } ”</li>
+</ul>
+</li>
+<li><p>属性 replace 替换当前页面</p>
+</li>
+<li><p>属性 scroll  跳转到页面顶部，默认为true</p>
+</li>
+<li><p>属性 passHref，强制 link 将href发送给子元素，默认false  </p>
+</li>
+<li><p>属性 prefetch，在后台预取目标页面。默认值为 true。（预取功能只在生产环境中开启）</p>
+</li>
+</ul>
+<p>js编程式跳转</p>
+<ul>
+<li><p>useRouter  React Hook</p>
+</li>
+<li><p>router.push(‘/testRouter1’)</p>
+</li>
+<li><p>router.push({pathname: ‘/testRouter1’, query: {id: ‘123’} })</p>
+</li>
+<li><p>withRouter  class 组件</p>
+</li>
+</ul>
+<p>router对象的定义参数：</p>
+<table>
+<thead>
+<tr>
+<th align="center">属性</th>
+<th align="center">用法</th>
+<th align="center">默认值</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">pathname</td>
+<td align="center">- -</td>
+<td align="center">- -</td>
+</tr>
+<tr>
+<td align="center">query</td>
+<td align="center">- -</td>
+<td align="center">- -</td>
+</tr>
+</tbody></table>
+<p>其他的用法</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">import &#123; useRouter &#125; from &#39;next&#x2F;router&#39; </span><br><span class="line">const router &#x3D; useRouter()</span><br><span class="line"></span><br><span class="line">router.query    &#x2F;&#x2F; 当前地址参数</span><br><span class="line">router.replace()</span><br><span class="line">router.prefetch()   &#x2F;&#x2F; 同 link 标签的prefetch属性，仅对 link标签有效，只能用于生产环境</span><br><span class="line">router.beforePopState()  &#x2F;&#x2F; ***</span><br><span class="line">router.reload()  &#x2F;&#x2F; 等同 window.location.reload()</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>router.events 路由事件<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">import &#123; useRouter &#125; from &#39;next&#x2F;router&#39; </span><br><span class="line">const router &#x3D; useRouter()</span><br><span class="line"></span><br><span class="line">routeChangeStart(url, &#123; shallow &#125;)   &#x2F;&#x2F; 路由改变时</span><br><span class="line">routeChangeComplete(url, &#123; shallow &#125;) &#x2F;&#x2F; 路由改变之后</span><br><span class="line">routeChangeError(url, &#123; shallow &#125;) &#x2F;&#x2F; 路由跳转错误</span><br><span class="line">routeChangeError(err, url, &#123; shallow &#125;) &#x2F;&#x2F; 路由跳转错误</span><br><span class="line">beforeHistoryChange(err, url, &#123; shallow &#125;) &#x2F;&#x2F; 在更改浏览器历史记录之前触发</span><br><span class="line">hashChangeStart(err, url, &#123; shallow &#125;) &#x2F;&#x2F; 当哈希值已更改但页面未更改时触发</span><br><span class="line">hashChangeComplete(err, url, &#123; shallow &#125;) &#x2F;&#x2F; 当哈希值已更改但页面未更改时触发</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="动态路由"><a href="#动态路由" class="headerlink" title="动态路由"></a>动态路由</h3><p>pages 目录下的[typeId].js 就是动态路由。<br>比如当前目录：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">|- pages</span><br><span class="line">    |- index.js</span><br><span class="line">    |- help.js</span><br><span class="line">    |- about.js</span><br><span class="line">    |- news</span><br><span class="line">      |- index.js</span><br><span class="line">      |- [typeId].js</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>‘pages/news/1’、’pages/news/2’、’pages/news/2?name=lxl‘ 都会匹配到 ’pages/news/[typeId].js‘</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&#123;typeId: 1&#125;             &#x2F;&#x2F; pages&#x2F;news&#x2F;1.js</span><br><span class="line">&#123;typeId: 2&#125;             &#x2F;&#x2F;  pages&#x2F;news&#x2F;2.js</span><br><span class="line">&#123;typeId: 2, name: lxl&#125;  &#x2F;&#x2F;  pages&#x2F;news&#x2F;2.js?name&#x3D;lxl</span><br></pre></td></tr></table></figure>
+
+<p>多个参数呢？<br>动态路由在pages目录下动态路由文件名加三个点来扩展捕获所有参数<br>‘pages/goods/生活用品’、’pages/goods/科技数码?isHot=1’、’pages/goods/文学作品/3’<br> 就可以匹配到 ’pages/goods/[…slugs].js‘。（’slugs‘是自定义的，根据需要自行定义即可）</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&#123;slugs: [&#39;生活用品&#39;]&#125;                   &#x2F;&#x2F; pages&#x2F;goods&#x2F;生活用品</span><br><span class="line">&#123;slugs: [&#39;科技数码&#39;], isHot: &#39;1&#39;&#125;       &#x2F;&#x2F; pages&#x2F;goods&#x2F;科技数码?isHot&#x3D;1</span><br><span class="line">&#123;slugs: [&#39;文学作品&#39;, &#39;3&#39;], isHot: &#39;1&#39;&#125;  &#x2F;&#x2F; pages&#x2F;goods&#x2F;文学作品&#x2F;3</span><br></pre></td></tr></table></figure>
+
+<h2 id="四-预加载"><a href="#四-预加载" class="headerlink" title="四. 预加载"></a>四. 预加载</h2><p>什么是预加载</p>
+<ol>
+<li>预加载是性能优化技术</li>
+<li>所需资源提前加载到本地，这样后面在需要用的时候直接从缓存取资源<br>Link 标签的属性 prefetch</li>
+</ol>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">Link</span> <span class="attr">href</span>=<span class="string">&quot;/&quot;</span> <span class="attr">prefetch</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">a</span>&gt;</span>pageIndex<span class="tag">&lt;/<span class="name">a</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">Link</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="五-404-和-错误页定制"><a href="#五-404-和-错误页定制" class="headerlink" title="五. 404 和 错误页定制"></a>五. 404 和 错误页定制</h2><p>pages目录下:</p>
+<ul>
+<li>定制 404： 404.js</li>
+<li>定制 错误页： _error.js</li>
+</ul>
+<h2 id="六-css支持"><a href="#六-css支持" class="headerlink" title="六. css支持"></a>六. css支持</h2><h3 id="添加全局样式表"><a href="#添加全局样式表" class="headerlink" title="添加全局样式表"></a>添加全局样式表</h3><p>全局样式应在 ‘pages/_app.js’中引入</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> <span class="string">&#x27;../styles/globals.css&#x27;</span></span><br><span class="line"><span class="keyword">import</span> <span class="string">&#x27;antd/dist/antd.css&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">MyApp</span>(<span class="params">&#123; Component, pageProps &#125;</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="xml"><span class="tag">&lt;<span class="name">Component</span> &#123;<span class="attr">...pageProps</span>&#125; /&gt;</span></span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> MyApp</span><br></pre></td></tr></table></figure>
+<p>这些样式 (globals.css) 将应用于你的应用程序中的所有页面和组件。 并且为了避免冲突，应该 只在 pages/_app.js 文件中导入（import）这些全局样式表</p>
+<h3 id="从-node-modules-目录导入（import）样式"><a href="#从-node-modules-目录导入（import）样式" class="headerlink" title="从 node_modules 目录导入（import）样式"></a>从 node_modules 目录导入（import）样式</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">import Texty from &#39;rc-texty&#39;;</span><br><span class="line">import &#39;rc-texty&#x2F;assets&#x2F;index.css&#39;;</span><br></pre></td></tr></table></figure>
+<h3 id="添加组件级-CSS"><a href="#添加组件级-CSS" class="headerlink" title="添加组件级 CSS"></a>添加组件级 CSS</h3><p>Next.js 通过 [name].module.css 文件命名约定来支持 CSS 模块 。</p>
+<ul>
+<li>CSS 模块会自动创建唯一的类名，在不同文件使用同一类名，样式不会冲突</li>
+<li>nextjs中，个人推荐使用此方法写样式表</li>
+</ul>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> Head <span class="keyword">from</span> <span class="string">&#x27;next/head&#x27;</span></span><br><span class="line"><span class="keyword">import</span> styles <span class="keyword">from</span> <span class="string">&#x27;../styles/Home.module.css&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="function"><span class="keyword">function</span> <span class="title">About</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    &lt;div className=&#123;styles.container&#125;&gt;</span><br><span class="line">      &lt;main className=&#123;styles.main&#125;&gt;</span><br><span class="line">        about</span><br><span class="line">      &lt;/main&gt;</span><br><span class="line">    &lt;/div&gt;</span><br><span class="line">  )</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="原生对sass支持很好"><a href="#原生对sass支持很好" class="headerlink" title="原生对sass支持很好"></a>原生对sass支持很好</h3><p>Next.js 内置 Sass，要确保安装 ‘sass’</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install sass</span><br></pre></td></tr></table></figure>
+<h3 id="CSS-in-JS"><a href="#CSS-in-JS" class="headerlink" title="CSS-in-JS"></a>CSS-in-JS</h3><ul>
+<li>支持内联样式</li>
+<li>支持 styled-jsx<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"> &lt;main className=&#123;styles.main&#125;&gt;</span><br><span class="line">  &lt;div&gt;</span><br><span class="line">    &lt;p&gt;<span class="number">1</span>&lt;/p&gt;</span><br><span class="line">    &lt;p&gt;<span class="number">2</span>&lt;/p&gt;</span><br><span class="line">    &lt;style jsx&gt;</span><br><span class="line">      &#123;<span class="string">`</span></span><br><span class="line"><span class="string">      p &#123;</span></span><br><span class="line"><span class="string">        width: 100px;</span></span><br><span class="line"><span class="string">      &#125;</span></span><br><span class="line"><span class="string">      p:nth-child(1) &#123;</span></span><br><span class="line"><span class="string">        color: blue;</span></span><br><span class="line"><span class="string">        background: red;</span></span><br><span class="line"><span class="string">      &#125;</span></span><br><span class="line"><span class="string">      p:nth-child(2) &#123;</span></span><br><span class="line"><span class="string">        color: green;</span></span><br><span class="line"><span class="string">        background: pink;</span></span><br><span class="line"><span class="string">      &#125;</span></span><br><span class="line"><span class="string">      `</span>&#125;</span><br><span class="line">    &lt;/style&gt;</span><br><span class="line">  &lt;/div&gt;</span><br><span class="line">&lt;/main&gt;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="七-middleware-中间件"><a href="#七-middleware-中间件" class="headerlink" title="七. middleware 中间件"></a>七. middleware 中间件</h2><h2 id="八-Dynamic-Import-动态导入"><a href="#八-Dynamic-Import-动态导入" class="headerlink" title="八. Dynamic Import 动态导入"></a>八. Dynamic Import 动态导入</h2><p>nextjs 也支持 react 的 ‘lazy’相似的组件导入方式</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> dynamic <span class="keyword">from</span> <span class="string">&#x27;next/dynamic&#x27;</span></span><br><span class="line"><span class="keyword">const</span> DynamicComponent = dynamic(<span class="function">() =&gt;</span> <span class="keyword">import</span>(<span class="string">&#x27;../components/userInfo&#x27;</span>))</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>也可以让他不在服务端渲染，在浏览器端异步加载</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> DynamicComponent = dynamic(<span class="function">() =&gt;</span> <span class="keyword">import</span>(<span class="string">&#x27;../components/userInfo&#x27;</span>), &#123; <span class="attr">loading</span>: <span class="function">() =&gt;</span> <span class="xml"><span class="tag">&lt;<span class="name">p</span>&gt;</span>加载中...<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span>, ssr: <span class="literal">false</span> &#125;)</span><br></pre></td></tr></table></figure>
+<p>支持Suspense</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> DynamicLazyComponent  = dynamic(</span><br><span class="line">  () =&gt; <span class="keyword">import</span>(<span class="string">&#x27;../components/userInfo&#x27;</span>),</span><br><span class="line">  &#123; <span class="attr">suspense</span>: <span class="literal">true</span>  &#125;</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">&lt;Suspense fallback=&#123;<span class="string">`&lt;p&gt;加载中...&lt;/p&gt;`</span>&#125;&gt;</span><br><span class="line">  &lt;DynamicLazyComponent /&gt;</span><br><span class="line">&lt;/Suspense&gt;</span><br></pre></td></tr></table></figure>
+
+<h2 id="九-图片优化"><a href="#九-图片优化" class="headerlink" title="九. 图片优化"></a>九. 图片优化</h2><ul>
+<li>模糊效果占位图，支持懒加载</li>
+<li>默认加上 srcset 属性来适配不同 devicePixelRatio 的屏幕</li>
+<li>默认会返回压缩后的图片</li>
+<li>支持给图片设置优先级</li>
+</ul>
+<h2 id="十-如何获取数据"><a href="#十-如何获取数据" class="headerlink" title="十. 如何获取数据"></a>十. 如何获取数据</h2><p>nextjs中有两种形式的预渲染</p>
+<h3 id="1-服务端渲染"><a href="#1-服务端渲染" class="headerlink" title="1. 服务端渲染"></a>1. 服务端渲染</h3><p>访问xxx路由之前，向服务服务器要数据，吧要回来的数据和html加工直接返回前台展示</p>
+<h3 id="2-静态化"><a href="#2-静态化" class="headerlink" title="2. 静态化"></a>2. 静态化</h3><p>访问xxx路由之前，向服务器请求数据，将请求来的数据和html加工成真正的XXX.html文件<br>作用：下次访问同一个路由地址的时候，直接返回静态页面，减小服务器压力，以达到性能优化目的</p>
+<table>
+<thead>
+<tr>
+<th align="center">方法</th>
+<th align="center">静态化</th>
+<th align="center">只能在pages文件夹下</th>
+<th align="center">作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">getStaticProps</td>
+<td align="center">静态生成</td>
+<td align="center">是</td>
+<td align="center">在构建时获取数据</td>
+</tr>
+<tr>
+<td align="center">getServerSideProps</td>
+<td align="center">服务器端渲染</td>
+<td align="center">是</td>
+<td align="center">每次进入页面重新获取数据</td>
+</tr>
+</tbody></table>
+<h2 id="十一-MDX"><a href="#十一-MDX" class="headerlink" title="十一. MDX"></a>十一. MDX</h2><p>MDX 是 Markdown 的超集，允许您直接在 markdown 文件中写入 JSX。</p>
+<ol>
+<li>安装依赖包</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install @next&#x2F;mdx @mdx-js&#x2F;loader</span><br></pre></td></tr></table></figure>
+<ol start="2">
+<li>next.config.js 完善扩展<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// next.config.js</span></span><br><span class="line"><span class="keyword">const</span> withMDX = <span class="built_in">require</span>(<span class="string">&#x27;@next/mdx&#x27;</span>)(&#123;</span><br><span class="line">  extension: <span class="regexp">/\.mdx?$/</span>,</span><br><span class="line">  options: &#123;</span><br><span class="line">    remarkPlugins: [],</span><br><span class="line">    rehypePlugins: [],</span><br><span class="line">    <span class="comment">// If you use `MDXProvider`, uncomment the following line.</span></span><br><span class="line">    <span class="comment">// providerImportSource: &quot;@mdx-js/react&quot;,</span></span><br><span class="line">  &#125;,</span><br><span class="line">&#125;)</span><br><span class="line"><span class="built_in">module</span>.exports = withMDX(&#123;</span><br><span class="line">  <span class="comment">// Append the default value with md extensions</span></span><br><span class="line">  pageExtensions: [<span class="string">&#x27;ts&#x27;</span>, <span class="string">&#x27;tsx&#x27;</span>, <span class="string">&#x27;js&#x27;</span>, <span class="string">&#x27;jsx&#x27;</span>, <span class="string">&#x27;md&#x27;</span>, <span class="string">&#x27;mdx&#x27;</span>],</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+现在 可以直接在 pages 目录创建后缀是 ’.mdx‘ 的文件，当然它也和’index.js’一样也是一个路由</li>
+</ol>
+<h2 id="十二-如何部署"><a href="#十二-如何部署" class="headerlink" title="十二. 如何部署"></a>十二. 如何部署</h2><h3 id="目前尝试部署方案"><a href="#目前尝试部署方案" class="headerlink" title="目前尝试部署方案"></a>目前尝试部署方案</h3><ul>
+<li><p>源码放生产环境</p>
+</li>
+<li><p>yarn install</p>
+</li>
+<li><p>yarn build</p>
+</li>
+<li><p>yarn start，此时项目运行在服务端8883端口（可按实际情况更改端口）</p>
+</li>
+<li><p>不挂断运行服务 nohup yarn start &gt;&gt; ./log/nohup<code>date +%Y-%m-%d-%H</code>.out 2&gt;&amp;1 &amp;</p>
+</li>
+<li><p>有域名，用nginx代理到8883端口 </p>
+<h3 id="运行"><a href="#运行" class="headerlink" title="运行"></a>运行</h3></li>
+<li><p>nohup 方式<br>nohup yarn start &gt;&gt; ./log/nohup<code>date +%Y-%m-%d-%H</code>.out 2&gt;&amp;1 &amp;</p>
+</li>
+<li><p>pm2 方式<br>pm2 start yarn –name testxj03 – start</p>
+</li>
+</ul>
+
+      
+    </div>
+    <div class="article-footer">
+      <blockquote class="mt-2x">
+  <ul class="post-copyright list-unstyled">
+    
+    <li class="post-copyright-link hidden-xs">
+      <strong>本文链接：</strong>
+      <a href="https://blog.magicyou.cn/2022/08/31/react-Next.js%20%E4%B8%80%E4%BA%9B%E4%B8%9C%E8%A5%BF/" title="Next.js 一些东西" target="_blank" rel="external">https://blog.magicyou.cn/2022/08/31/react-Next.js 一些东西/</a>
+    </li>
+    
+    <li class="post-copyright-license">
+      <strong>版权声明： </strong> 本博客所有文章除特别声明外，均采用 <a href="http://creativecommons.org/licenses/by/4.0/deed.zh" target="_blank" rel="external">CC BY 4.0 CN协议</a> 许可协议。转载请注明出处！
+    </li>
+  </ul>
+</blockquote>
+
+
+<div class="panel panel-default panel-badger">
+  <div class="panel-body">
+    <figure class="media">
+      <div class="media-left">
+        <a href="https://github.com/magicyou" target="_blank" class="img-burn thumb-sm visible-lg">
+          <img src="http://tva3.sinaimg.cn/crop.0.0.180.180.180/a524faafjw1e8qgp5bmzyj2050050aa8.jpg" class="img-rounded w-full" alt="">
+        </a>
+      </div>
+      <div class="media-body">
+        <h3 class="media-heading"><a href="https://github.com/magicyou" target="_blank"><span class="text-dark">BruceLee</span><small class="ml-1x">Web Developer</small></a></h3>
+        <div>个人简介。</div>
+      </div>
+    </figure>
+  </div>
+</div>
+
+
+    </div>
+  </article>
+  
+    
+  <section id="comments">
+  	
+           
+    
+  </section>
+
+
+  
+</div>
+
+  <nav class="bar bar-footer clearfix" data-stick-bottom>
+  <div class="bar-inner">
+  
+  <ul class="pager pull-left">
+    
+    
+    <li class="next">
+      <a href="/2022/03/11/vue-%E7%89%B9%E6%80%A7/" title="vue-"><span>下一篇&nbsp;&nbsp;</span><i class="icon icon-angle-right" aria-hidden="true"></i></a>
+    </li>
+    
+    
+  </ul>
+  
+  
+  <!-- Button trigger modal -->
+  <button type="button" class="btn btn-fancy btn-donate pop-onhover bg-gradient-warning" data-toggle="modal" data-target="#donateModal"><span>赏</span></button>
+  <!-- <div class="wave-icon wave-icon-danger btn-donate" data-toggle="modal" data-target="#donateModal">
+    <div class="wave-circle"><span class="icon"><i class="icon icon-bill"></i></span></div>
+  </div> -->
+  
+  
+  <div class="bar-right">
+    
+    <div class="share-component" data-sites="weibo,qq,wechat" data-mobile-sites="weibo,qq,wechat"></div>
+    
+  </div>
+  </div>
+</nav>
+  
+<!-- Modal -->
+<div class="modal modal-center modal-small modal-xs-full fade" id="donateModal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content donate">
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      <div class="modal-body">
+        <div class="donate-box">
+          <div class="donate-head">
+            <p>感谢您的支持，我会继续努力的!</p>
+          </div>
+          <div class="tab-content">
+            <div role="tabpanel" class="tab-pane fade active in" id="alipay">
+              <div class="donate-payimg">
+                <img src="/images/donate/alipayimg.jpg" alt="扫码支持" title="扫一扫" />
+              </div>
+              <p class="text-muted mv">扫码打赏，你说多少就多少</p>
+              <p class="text-grey">打开支付宝扫一扫，即可进行扫码打赏哦</p>
+            </div>
+            <div role="tabpanel" class="tab-pane fade" id="wechatpay">
+              <div class="donate-payimg">
+                <img src="/images/donate/wechatpayimg.jpg" alt="扫码支持" title="扫一扫" />
+              </div>
+              <p class="text-muted mv">扫码打赏，你说多少就多少</p>
+              <p class="text-grey">打开微信扫一扫，即可进行扫码打赏哦</p>
+            </div>
+          </div>
+          <div class="donate-footer">
+            <ul class="nav nav-tabs nav-justified" role="tablist">
+              <li role="presentation" class="active">
+                <a href="#alipay" id="alipay-tab" role="tab" data-toggle="tab" aria-controls="alipay" aria-expanded="true"><i class="icon icon-alipay"></i> 支付宝</a>
+              </li>
+              <li role="presentation" class="">
+                <a href="#wechatpay" role="tab" id="wechatpay-tab" data-toggle="tab" aria-controls="wechatpay" aria-expanded="false"><i class="icon icon-wepay"></i> 微信支付</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+</main>
+
+  <footer class="footer" itemscope itemtype="http://schema.org/WPFooter">
+    <script src="http://127.0.0.1:7001/client.js"></script>
+    <span id="site_uv">
+        local 本站访客数<span id="web_site_uv_tips"></span>人
+    </span>
+
+	
+	
+    <ul class="social-links">
+    	
+        <li><a href="https://github.com/magicyou" target="_blank" title="Github" data-toggle=tooltip data-placement=top><i class="icon icon-github"></i></a></li>
+        
+        <li><a href="https://weibo.com/p/1005052770664111/home?from=page_100505&mod=TAB&is_all=1#place" target="_blank" title="Weibo" data-toggle=tooltip data-placement=top><i class="icon icon-weibo"></i></a></li>
+        
+    </ul>
+
+    
+    
+        <!-- 不蒜子统计 -->
+        <!-- <span id="busuanzi_container_site_pv">
+                本站总访问量<span id="busuanzi_value_site_pv"></span>次
+        </span> -->
+        <!-- <span class="post-meta-divider">|</span> -->
+        <span id="busuanzi_container_site_uv">
+                本站访客数<span id="busuanzi_value_site_uv"></span>人
+        </span>
+  
+    <div class="copyright">
+    	
+        <div class="publishby">
+        	Theme by <a href="https://github.com/cofess" target="_blank"> cofess </a>base on <a href="https://github.com/cofess/hexo-theme-pure" target="_blank">pure</a>.
+        </div>
+    </div>
+</footer>
+  <script src="//cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
+<script>
+window.jQuery || document.write('<script src="js/jquery.min.js"><\/script>')
+</script>
+
+<script src="/js/plugin.min.js"></script>
+
+
+<script src="/js/application.js"></script>
+
+
+    <script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+
+<script src="/js/insight.js"></script>
+
+
+
+
+
+
+   
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+   
+    
+  <!-- <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css"> -->
+  <script src="//cdn.jsdelivr.net/npm/gitalk@1.4.0/dist/gitalk.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/blueimp-md5@2.10.0/js/md5.min.js"></script>
+  <script type="text/javascript">
+  var gitalk = new Gitalk({
+    clientID: 'e6bd9b1c9667be2eba71',
+    clientSecret: '0749dfe86f83d7fb16beb133646555d83d5d7fc7',
+    repo: 'gitalk_comment',
+    owner: 'magicyou',
+    admin: ['magicyou'],
+    id: md5(location.pathname),
+    distractionFreeMode: true
+  })
+  gitalk.render('comments')
+  </script>
+
+      
+
+
+
+
+
+
+
+</body>
+</html>
+
+<script type="text/javascript">document.write(unescape("%3Cspan id='cnzz_stat_icon_1280958573'%3E%3C/span%3E%3Cscript src='https://s9.cnzz.com/z_stat.php%3Fid%3D1280958573%26show%3Dpic' type='text/javascript'%3E%3C/script%3E"));</script>

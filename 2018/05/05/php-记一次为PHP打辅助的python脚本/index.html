@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+  <meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="Cache-Control" content="no-transform" />
+  <meta http-equiv="Cache-Control" content="no-siteapp" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="format-detection" content="telephone=no,email=no,adress=no">
+  <!-- Color theme for statusbar -->
+  <meta name="theme-color" content="#000000" />
+  <!-- 强制页面在当前窗口以独立页面显示,防止别人在框架里调用页面 -->
+  <meta http-equiv="window-target" content="_top" />
+  
+  
+  <title>记一次python为PHP打辅助 | Hexo</title>
+  <meta name="description" content="项目结构：B&#x2F;S结构，web端，自然是PHP主控；  问题场景：根据相应的条件，实时生成csv文件并下载。文件很大的时候，客户点击导出就一直在等，看着加载一直在打圈圈，大一点的文件三分钟也是常见，时间长了干脆请求超时，下载失败，体验极差；  解决办法：做成离线任务，用户点击下载之后，不再理会，在另一个面板查看文件是否已经生成，生成就可以下载。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="记一次python为PHP打辅助">
+<meta property="og:url" content="https://blog.magicyou.cn/2018/05/05/php-%E8%AE%B0%E4%B8%80%E6%AC%A1%E4%B8%BAPHP%E6%89%93%E8%BE%85%E5%8A%A9%E7%9A%84python%E8%84%9A%E6%9C%AC/index.html">
+<meta property="og:site_name" content="MagicYou">
+<meta property="og:description" content="项目结构：B&#x2F;S结构，web端，自然是PHP主控；  问题场景：根据相应的条件，实时生成csv文件并下载。文件很大的时候，客户点击导出就一直在等，看着加载一直在打圈圈，大一点的文件三分钟也是常见，时间长了干脆请求超时，下载失败，体验极差；  解决办法：做成离线任务，用户点击下载之后，不再理会，在另一个面板查看文件是否已经生成，生成就可以下载。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2018-05-05T05:12:45.000Z">
+<meta property="article:modified_time" content="2018-05-05T05:12:45.000Z">
+<meta property="article:author" content="magicyou">
+<meta property="article:tag" content="Python">
+<meta name="twitter:card" content="summary">
+  <!-- Canonical links -->
+  <link rel="canonical" href="https://blog.magicyou.cn/2018/05/05/php-%E8%AE%B0%E4%B8%80%E6%AC%A1%E4%B8%BAPHP%E6%89%93%E8%BE%85%E5%8A%A9%E7%9A%84python%E8%84%9A%E6%9C%AC/index.html">
+  
+    <link rel="alternate" href="/atom.xml" title="MagicYou" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png" type="image/x-icon">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+  
+  
+  
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1.4.0/dist/gitalk.min.css">
+  
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body class="main-center" itemscope itemtype="http://schema.org/WebPage">
+  <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+  <div class="slimContent">
+    <div class="navbar-header">
+      
+      
+      <div class="profile-block text-center">
+        <a id="avatar" href="https://github.com/magicyou" target="_blank">
+          <img class="img-circle img-rotate" src="http://tva3.sinaimg.cn/crop.0.0.180.180.180/a524faafjw1e8qgp5bmzyj2050050aa8.jpg" width="200" height="200">
+        </a>
+        <h2 id="name" class="hidden-xs hidden-sm">BruceLee</h2>
+        <h3 id="title" class="hidden-xs hidden-sm hidden-md">Web Developer</h3>
+        <small id="location" class="text-muted hidden-xs hidden-sm"><i class="icon icon-map-marker"></i> Beijing, China</small>
+      </div>
+      
+      <div class="search" id="search-form-wrap">
+
+    <form class="search-form sidebar-form">
+        <div class="input-group">
+            <input type="text" class="search-form-input form-control" placeholder="搜索" />
+            <span class="input-group-btn">
+                <button type="submit" class="search-form-submit btn btn-flat" onclick="return false;"><i class="icon icon-search"></i></button>
+            </span>
+        </div>
+    </form>
+    <div class="ins-search">
+  <div class="ins-search-mask"></div>
+  <div class="ins-search-container">
+    <div class="ins-input-wrapper">
+      <input type="text" class="ins-search-input" placeholder="想要查找什么..." x-webkit-speech />
+      <button type="button" class="close ins-close ins-selectable" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+    </div>
+    <div class="ins-section-wrapper">
+      <div class="ins-section-container"></div>
+    </div>
+  </div>
+</div>
+
+
+</div>
+      <button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target="#main-navbar" aria-controls="main-navbar" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+    <nav id="main-navbar" class="collapse navbar-collapse" itemscope itemtype="http://schema.org/SiteNavigationElement" role="navigation">
+      <ul class="nav navbar-nav main-nav ">
+        
+        
+        <li class="menu-item menu-item-home">
+          <a href="/.">
+            
+            <i class="icon icon-home-fill"></i>
+            
+            <span class="menu-title">首页</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives">
+            
+            <i class="icon icon-archives-fill"></i>
+            
+            <span class="menu-title">归档</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories">
+            
+            <i class="icon icon-folder"></i>
+            
+            <span class="menu-title">分类</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags">
+            
+            <i class="icon icon-tags"></i>
+            
+            <span class="menu-title">标签</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-repository">
+          <a href="/repository">
+            
+            <i class="icon icon-project"></i>
+            
+            <span class="menu-title">项目</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-books">
+          <a href="/books">
+            
+            <i class="icon icon-book-fill"></i>
+            
+            <span class="menu-title">书单</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-links">
+          <a href="/links">
+            
+            <i class="icon icon-friendship"></i>
+            
+            <span class="menu-title">友链</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about">
+            
+            <i class="icon icon-cup-fill"></i>
+            
+            <span class="menu-title">关于</span>
+          </a>
+        </li>
+        
+      </ul>
+      
+	
+    <ul class="social-links">
+    	
+        <li><a href="https://github.com/magicyou" target="_blank" title="Github" data-toggle=tooltip data-placement=top><i class="icon icon-github"></i></a></li>
+        
+        <li><a href="https://weibo.com/p/1005052770664111/home?from=page_100505&mod=TAB&is_all=1#place" target="_blank" title="Weibo" data-toggle=tooltip data-placement=top><i class="icon icon-weibo"></i></a></li>
+        
+    </ul>
+
+    </nav>
+  </div>
+</header>
+
+  
+    <aside class="sidebar" itemscope itemtype="http://schema.org/WPSideBar">
+  <div class="slimContent">
+    
+      <div class="widget">
+    <h3 class="widget-title">公告</h3>
+    <div class="widget-body">
+        <div id="board">
+            <div class="content">
+                <p>欢迎交流与分享经验!</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">分类</h3>
+    <div class="widget-body">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/JAVA/">JAVA</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/JavaScript/">JavaScript</a><span class="category-list-count">28</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Linux/">Linux</a><span class="category-list-count">9</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/MacOS/">MacOS</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/PHP/">PHP</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Python/">Python</a><span class="category-list-count">7</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Vue/">Vue</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/uni-app/">uni-app</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a><span class="category-list-count">13</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%A0%91%E8%8E%93%E6%B4%BE/">树莓派</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/">算法</a><span class="category-list-count">6</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80/">计算机基础</a><span class="category-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget-body">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Apache/" rel="tag">Apache</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CSS/" rel="tag">CSS</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CSS3/" rel="tag">CSS3</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Centos/" rel="tag">Centos</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/HTML/" rel="tag">HTML</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/HTML5/" rel="tag">HTML5</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/JAVA/" rel="tag">JAVA</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/JavaScript/" rel="tag">JavaScript</a><span class="tag-list-count">40</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux/" rel="tag">Linux</a><span class="tag-list-count">11</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MacOS/" rel="tag">MacOS</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Next-js/" rel="tag">Next.js</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Nginx/" rel="tag">Nginx</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PHP/" rel="tag">PHP</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Python/" rel="tag">Python</a><span class="tag-list-count">7</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/React/" rel="tag">React</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Vue/" rel="tag">Vue</a><span class="tag-list-count">6</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/canvas/" rel="tag">canvas</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/git/" rel="tag">git</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jQuery/" rel="tag">jQuery</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/other/" rel="tag">other</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/react/" rel="tag">react</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/scrapy/" rel="tag">scrapy</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/uni-app/" rel="tag">uni-app</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%B0%8F%E7%A8%8B%E5%BA%8F/" rel="tag">小程序</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%BE%AE%E4%BF%A1/" rel="tag">微信</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%BE%AE%E4%BF%A1%E5%85%AC%E4%BC%97%E5%8F%B7/" rel="tag">微信公众号</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%BE%AE%E4%BF%A1%E5%B0%8F%E7%A8%8B%E5%BA%8F/" rel="tag">微信小程序</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%A0%91%E8%8E%93%E6%B4%BE/" rel="tag">树莓派</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%AE%97%E6%B3%95/" rel="tag">算法</a><span class="tag-list-count">6</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80/" rel="tag">计算机基础</a><span class="tag-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget-body tagcloud">
+      <a href="/tags/Apache/" style="font-size: 13px;">Apache</a> <a href="/tags/CSS/" style="font-size: 13px;">CSS</a> <a href="/tags/CSS3/" style="font-size: 13.43px;">CSS3</a> <a href="/tags/Centos/" style="font-size: 13.43px;">Centos</a> <a href="/tags/HTML/" style="font-size: 13px;">HTML</a> <a href="/tags/HTML5/" style="font-size: 13px;">HTML5</a> <a href="/tags/JAVA/" style="font-size: 13px;">JAVA</a> <a href="/tags/JavaScript/" style="font-size: 14px;">JavaScript</a> <a href="/tags/Linux/" style="font-size: 13.86px;">Linux</a> <a href="/tags/MacOS/" style="font-size: 13px;">MacOS</a> <a href="/tags/Next-js/" style="font-size: 13px;">Next.js</a> <a href="/tags/Nginx/" style="font-size: 13px;">Nginx</a> <a href="/tags/PHP/" style="font-size: 13.43px;">PHP</a> <a href="/tags/Python/" style="font-size: 13.71px;">Python</a> <a href="/tags/React/" style="font-size: 13px;">React</a> <a href="/tags/Vue/" style="font-size: 13.57px;">Vue</a> <a href="/tags/canvas/" style="font-size: 13px;">canvas</a> <a href="/tags/git/" style="font-size: 13px;">git</a> <a href="/tags/jQuery/" style="font-size: 13.14px;">jQuery</a> <a href="/tags/other/" style="font-size: 13px;">other</a> <a href="/tags/react/" style="font-size: 13px;">react</a> <a href="/tags/scrapy/" style="font-size: 13px;">scrapy</a> <a href="/tags/uni-app/" style="font-size: 13.14px;">uni-app</a> <a href="/tags/%E5%B0%8F%E7%A8%8B%E5%BA%8F/" style="font-size: 13px;">小程序</a> <a href="/tags/%E5%BE%AE%E4%BF%A1/" style="font-size: 13.14px;">微信</a> <a href="/tags/%E5%BE%AE%E4%BF%A1%E5%85%AC%E4%BC%97%E5%8F%B7/" style="font-size: 13px;">微信公众号</a> <a href="/tags/%E5%BE%AE%E4%BF%A1%E5%B0%8F%E7%A8%8B%E5%BA%8F/" style="font-size: 13.29px;">微信小程序</a> <a href="/tags/%E6%A0%91%E8%8E%93%E6%B4%BE/" style="font-size: 13.14px;">树莓派</a> <a href="/tags/%E7%AE%97%E6%B3%95/" style="font-size: 13.57px;">算法</a> <a href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80/" style="font-size: 13px;">计算机基础</a>
+    </div>
+  </div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget-body">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/08/">八月 2022</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/03/">三月 2022</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/12/">十二月 2021</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/11/">十一月 2021</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/10/">十月 2021</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/09/">九月 2021</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/04/">四月 2021</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/02/">二月 2021</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">十二月 2020</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">十月 2020</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">八月 2020</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">六月 2020</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">四月 2020</a><span class="archive-list-count">11</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">三月 2020</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">一月 2020</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">十二月 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/09/">九月 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/08/">八月 2019</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/07/">七月 2019</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/02/">二月 2019</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/10/">十月 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">九月 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">七月 2018</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">五月 2018</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">四月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/03/">三月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/02/">二月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/01/">一月 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/11/">十一月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/10/">十月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/08/">八月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/06/">六月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/04/">四月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/03/">三月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/02/">二月 2017</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/01/">一月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">十二月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/11/">十一月 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">九月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">八月 2016</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/07/">七月 2016</a><span class="archive-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget-body">
+      <ul class="recent-post-list list-unstyled no-thumbnail">
+        
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a>
+              </p>
+              <p class="item-title">
+                <a href="/2022/08/31/react-Next.js%20%E4%B8%80%E4%BA%9B%E4%B8%9C%E8%A5%BF/" class="title">Next.js 一些东西</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2022-08-31T13:33:00.000Z" itemprop="datePublished">2022-08-31</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/Vue/">Vue</a>
+              </p>
+              <p class="item-title">
+                <a href="/2022/03/11/vue-%E7%89%B9%E6%80%A7/" class="title">vue-</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2022-03-11T14:13:02.000Z" itemprop="datePublished">2022-03-11</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80/">计算机基础</a>
+              </p>
+              <p class="item-title">
+                <a href="/2021/12/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80-%E8%BF%9B%E5%88%B6%E8%BD%AC%E6%8D%A2/" class="title">计算机基础-进制转换</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2021-12-10T05:34:12.000Z" itemprop="datePublished">2021-12-10</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/Vue/">Vue</a>
+              </p>
+              <p class="item-title">
+                <a href="/2021/11/15/vue-%E9%80%9A%E4%BF%A1%E6%96%B9%E5%BC%8F/" class="title">vue-通信方式</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2021-11-15T14:13:02.000Z" itemprop="datePublished">2021-11-15</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/Vue/">Vue</a>
+              </p>
+              <p class="item-title">
+                <a href="/2021/10/11/vue-%E9%87%8D%E6%96%B0%E7%A0%94%E7%A9%B6%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F/" class="title">vue-重新研究生命周期</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2021-10-11T14:13:02.000Z" itemprop="datePublished">2021-10-11</time>
+              </p>
+            </div>
+          </li>
+          
+      </ul>
+    </div>
+  </div>
+  
+
+    
+  </div>
+</aside>
+
+  
+  
+<main class="main" role="main">
+  <div class="content">
+  <article id="post-php-记一次为PHP打辅助的python脚本" class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
+    
+    <div class="article-header">
+      
+        
+  
+    <h1 class="article-title" itemprop="name">
+      记一次python为PHP打辅助
+    </h1>
+  
+
+      
+      <div class="article-meta">
+        <span class="article-date">
+    <i class="icon icon-calendar-check"></i>
+	<a href="/2018/05/05/php-%E8%AE%B0%E4%B8%80%E6%AC%A1%E4%B8%BAPHP%E6%89%93%E8%BE%85%E5%8A%A9%E7%9A%84python%E8%84%9A%E6%9C%AC/" class="article-date">
+	  <time datetime="2018-05-05T05:12:45.000Z" itemprop="datePublished">2018-05-05</time>
+	</a>
+</span>
+        
+  <span class="article-category">
+    <i class="icon icon-folder"></i>
+    <a class="article-category-link" href="/categories/Python/">Python</a>
+  </span>
+
+        
+  <span class="article-tag">
+    <i class="icon icon-tags"></i>
+	<a class="article-tag-link-link" href="/tags/Python/" rel="tag">Python</a>
+  </span>
+
+
+        
+	<span class="article-read hidden-xs">
+	    <i class="icon icon-eye-fill" aria-hidden="true"></i>
+	    <span id="busuanzi_container_page_pv">
+			<span id="busuanzi_value_page_pv">0</span>
+		</span>
+	</span>
+
+
+        <span class="post-comment"><i class="icon icon-comment"></i> <a href="/2018/05/05/php-%E8%AE%B0%E4%B8%80%E6%AC%A1%E4%B8%BAPHP%E6%89%93%E8%BE%85%E5%8A%A9%E7%9A%84python%E8%84%9A%E6%9C%AC/#comments" class="article-comment-link">评论</a></span>
+        
+	
+		<span class="post-wordcount hidden-xs" itemprop="wordCount">字数统计: 1.7k(字)</span>
+	
+	
+		<span class="post-readcount hidden-xs" itemprop="timeRequired">阅读时长: 7(分)</span>
+	
+
+      </div>
+    </div>
+    <div class="article-entry marked-body" itemprop="articleBody">
+      
+        <ul>
+<li><p>项目结构：B/S结构，web端，自然是PHP主控；</p>
+</li>
+<li><p>问题场景：根据相应的条件，实时生成csv文件并下载。文件很大的时候，客户点击导出就一直在等，看着加载一直在打圈圈，大一点的文件三分钟也是常见，时间长了干脆请求超时，下载失败，体验极差；</p>
+</li>
+<li><p>解决办法：做成离线任务，用户点击下载之后，不再理会，在另一个面板查看文件是否已经生成，生成就可以下载。</p>
+</li>
+</ul>
+<span id="more"></span>
+
+<h3 id="研究一下php怎样做离线任务"><a href="#研究一下php怎样做离线任务" class="headerlink" title="研究一下php怎样做离线任务"></a>研究一下php怎样做离线任务</h3><p>找到两个相对有代表性的博文：</p>
+<ol>
+<li><p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/jianqingwang/p/6420602.html">PHP工作笔记：离线执行</a></p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="http://www.thinkphp.cn/topic/21969.html">离线下载文件（或者是离线执行任务）</a></p>
+</li>
+</ol>
+<p>简单研究了一下，感觉不是很好用，理由如下：</p>
+<ul>
+<li><p>不可控，文件大了还是容易断</p>
+</li>
+<li><p>占用php资源，其他的页面请求开始慢下来</p>
+</li>
+</ul>
+<p>这样的话不如想想用如何把这个处理过程交给后台，让它几自个儿玩。</p>
+<p>学Python有一段时间，刚好试试”手艺”如何。</p>
+<h3 id="规划流程"><a href="#规划流程" class="headerlink" title="规划流程"></a>规划流程</h3><ol>
+<li>用户点击导出，php拿到用户请求，整理用户要导出的相关数据（还好这些数据都是一条sql语句查出来的），存入数据库一条记录，状态status为0，表示未处理。顺便展示一下这个表结构，python和php的互帮互助全靠这张表；</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th align="center">列名</th>
+<th align="center">类型</th>
+<th align="center">长度</th>
+<th align="center">是否可为空</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">id</td>
+<td align="center">int</td>
+<td align="center">11</td>
+<td align="center">否</td>
+<td>主键，非空且唯一</td>
+</tr>
+<tr>
+<td align="center">name</td>
+<td align="center">varchar</td>
+<td align="center">100</td>
+<td align="center">否</td>
+<td>任务名称</td>
+</tr>
+<tr>
+<td align="center">title</td>
+<td align="center">varchar</td>
+<td align="center">255</td>
+<td align="center">否</td>
+<td>导出字段标题</td>
+</tr>
+<tr>
+<td align="center">query</td>
+<td align="center">varchar</td>
+<td align="center">255</td>
+<td align="center">否</td>
+<td>数据库查询sql</td>
+</tr>
+<tr>
+<td align="center">creater_name</td>
+<td align="center">varchar</td>
+<td align="center">100</td>
+<td align="center">否</td>
+<td>创建人</td>
+</tr>
+<tr>
+<td align="center">status</td>
+<td align="center">int</td>
+<td align="center"></td>
+<td align="center">否</td>
+<td>任务状态(0:未处理,1:处理中,2,成功,3:失败)，默认为0</td>
+</tr>
+<tr>
+<td align="center">msg</td>
+<td align="center">text</td>
+<td align="center"></td>
+<td align="center">是</td>
+<td>错误信息记录</td>
+</tr>
+<tr>
+<td align="center">filepath</td>
+<td align="center">varchar</td>
+<td align="center">255</td>
+<td align="center">是</td>
+<td>文件地址</td>
+</tr>
+</tbody></table>
+<ol start="2">
+<li>Python脚本一直在服务器运行，实时检测这张表是否有需要处理的任务（就是检测这张表是否有状态值status==1的记录）；</li>
+</ol>
+<ul>
+<li><p>2.1 有，就将这条记录的状态status改为1（这时前端页面看到的任务状态是”处理中”）</p>
+</li>
+<li><p>2.2 查询数据库生成一个csv文件，成功后将文件路径放入条记录的 字段”filepath” </p>
+</li>
+<li><p>2.3 没有报错，就将status改为2； 有报错，就将status改为3，并将失败原因记录在msg</p>
+</li>
+</ul>
+<ol start="3">
+<li>用户看到最新状态是”成功”，就可以点击文件下载了；状态是 “失败”，则需要进一步查看失败原因进行重新生成相关csv文件。</li>
+</ol>
+<h3 id="上python脚本"><a href="#上python脚本" class="headerlink" title="上python脚本"></a>上python脚本</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/python3</span></span><br><span class="line"><span class="comment"># -*- coding: utf-8 -*-</span></span><br><span class="line"><span class="keyword">import</span> pymysql</span><br><span class="line"><span class="keyword">import</span> psycopg2</span><br><span class="line"><span class="keyword">import</span> psycopg2.extras</span><br><span class="line"><span class="keyword">import</span> time</span><br><span class="line"><span class="keyword">import</span> csv</span><br><span class="line"><span class="keyword">import</span> random</span><br><span class="line"><span class="keyword">import</span> sys</span><br><span class="line"><span class="keyword">from</span> Crypto <span class="keyword">import</span> Random</span><br><span class="line"><span class="keyword">import</span> binascii</span><br><span class="line"><span class="keyword">from</span> Crypto.PublicKey <span class="keyword">import</span> RSA</span><br><span class="line"><span class="keyword">from</span> Crypto.Cipher <span class="keyword">import</span> PKCS1_v1_5</span><br><span class="line"><span class="keyword">import</span> threading</span><br><span class="line"></span><br><span class="line"><span class="comment"># 线程数，限定数</span></span><br><span class="line">thread = <span class="number">6</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 本地测试环境</span></span><br><span class="line">hostName = <span class="string">&#x27;http://test-web&#x27;</span></span><br><span class="line">mysql = &#123;<span class="string">&#x27;host&#x27;</span>:<span class="string">&#x27;localhost&#x27;</span>,<span class="string">&#x27;user&#x27;</span>:<span class="string">&#x27;root&#x27;</span>,<span class="string">&#x27;pwd&#x27;</span>:<span class="string">&#x27;&#x27;</span>,<span class="string">&#x27;db&#x27;</span>:<span class="string">&#x27;test&#x27;</span>&#125;</span><br><span class="line">pgsql = &#123;<span class="string">&#x27;host&#x27;</span>:<span class="string">&#x27;127.0.0.1&#x27;</span>,<span class="string">&#x27;database&#x27;</span>:<span class="string">&#x27;sys&#x27;</span>,<span class="string">&#x27;user&#x27;</span>:<span class="string">&#x27;root&#x27;</span>,<span class="string">&#x27;password&#x27;</span>:<span class="string">&#x27;root&#x27;</span>,<span class="string">&#x27;port&#x27;</span>:<span class="string">&#x27;5432&#x27;</span>&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">conMysql</span>(<span class="params"><span class="built_in">type</span>=<span class="string">&#x27;dict&#x27;</span></span>):</span></span><br><span class="line">    <span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">    mysql连接</span></span><br><span class="line"><span class="string">    :param type: 获取数据类型 默认为字典类型</span></span><br><span class="line"><span class="string">    :return:游标</span></span><br><span class="line"><span class="string">    &#x27;&#x27;&#x27;</span></span><br><span class="line">    <span class="keyword">if</span> <span class="built_in">type</span>==<span class="string">&#x27;dict&#x27;</span>:</span><br><span class="line">        conn = pymysql.connect(mysql[<span class="string">&#x27;host&#x27;</span>],mysql[<span class="string">&#x27;user&#x27;</span>],mysql[<span class="string">&#x27;pwd&#x27;</span>],mysql[<span class="string">&#x27;db&#x27;</span>],charset=<span class="string">&#x27;utf8&#x27;</span>,cursorclass=pymysql.cursors.DictCursor)</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        conn = pymysql.connect(mysql[<span class="string">&#x27;host&#x27;</span>],mysql[<span class="string">&#x27;user&#x27;</span>],mysql[<span class="string">&#x27;pwd&#x27;</span>],mysql[<span class="string">&#x27;db&#x27;</span>],charset=<span class="string">&#x27;utf8&#x27;</span>)</span><br><span class="line">    <span class="keyword">return</span> conn</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">conPgsql</span>():</span></span><br><span class="line">    <span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">    pgsql数据库连接</span></span><br><span class="line"><span class="string">    :return: 游标</span></span><br><span class="line"><span class="string">    &#x27;&#x27;&#x27;</span></span><br><span class="line">    conn = psycopg2.connect(database=pgsql[<span class="string">&#x27;database&#x27;</span>],user=pgsql[<span class="string">&#x27;user&#x27;</span>],password=pgsql[<span class="string">&#x27;password&#x27;</span>],host=pgsql[<span class="string">&#x27;host&#x27;</span>],port=pgsql[<span class="string">&#x27;port&#x27;</span>])</span><br><span class="line">    <span class="keyword">return</span> conn</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">exportCsv</span>(<span class="params">title,data</span>):</span></span><br><span class="line">    <span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">    生成csv文件</span></span><br><span class="line"><span class="string">    :param title: 表头</span></span><br><span class="line"><span class="string">    :param data: 数据</span></span><br><span class="line"><span class="string">    :return: &#123;&#x27;status&#x27;:任务执行状况, &#x27;fileName&#x27;:文件名&#125;</span></span><br><span class="line"><span class="string">    &#x27;&#x27;&#x27;</span></span><br><span class="line">    <span class="comment"># 数据处理</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">len</span>(data)):</span><br><span class="line">        dataList = <span class="built_in">list</span>(data[i].values())</span><br><span class="line">        dataList.insert(<span class="number">0</span>, i+<span class="number">1</span>)</span><br><span class="line">        data[i] = dataList</span><br><span class="line"></span><br><span class="line">    fileName = <span class="string">&#x27;/Public/Temp/&#x27;</span> + time.strftime(<span class="string">&#x27;%Y%m%d%H%M&#x27;</span>,time.localtime(time.time())) + <span class="string">&#x27;_&#x27;</span>+ <span class="built_in">str</span>(<span class="built_in">int</span>(<span class="built_in">round</span>((time.time()) * <span class="number">1000</span>))) + <span class="string">&quot;.csv&quot;</span></span><br><span class="line">    title = title.split(<span class="string">&#x27;,&#x27;</span>)</span><br><span class="line">    <span class="keyword">with</span> <span class="built_in">open</span>(fileName,<span class="string">&quot;w&quot;</span>,newline=<span class="string">&#x27;&#x27;</span>,encoding=<span class="string">&#x27;gb18030&#x27;</span>) <span class="keyword">as</span> csvfile:</span><br><span class="line">        writer = csv.writer(csvfile)</span><br><span class="line">        <span class="comment"># 先写入columns_name</span></span><br><span class="line">        <span class="keyword">try</span>:</span><br><span class="line">            writer.writerow(title)</span><br><span class="line">            writer.writerows(data)</span><br><span class="line">        <span class="keyword">except</span>:</span><br><span class="line">            <span class="keyword">return</span> &#123;<span class="string">&#x27;status&#x27;</span>:<span class="literal">False</span>, <span class="string">&#x27;msg&#x27;</span>:<span class="string">&#x27;文件写入失败！&#x27;</span>&#125;</span><br><span class="line">    <span class="keyword">return</span> &#123;<span class="string">&#x27;status&#x27;</span>:<span class="literal">True</span>, <span class="string">&#x27;fileName&#x27;</span>:hostName + fileName&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">getCsvDate</span>(<span class="params">sql</span>):</span></span><br><span class="line">    <span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">    获取csv数据</span></span><br><span class="line"><span class="string">    :param sql: 获取csv数据的sql语句</span></span><br><span class="line"><span class="string">    :return:&#123;&#x27;status&#x27;:sql执行状况, &#x27;data&#x27;:数据&#125;</span></span><br><span class="line"><span class="string">    &#x27;&#x27;&#x27;</span></span><br><span class="line">    conn = conPgsql()</span><br><span class="line">    cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        cur.execute(sql)</span><br><span class="line">        rows = cur.fetchall()</span><br><span class="line">    <span class="keyword">except</span>:</span><br><span class="line">        cur.close()</span><br><span class="line">        conn.close()</span><br><span class="line">        <span class="keyword">return</span> &#123;<span class="string">&#x27;status&#x27;</span>:<span class="literal">False</span>, <span class="string">&#x27;msg&#x27;</span>:<span class="string">&#x27;sql执行失败！&#x27;</span>&#125;</span><br><span class="line"></span><br><span class="line">    conn.commit()</span><br><span class="line">    cur.close()</span><br><span class="line">    conn.close()</span><br><span class="line">    <span class="keyword">return</span> &#123;<span class="string">&#x27;status&#x27;</span>:<span class="literal">True</span>, <span class="string">&#x27;data&#x27;</span>:rows&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">dealWork</span>():</span></span><br><span class="line">    <span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">    任务处理</span></span><br><span class="line"><span class="string">    :return: None</span></span><br><span class="line"><span class="string">    &#x27;&#x27;&#x27;</span></span><br><span class="line">    conn = conMysql()</span><br><span class="line">    <span class="comment"># 看有没有正在进行任务是否超过限定数,超过限定数就跳跳出</span></span><br><span class="line">    cursor = conn.cursor()</span><br><span class="line">    sql = <span class="string">&quot;select count(*) count from box_download_task where status=&#x27;1&#x27;;&quot;</span></span><br><span class="line">    cursor.execute(sql)</span><br><span class="line">    re = cursor.fetchone()</span><br><span class="line">    rowsNum = re[<span class="string">&#x27;count&#x27;</span>]</span><br><span class="line">    <span class="keyword">if</span> rowsNum &gt; thread:</span><br><span class="line">        <span class="keyword">return</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># 看有没有未开始的任务，有的话继续进行，没有则跳出</span></span><br><span class="line">    sql = <span class="string">&quot;select count(*) count from box_download_task where status=&#x27;0&#x27; and type&lt;&gt;&#x27;4&#x27; order by id asc;&quot;</span></span><br><span class="line">    cursor.execute(sql)</span><br><span class="line">    re = cursor.fetchone()</span><br><span class="line">    <span class="keyword">if</span> re[<span class="string">&#x27;count&#x27;</span>]==<span class="number">0</span>:</span><br><span class="line">        <span class="keyword">return</span></span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="comment"># 根据降序选择最早加入的并且未处理的任务进行处理</span></span><br><span class="line">        sql = <span class="string">&quot;select * from box_download_task where status=&#x27;0&#x27; order by id asc;&quot;</span></span><br><span class="line">        cursor.execute(sql)</span><br><span class="line">        re = cursor.fetchone()</span><br><span class="line">        workId = re[<span class="string">&#x27;id&#x27;</span>]</span><br><span class="line">        <span class="comment"># 修改记录status为1，处理中，防止其他线程重复处理</span></span><br><span class="line">        sql = <span class="string">&#x27;update box_download_task set status=&quot;%s&quot; where id=%d;&#x27;</span> % (<span class="string">&#x27;1&#x27;</span>,workId)</span><br><span class="line">        cursor.execute(sql)</span><br><span class="line">        conn.commit()</span><br><span class="line"></span><br><span class="line">        sql = re[<span class="string">&#x27;query&#x27;</span>]</span><br><span class="line">        title = re[<span class="string">&#x27;title&#x27;</span>]</span><br><span class="line">        <span class="comment"># 获取csv的数据</span></span><br><span class="line">        res = getCsvDate(sql)</span><br><span class="line">        <span class="keyword">if</span> res[<span class="string">&#x27;status&#x27;</span>]:</span><br><span class="line">            <span class="comment"># 导出csv</span></span><br><span class="line">            file = exportCsv(title, res[<span class="string">&#x27;data&#x27;</span>])</span><br><span class="line">            <span class="comment"># 写入文件是否成功，成功则修改status为2，失败则status为3</span></span><br><span class="line">            <span class="keyword">if</span> file[<span class="string">&#x27;status&#x27;</span>]:</span><br><span class="line">                sql = <span class="string">&#x27;update box_download_task set status=&quot;%s&quot;, filepath=&quot;%s&quot; where id=%d;&#x27;</span> % (</span><br><span class="line">                <span class="string">&#x27;2&#x27;</span>, file[<span class="string">&#x27;fileName&#x27;</span>], workId)</span><br><span class="line">                cursor.execute(sql)</span><br><span class="line">                conn.commit()</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                sql = <span class="string">&#x27;update box_download_task set status=&quot;%s&quot;, msg=&quot;%s&quot; where id=%d;&#x27;</span> % (<span class="string">&#x27;3&#x27;</span>, file[<span class="string">&#x27;msg&#x27;</span>], workId)</span><br><span class="line">                cursor.execute(sql)</span><br><span class="line">                conn.commit()</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            sql = <span class="string">&#x27;update box_download_task set status=&quot;%s&quot;, msg=&quot;%s&quot; where id=%d;&#x27;</span> % (<span class="string">&#x27;3&#x27;</span>, res[<span class="string">&#x27;msg&#x27;</span>], workId)</span><br><span class="line">            cursor.execute(sql)</span><br><span class="line">            conn.commit()</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line"></span><br><span class="line">    conn.close()</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 引入多线程并行快速处理</span></span><br><span class="line">    <span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(thread):</span><br><span class="line">            t = threading.Thread(target=dealWork, args=())</span><br><span class="line">            t.start()</span><br><span class="line">            time.sleep(<span class="number">1</span>)</span><br><span class="line"></span><br><span class="line">        t.join()</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&#x27;执行了&#x27;</span>)</span><br><span class="line">        time.sleep(<span class="number">5</span>)</span><br></pre></td></tr></table></figure>
+
+<p>小结：</p>
+<ul>
+<li><p>python引入多线程，并行处理多个任务，效率不言而喻；</p>
+</li>
+<li><p>引用队列思想，先进先出，一个一个处理，一个不落；</p>
+</li>
+<li><p>python独立于php进程，不占用php运行资源；</p>
+</li>
+<li><p>比起以往点击下载后进行查询生成文件再下载，虽然步骤多了，但是用户体验提高了不止一点，属于优化（想想不该掉原先php的导出文件，数据大迟早要出问题）</p>
+</li>
+</ul>
+<p>完结！</p>
+
+      
+    </div>
+    <div class="article-footer">
+      <blockquote class="mt-2x">
+  <ul class="post-copyright list-unstyled">
+    
+    <li class="post-copyright-link hidden-xs">
+      <strong>本文链接：</strong>
+      <a href="https://blog.magicyou.cn/2018/05/05/php-%E8%AE%B0%E4%B8%80%E6%AC%A1%E4%B8%BAPHP%E6%89%93%E8%BE%85%E5%8A%A9%E7%9A%84python%E8%84%9A%E6%9C%AC/" title="记一次python为PHP打辅助" target="_blank" rel="external">https://blog.magicyou.cn/2018/05/05/php-记一次为PHP打辅助的python脚本/</a>
+    </li>
+    
+    <li class="post-copyright-license">
+      <strong>版权声明： </strong> 本博客所有文章除特别声明外，均采用 <a href="http://creativecommons.org/licenses/by/4.0/deed.zh" target="_blank" rel="external">CC BY 4.0 CN协议</a> 许可协议。转载请注明出处！
+    </li>
+  </ul>
+</blockquote>
+
+
+<div class="panel panel-default panel-badger">
+  <div class="panel-body">
+    <figure class="media">
+      <div class="media-left">
+        <a href="https://github.com/magicyou" target="_blank" class="img-burn thumb-sm visible-lg">
+          <img src="http://tva3.sinaimg.cn/crop.0.0.180.180.180/a524faafjw1e8qgp5bmzyj2050050aa8.jpg" class="img-rounded w-full" alt="">
+        </a>
+      </div>
+      <div class="media-body">
+        <h3 class="media-heading"><a href="https://github.com/magicyou" target="_blank"><span class="text-dark">BruceLee</span><small class="ml-1x">Web Developer</small></a></h3>
+        <div>个人简介。</div>
+      </div>
+    </figure>
+  </div>
+</div>
+
+
+    </div>
+  </article>
+  
+    
+  <section id="comments">
+  	
+           
+    
+  </section>
+
+
+  
+</div>
+
+  <nav class="bar bar-footer clearfix" data-stick-bottom>
+  <div class="bar-inner">
+  
+  <ul class="pager pull-left">
+    
+    <li class="prev">
+      <a href="/2018/05/11/vue-vuex%E7%9A%84%E4%BA%94%E4%B8%AA%E5%B1%9E%E6%80%A7/" title="vuex使用方式"><i class="icon icon-angle-left" aria-hidden="true"></i><span>&nbsp;&nbsp;上一篇</span></a>
+    </li>
+    
+    
+    <li class="next">
+      <a href="/2018/05/03/Linux-%E6%80%8E%E6%A0%B7%E4%B8%80%E4%B8%AA%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%AD%98%E6%94%BE%E5%A4%9A%E4%B8%AA%E7%AB%99%E7%82%B9%EF%BC%8C%E5%88%86%E5%88%AB%E7%BB%91%E5%AE%9A%E4%B8%8D%E5%90%8C%E7%9A%84%E5%9F%9F%E5%90%8D/" title="怎样一个服务器存放多个站点，分别绑定不同的域名"><span>下一篇&nbsp;&nbsp;</span><i class="icon icon-angle-right" aria-hidden="true"></i></a>
+    </li>
+    
+    
+  </ul>
+  
+  
+  <!-- Button trigger modal -->
+  <button type="button" class="btn btn-fancy btn-donate pop-onhover bg-gradient-warning" data-toggle="modal" data-target="#donateModal"><span>赏</span></button>
+  <!-- <div class="wave-icon wave-icon-danger btn-donate" data-toggle="modal" data-target="#donateModal">
+    <div class="wave-circle"><span class="icon"><i class="icon icon-bill"></i></span></div>
+  </div> -->
+  
+  
+  <div class="bar-right">
+    
+    <div class="share-component" data-sites="weibo,qq,wechat" data-mobile-sites="weibo,qq,wechat"></div>
+    
+  </div>
+  </div>
+</nav>
+  
+<!-- Modal -->
+<div class="modal modal-center modal-small modal-xs-full fade" id="donateModal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content donate">
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      <div class="modal-body">
+        <div class="donate-box">
+          <div class="donate-head">
+            <p>感谢您的支持，我会继续努力的!</p>
+          </div>
+          <div class="tab-content">
+            <div role="tabpanel" class="tab-pane fade active in" id="alipay">
+              <div class="donate-payimg">
+                <img src="/images/donate/alipayimg.jpg" alt="扫码支持" title="扫一扫" />
+              </div>
+              <p class="text-muted mv">扫码打赏，你说多少就多少</p>
+              <p class="text-grey">打开支付宝扫一扫，即可进行扫码打赏哦</p>
+            </div>
+            <div role="tabpanel" class="tab-pane fade" id="wechatpay">
+              <div class="donate-payimg">
+                <img src="/images/donate/wechatpayimg.jpg" alt="扫码支持" title="扫一扫" />
+              </div>
+              <p class="text-muted mv">扫码打赏，你说多少就多少</p>
+              <p class="text-grey">打开微信扫一扫，即可进行扫码打赏哦</p>
+            </div>
+          </div>
+          <div class="donate-footer">
+            <ul class="nav nav-tabs nav-justified" role="tablist">
+              <li role="presentation" class="active">
+                <a href="#alipay" id="alipay-tab" role="tab" data-toggle="tab" aria-controls="alipay" aria-expanded="true"><i class="icon icon-alipay"></i> 支付宝</a>
+              </li>
+              <li role="presentation" class="">
+                <a href="#wechatpay" role="tab" id="wechatpay-tab" data-toggle="tab" aria-controls="wechatpay" aria-expanded="false"><i class="icon icon-wepay"></i> 微信支付</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+</main>
+
+  <footer class="footer" itemscope itemtype="http://schema.org/WPFooter">
+    <script src="http://127.0.0.1:7001/client.js"></script>
+    <span id="site_uv">
+        local 本站访客数<span id="web_site_uv_tips"></span>人
+    </span>
+
+	
+	
+    <ul class="social-links">
+    	
+        <li><a href="https://github.com/magicyou" target="_blank" title="Github" data-toggle=tooltip data-placement=top><i class="icon icon-github"></i></a></li>
+        
+        <li><a href="https://weibo.com/p/1005052770664111/home?from=page_100505&mod=TAB&is_all=1#place" target="_blank" title="Weibo" data-toggle=tooltip data-placement=top><i class="icon icon-weibo"></i></a></li>
+        
+    </ul>
+
+    
+    
+        <!-- 不蒜子统计 -->
+        <!-- <span id="busuanzi_container_site_pv">
+                本站总访问量<span id="busuanzi_value_site_pv"></span>次
+        </span> -->
+        <!-- <span class="post-meta-divider">|</span> -->
+        <span id="busuanzi_container_site_uv">
+                本站访客数<span id="busuanzi_value_site_uv"></span>人
+        </span>
+  
+    <div class="copyright">
+    	
+        <div class="publishby">
+        	Theme by <a href="https://github.com/cofess" target="_blank"> cofess </a>base on <a href="https://github.com/cofess/hexo-theme-pure" target="_blank">pure</a>.
+        </div>
+    </div>
+</footer>
+  <script src="//cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
+<script>
+window.jQuery || document.write('<script src="js/jquery.min.js"><\/script>')
+</script>
+
+<script src="/js/plugin.min.js"></script>
+
+
+<script src="/js/application.js"></script>
+
+
+    <script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+
+<script src="/js/insight.js"></script>
+
+
+
+
+
+
+   
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+   
+    
+  <!-- <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css"> -->
+  <script src="//cdn.jsdelivr.net/npm/gitalk@1.4.0/dist/gitalk.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/blueimp-md5@2.10.0/js/md5.min.js"></script>
+  <script type="text/javascript">
+  var gitalk = new Gitalk({
+    clientID: 'e6bd9b1c9667be2eba71',
+    clientSecret: '0749dfe86f83d7fb16beb133646555d83d5d7fc7',
+    repo: 'gitalk_comment',
+    owner: 'magicyou',
+    admin: ['magicyou'],
+    id: md5(location.pathname),
+    distractionFreeMode: true
+  })
+  gitalk.render('comments')
+  </script>
+
+      
+
+
+
+
+
+
+
+</body>
+</html>
+
+<script type="text/javascript">document.write(unescape("%3Cspan id='cnzz_stat_icon_1280958573'%3E%3C/span%3E%3Cscript src='https://s9.cnzz.com/z_stat.php%3Fid%3D1280958573%26show%3Dpic' type='text/javascript'%3E%3C/script%3E"));</script>

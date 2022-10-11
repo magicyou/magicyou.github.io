@@ -1,0 +1,865 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+  <meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="Cache-Control" content="no-transform" />
+  <meta http-equiv="Cache-Control" content="no-siteapp" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="format-detection" content="telephone=no,email=no,adress=no">
+  <!-- Color theme for statusbar -->
+  <meta name="theme-color" content="#000000" />
+  <!-- 强制页面在当前窗口以独立页面显示,防止别人在框架里调用页面 -->
+  <meta http-equiv="window-target" content="_top" />
+  
+  
+  <title>scrapy爬虫之初次尝试 | Hexo</title>
+  <meta name="description" content="本文主要记录scrapy安装、配置，到第一个爬虫实例实现的过程。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="scrapy爬虫之初次尝试">
+<meta property="og:url" content="https://blog.magicyou.cn/2018/10/10/Python-scrapy%E7%88%AC%E8%99%AB%E4%B9%8B%E5%88%9D%E6%AC%A1%E5%B0%9D%E8%AF%95/index.html">
+<meta property="og:site_name" content="MagicYou">
+<meta property="og:description" content="本文主要记录scrapy安装、配置，到第一个爬虫实例实现的过程。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2018-10-10T13:34:23.000Z">
+<meta property="article:modified_time" content="2018-10-10T13:34:23.000Z">
+<meta property="article:author" content="magicyou">
+<meta property="article:tag" content="Python">
+<meta property="article:tag" content="scrapy">
+<meta name="twitter:card" content="summary">
+  <!-- Canonical links -->
+  <link rel="canonical" href="https://blog.magicyou.cn/2018/10/10/Python-scrapy%E7%88%AC%E8%99%AB%E4%B9%8B%E5%88%9D%E6%AC%A1%E5%B0%9D%E8%AF%95/index.html">
+  
+    <link rel="alternate" href="/atom.xml" title="MagicYou" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png" type="image/x-icon">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+  
+  
+  
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1.4.0/dist/gitalk.min.css">
+  
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body class="main-center" itemscope itemtype="http://schema.org/WebPage">
+  <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+  <div class="slimContent">
+    <div class="navbar-header">
+      
+      
+      <div class="profile-block text-center">
+        <a id="avatar" href="https://github.com/magicyou" target="_blank">
+          <img class="img-circle img-rotate" src="http://tva3.sinaimg.cn/crop.0.0.180.180.180/a524faafjw1e8qgp5bmzyj2050050aa8.jpg" width="200" height="200">
+        </a>
+        <h2 id="name" class="hidden-xs hidden-sm">BruceLee</h2>
+        <h3 id="title" class="hidden-xs hidden-sm hidden-md">Web Developer</h3>
+        <small id="location" class="text-muted hidden-xs hidden-sm"><i class="icon icon-map-marker"></i> Beijing, China</small>
+      </div>
+      
+      <div class="search" id="search-form-wrap">
+
+    <form class="search-form sidebar-form">
+        <div class="input-group">
+            <input type="text" class="search-form-input form-control" placeholder="搜索" />
+            <span class="input-group-btn">
+                <button type="submit" class="search-form-submit btn btn-flat" onclick="return false;"><i class="icon icon-search"></i></button>
+            </span>
+        </div>
+    </form>
+    <div class="ins-search">
+  <div class="ins-search-mask"></div>
+  <div class="ins-search-container">
+    <div class="ins-input-wrapper">
+      <input type="text" class="ins-search-input" placeholder="想要查找什么..." x-webkit-speech />
+      <button type="button" class="close ins-close ins-selectable" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+    </div>
+    <div class="ins-section-wrapper">
+      <div class="ins-section-container"></div>
+    </div>
+  </div>
+</div>
+
+
+</div>
+      <button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target="#main-navbar" aria-controls="main-navbar" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+    <nav id="main-navbar" class="collapse navbar-collapse" itemscope itemtype="http://schema.org/SiteNavigationElement" role="navigation">
+      <ul class="nav navbar-nav main-nav ">
+        
+        
+        <li class="menu-item menu-item-home">
+          <a href="/.">
+            
+            <i class="icon icon-home-fill"></i>
+            
+            <span class="menu-title">首页</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives">
+            
+            <i class="icon icon-archives-fill"></i>
+            
+            <span class="menu-title">归档</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories">
+            
+            <i class="icon icon-folder"></i>
+            
+            <span class="menu-title">分类</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags">
+            
+            <i class="icon icon-tags"></i>
+            
+            <span class="menu-title">标签</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-repository">
+          <a href="/repository">
+            
+            <i class="icon icon-project"></i>
+            
+            <span class="menu-title">项目</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-books">
+          <a href="/books">
+            
+            <i class="icon icon-book-fill"></i>
+            
+            <span class="menu-title">书单</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-links">
+          <a href="/links">
+            
+            <i class="icon icon-friendship"></i>
+            
+            <span class="menu-title">友链</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about">
+            
+            <i class="icon icon-cup-fill"></i>
+            
+            <span class="menu-title">关于</span>
+          </a>
+        </li>
+        
+      </ul>
+      
+	
+    <ul class="social-links">
+    	
+        <li><a href="https://github.com/magicyou" target="_blank" title="Github" data-toggle=tooltip data-placement=top><i class="icon icon-github"></i></a></li>
+        
+        <li><a href="https://weibo.com/p/1005052770664111/home?from=page_100505&mod=TAB&is_all=1#place" target="_blank" title="Weibo" data-toggle=tooltip data-placement=top><i class="icon icon-weibo"></i></a></li>
+        
+    </ul>
+
+    </nav>
+  </div>
+</header>
+
+  
+    <aside class="sidebar" itemscope itemtype="http://schema.org/WPSideBar">
+  <div class="slimContent">
+    
+      <div class="widget">
+    <h3 class="widget-title">公告</h3>
+    <div class="widget-body">
+        <div id="board">
+            <div class="content">
+                <p>欢迎交流与分享经验!</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">分类</h3>
+    <div class="widget-body">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/JAVA/">JAVA</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/JavaScript/">JavaScript</a><span class="category-list-count">28</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Linux/">Linux</a><span class="category-list-count">9</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/MacOS/">MacOS</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/PHP/">PHP</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Python/">Python</a><span class="category-list-count">7</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Vue/">Vue</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/uni-app/">uni-app</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a><span class="category-list-count">13</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%A0%91%E8%8E%93%E6%B4%BE/">树莓派</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/">算法</a><span class="category-list-count">6</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80/">计算机基础</a><span class="category-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget-body">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Apache/" rel="tag">Apache</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CSS/" rel="tag">CSS</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CSS3/" rel="tag">CSS3</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Centos/" rel="tag">Centos</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/HTML/" rel="tag">HTML</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/HTML5/" rel="tag">HTML5</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/JAVA/" rel="tag">JAVA</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/JavaScript/" rel="tag">JavaScript</a><span class="tag-list-count">40</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux/" rel="tag">Linux</a><span class="tag-list-count">11</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MacOS/" rel="tag">MacOS</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Next-js/" rel="tag">Next.js</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Nginx/" rel="tag">Nginx</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PHP/" rel="tag">PHP</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Python/" rel="tag">Python</a><span class="tag-list-count">7</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/React/" rel="tag">React</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Vue/" rel="tag">Vue</a><span class="tag-list-count">6</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/canvas/" rel="tag">canvas</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/git/" rel="tag">git</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jQuery/" rel="tag">jQuery</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/other/" rel="tag">other</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/react/" rel="tag">react</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/scrapy/" rel="tag">scrapy</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/uni-app/" rel="tag">uni-app</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%B0%8F%E7%A8%8B%E5%BA%8F/" rel="tag">小程序</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%BE%AE%E4%BF%A1/" rel="tag">微信</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%BE%AE%E4%BF%A1%E5%85%AC%E4%BC%97%E5%8F%B7/" rel="tag">微信公众号</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%BE%AE%E4%BF%A1%E5%B0%8F%E7%A8%8B%E5%BA%8F/" rel="tag">微信小程序</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%A0%91%E8%8E%93%E6%B4%BE/" rel="tag">树莓派</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%AE%97%E6%B3%95/" rel="tag">算法</a><span class="tag-list-count">6</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80/" rel="tag">计算机基础</a><span class="tag-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget-body tagcloud">
+      <a href="/tags/Apache/" style="font-size: 13px;">Apache</a> <a href="/tags/CSS/" style="font-size: 13px;">CSS</a> <a href="/tags/CSS3/" style="font-size: 13.43px;">CSS3</a> <a href="/tags/Centos/" style="font-size: 13.43px;">Centos</a> <a href="/tags/HTML/" style="font-size: 13px;">HTML</a> <a href="/tags/HTML5/" style="font-size: 13px;">HTML5</a> <a href="/tags/JAVA/" style="font-size: 13px;">JAVA</a> <a href="/tags/JavaScript/" style="font-size: 14px;">JavaScript</a> <a href="/tags/Linux/" style="font-size: 13.86px;">Linux</a> <a href="/tags/MacOS/" style="font-size: 13px;">MacOS</a> <a href="/tags/Next-js/" style="font-size: 13px;">Next.js</a> <a href="/tags/Nginx/" style="font-size: 13px;">Nginx</a> <a href="/tags/PHP/" style="font-size: 13.43px;">PHP</a> <a href="/tags/Python/" style="font-size: 13.71px;">Python</a> <a href="/tags/React/" style="font-size: 13px;">React</a> <a href="/tags/Vue/" style="font-size: 13.57px;">Vue</a> <a href="/tags/canvas/" style="font-size: 13px;">canvas</a> <a href="/tags/git/" style="font-size: 13px;">git</a> <a href="/tags/jQuery/" style="font-size: 13.14px;">jQuery</a> <a href="/tags/other/" style="font-size: 13px;">other</a> <a href="/tags/react/" style="font-size: 13px;">react</a> <a href="/tags/scrapy/" style="font-size: 13px;">scrapy</a> <a href="/tags/uni-app/" style="font-size: 13.14px;">uni-app</a> <a href="/tags/%E5%B0%8F%E7%A8%8B%E5%BA%8F/" style="font-size: 13px;">小程序</a> <a href="/tags/%E5%BE%AE%E4%BF%A1/" style="font-size: 13.14px;">微信</a> <a href="/tags/%E5%BE%AE%E4%BF%A1%E5%85%AC%E4%BC%97%E5%8F%B7/" style="font-size: 13px;">微信公众号</a> <a href="/tags/%E5%BE%AE%E4%BF%A1%E5%B0%8F%E7%A8%8B%E5%BA%8F/" style="font-size: 13.29px;">微信小程序</a> <a href="/tags/%E6%A0%91%E8%8E%93%E6%B4%BE/" style="font-size: 13.14px;">树莓派</a> <a href="/tags/%E7%AE%97%E6%B3%95/" style="font-size: 13.57px;">算法</a> <a href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80/" style="font-size: 13px;">计算机基础</a>
+    </div>
+  </div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget-body">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/08/">八月 2022</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/03/">三月 2022</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/12/">十二月 2021</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/11/">十一月 2021</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/10/">十月 2021</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/09/">九月 2021</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/04/">四月 2021</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/02/">二月 2021</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">十二月 2020</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">十月 2020</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">八月 2020</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">六月 2020</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">四月 2020</a><span class="archive-list-count">11</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">三月 2020</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">一月 2020</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">十二月 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/09/">九月 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/08/">八月 2019</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/07/">七月 2019</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/02/">二月 2019</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/10/">十月 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">九月 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">七月 2018</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">五月 2018</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">四月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/03/">三月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/02/">二月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/01/">一月 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/11/">十一月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/10/">十月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/08/">八月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/06/">六月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/04/">四月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/03/">三月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/02/">二月 2017</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/01/">一月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">十二月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/11/">十一月 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">九月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">八月 2016</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/07/">七月 2016</a><span class="archive-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget-body">
+      <ul class="recent-post-list list-unstyled no-thumbnail">
+        
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a>
+              </p>
+              <p class="item-title">
+                <a href="/2022/08/31/react-Next.js%20%E4%B8%80%E4%BA%9B%E4%B8%9C%E8%A5%BF/" class="title">Next.js 一些东西</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2022-08-31T13:33:00.000Z" itemprop="datePublished">2022-08-31</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/Vue/">Vue</a>
+              </p>
+              <p class="item-title">
+                <a href="/2022/03/11/vue-%E7%89%B9%E6%80%A7/" class="title">vue-</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2022-03-11T14:13:02.000Z" itemprop="datePublished">2022-03-11</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80/">计算机基础</a>
+              </p>
+              <p class="item-title">
+                <a href="/2021/12/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80-%E8%BF%9B%E5%88%B6%E8%BD%AC%E6%8D%A2/" class="title">计算机基础-进制转换</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2021-12-10T05:34:12.000Z" itemprop="datePublished">2021-12-10</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/Vue/">Vue</a>
+              </p>
+              <p class="item-title">
+                <a href="/2021/11/15/vue-%E9%80%9A%E4%BF%A1%E6%96%B9%E5%BC%8F/" class="title">vue-通信方式</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2021-11-15T14:13:02.000Z" itemprop="datePublished">2021-11-15</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/Vue/">Vue</a>
+              </p>
+              <p class="item-title">
+                <a href="/2021/10/11/vue-%E9%87%8D%E6%96%B0%E7%A0%94%E7%A9%B6%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F/" class="title">vue-重新研究生命周期</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2021-10-11T14:13:02.000Z" itemprop="datePublished">2021-10-11</time>
+              </p>
+            </div>
+          </li>
+          
+      </ul>
+    </div>
+  </div>
+  
+
+    
+  </div>
+</aside>
+
+  
+  
+<main class="main" role="main">
+  <div class="content">
+  <article id="post-Python-scrapy爬虫之初次尝试" class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
+    
+    <div class="article-header">
+      
+        
+  
+    <h1 class="article-title" itemprop="name">
+      scrapy爬虫之初次尝试
+    </h1>
+  
+
+      
+      <div class="article-meta">
+        <span class="article-date">
+    <i class="icon icon-calendar-check"></i>
+	<a href="/2018/10/10/Python-scrapy%E7%88%AC%E8%99%AB%E4%B9%8B%E5%88%9D%E6%AC%A1%E5%B0%9D%E8%AF%95/" class="article-date">
+	  <time datetime="2018-10-10T13:34:23.000Z" itemprop="datePublished">2018-10-10</time>
+	</a>
+</span>
+        
+  <span class="article-category">
+    <i class="icon icon-folder"></i>
+    <a class="article-category-link" href="/categories/Python/">Python</a>
+  </span>
+
+        
+  <span class="article-tag">
+    <i class="icon icon-tags"></i>
+	<a class="article-tag-link-link" href="/tags/Python/" rel="tag">Python</a>, <a class="article-tag-link-link" href="/tags/scrapy/" rel="tag">scrapy</a>
+  </span>
+
+
+        
+	<span class="article-read hidden-xs">
+	    <i class="icon icon-eye-fill" aria-hidden="true"></i>
+	    <span id="busuanzi_container_page_pv">
+			<span id="busuanzi_value_page_pv">0</span>
+		</span>
+	</span>
+
+
+        <span class="post-comment"><i class="icon icon-comment"></i> <a href="/2018/10/10/Python-scrapy%E7%88%AC%E8%99%AB%E4%B9%8B%E5%88%9D%E6%AC%A1%E5%B0%9D%E8%AF%95/#comments" class="article-comment-link">评论</a></span>
+        
+	
+		<span class="post-wordcount hidden-xs" itemprop="wordCount">字数统计: 3.2k(字)</span>
+	
+	
+		<span class="post-readcount hidden-xs" itemprop="timeRequired">阅读时长: 15(分)</span>
+	
+
+      </div>
+    </div>
+    <div class="article-entry marked-body" itemprop="articleBody">
+      
+        <p>本文主要记录scrapy安装、配置，到第一个爬虫实例实现的过程。</p>
+<span id="more"></span>
+
+<h3 id="准备工作"><a href="#准备工作" class="headerlink" title="准备工作"></a>准备工作</h3><h4 id="环境"><a href="#环境" class="headerlink" title="环境"></a>环境</h4><ul>
+<li>环境：macOS</li>
+<li>python版本：python 3.7</li>
+<li>Scrapy版本：1.5.1</li>
+</ul>
+<h4 id="安装scrapy"><a href="#安装scrapy" class="headerlink" title="安装scrapy"></a>安装scrapy</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip3 install scrapy</span><br></pre></td></tr></table></figure>
+
+<h4 id="创建Scrapy项目"><a href="#创建Scrapy项目" class="headerlink" title="创建Scrapy项目"></a>创建Scrapy项目</h4><p>创建python目录，切换到python目录,创建爬虫项目</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">magicyou@magicYoudeMacBook-Pro ~$ mkdir ~&#x2F;python</span><br><span class="line">magicyou@magicYoudeMacBook-Pro ~$ cd ~&#x2F;python</span><br><span class="line">magicyou@magicYoudeMacBook-Pro python$ scrapy startproject articleSpider</span><br><span class="line">New Scrapy project &#39;articleSpider&#39;, using template directory &#39;&#x2F;usr&#x2F;local&#x2F;lib&#x2F;python3.7&#x2F;site-packages&#x2F;scrapy&#x2F;templates&#x2F;project&#39;, created in:</span><br><span class="line">    &#x2F;Users&#x2F;magicyou&#x2F;Desktop&#x2F;python&#x2F;articleSpider</span><br><span class="line"></span><br><span class="line">You can start your first spider with:</span><br><span class="line">    cd articleSpider</span><br><span class="line">    scrapy genspider example example.com</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>创建一个Spider爬虫程序。本文进行抓取的模板网站 ‘blog.jobbole.com’，</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">magicyou@magicYoudeMacBook-Pro python$ cd articleSpider</span><br><span class="line">magicyou@magicYoudeMacBook-Pro articleSpider$ scrapy genspider jobbole blog.jobbole.com</span><br><span class="line">Created spider &#39;jobbole&#39; using template &#39;basic&#39; in module:</span><br><span class="line">  articleSpider.spiders.jobbole</span><br></pre></td></tr></table></figure>
+
+<h4 id="创建一个mysql表，用来存储文章信息"><a href="#创建一个mysql表，用来存储文章信息" class="headerlink" title="创建一个mysql表，用来存储文章信息"></a>创建一个mysql表，用来存储文章信息</h4><p>直接上sql</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">DROP</span> <span class="keyword">TABLE</span> IF <span class="keyword">EXISTS</span> `article`;</span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> `article` (</span><br><span class="line">  `url_object_id` <span class="type">varchar</span>(<span class="number">255</span>) <span class="keyword">COLLATE</span> utf8_unicode_ci <span class="keyword">NOT</span> <span class="keyword">NULL</span> COMMENT <span class="string">&#x27;url的md5&#x27;</span>,</span><br><span class="line">  `url` <span class="type">varchar</span>(<span class="number">255</span>) <span class="keyword">COLLATE</span> utf8_unicode_ci <span class="keyword">DEFAULT</span> <span class="keyword">NULL</span> COMMENT <span class="string">&#x27;url&#x27;</span>,</span><br><span class="line">  `title` <span class="type">varchar</span>(<span class="number">255</span>) <span class="keyword">COLLATE</span> utf8_unicode_ci <span class="keyword">DEFAULT</span> <span class="keyword">NULL</span> COMMENT <span class="string">&#x27;文章名字&#x27;</span>,</span><br><span class="line">  `create_date` <span class="type">date</span> <span class="keyword">DEFAULT</span> <span class="keyword">NULL</span> COMMENT <span class="string">&#x27;创建日期&#x27;</span>,</span><br><span class="line">  `front_image_url` <span class="type">varchar</span>(<span class="number">255</span>) <span class="keyword">COLLATE</span> utf8_unicode_ci <span class="keyword">DEFAULT</span> <span class="keyword">NULL</span> COMMENT <span class="string">&#x27;封面路原始url&#x27;</span>,</span><br><span class="line">  `front_image_path` <span class="type">varchar</span>(<span class="number">255</span>) <span class="keyword">COLLATE</span> utf8_unicode_ci <span class="keyword">DEFAULT</span> <span class="keyword">NULL</span> COMMENT <span class="string">&#x27;封面图本地路径&#x27;</span>,</span><br><span class="line">  `comment_nums` <span class="type">int</span>(<span class="number">11</span>) <span class="keyword">DEFAULT</span> <span class="keyword">NULL</span> COMMENT <span class="string">&#x27;评论数&#x27;</span>,</span><br><span class="line">  `fav_nums` <span class="type">int</span>(<span class="number">11</span>) <span class="keyword">DEFAULT</span> <span class="keyword">NULL</span> COMMENT <span class="string">&#x27;点赞数&#x27;</span>,</span><br><span class="line">  `praise_nums` <span class="type">int</span>(<span class="number">11</span>) <span class="keyword">DEFAULT</span> <span class="keyword">NULL</span>,</span><br><span class="line">  `content` longtext <span class="keyword">COLLATE</span> utf8_unicode_ci COMMENT <span class="string">&#x27;文章内容&#x27;</span>,</span><br><span class="line">  <span class="keyword">PRIMARY</span> KEY (`url_object_id`)</span><br><span class="line">) ENGINE<span class="operator">=</span>InnoDB <span class="keyword">DEFAULT</span> CHARSET<span class="operator">=</span>utf8 <span class="keyword">COLLATE</span><span class="operator">=</span>utf8_unicode_ci;</span><br><span class="line"></span><br><span class="line"><span class="keyword">SET</span> FOREIGN_KEY_CHECKS <span class="operator">=</span> <span class="number">1</span>;</span><br></pre></td></tr></table></figure>
+<p>至此准备工作基本完成<br>此时的目录结构应该是如下展示：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">|-- articleSpider</span><br><span class="line">    |--- articleSpider</span><br><span class="line">        |-- spiders    # Spiders类</span><br><span class="line">        	|-- jobbole.py</span><br><span class="line">        	|-- __init__.py</span><br><span class="line">        	|-- __pycache__</span><br><span class="line">            	|-- __init__.cpython-37.pyc</span><br><span class="line">        |-- __pycache__</span><br><span class="line">            |-- settings.cpython-37.pyc</span><br><span class="line">            |-- __init__.cpython-37.pyc</span><br><span class="line">        |-- middlewares.</span><br><span class="line">        |-- pipelines.py</span><br><span class="line">        |-- items.py</span><br><span class="line">        |-- settings.py</span><br><span class="line">        |-- __init__.py</span><br><span class="line">    |-- scrapy.cfg</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="简单的了解"><a href="#简单的了解" class="headerlink" title="简单的了解"></a>简单的了解</h3><h4 id="Spiders"><a href="#Spiders" class="headerlink" title="Spiders"></a>Spiders</h4><p>Spider类定义了如何爬取某个(或某些)网站。包括了爬取的动作(例如:是否跟进链接)以及如何从网页的内容中提取结构化数据(爬取item)。 换句话说，Spider就是您定义爬取的动作及分析某个网页(或者是有些网页)的地方。</p>
+<p>对spider来说，爬取的循环类似下文:</p>
+<ul>
+<li><p>以初始的URL初始化Request，并设置回调函数。 当该request下载完毕并返回时，将生成response，并作为参数传给该回调函数。</p>
+<p>spider中初始的request是通过调用 start_requests() 来获取的。 start_requests() 读取 start_urls 中的URL， 并以 parse 为回调函数生成 Request 。</p>
+</li>
+<li><p>在回调函数内分析返回的(网页)内容，返回 Item 对象或者 Request 或者一个包括二者的可迭代容器。 返回的Request对象之后会经过Scrapy处理，下载相应的内容，并调用设置的callback函数(函数可相同)。</p>
+</li>
+<li><p>在回调函数内，您可以使用 选择器(Selectors) (您也可以使用BeautifulSoup, lxml 或者您想用的任何解析器) 来分析网页内容，并根据分析的数据生成item。</p>
+</li>
+<li><p>最后，由spider返回的item将被存到数据库(由某些 Item Pipeline 处理)或使用 Feed exports </p>
+</li>
+</ul>
+<h4 id="Items"><a href="#Items" class="headerlink" title="Items"></a>Items</h4><p>爬取的主要目标就是从非结构性的数据源提取结构性数据，例如网页。 Scrapy提供 Item 类来满足这样的需求。<br>Item 对象是种简单的容器，保存了爬取到得数据。 其提供了 类似于词典(dictionary-like) 的API以及用于声明可用字段的简单语法。</p>
+<h4 id="Item-Pipeline"><a href="#Item-Pipeline" class="headerlink" title="Item Pipeline"></a>Item Pipeline</h4><p>当Item在Spider中被收集之后，它将会被传递到Item Pipeline，一些组件会按照一定的顺序执行对Item的处理。</p>
+<p>每个item pipeline组件(有时称之为“Item Pipeline”)是实现了简单方法的Python类。他们接收到Item并通过它执行一些行为，同时也决定此Item是否继续通过pipeline，或是被丢弃而不再进行处理。</p>
+<p>以下是item pipeline的一些典型应用：</p>
+<ul>
+<li>清理HTML数据</li>
+<li>验证爬取的数据(检查item包含某些字段)</li>
+<li>查重(并丢弃)</li>
+<li>将爬取结果保存到数据库中</li>
+</ul>
+<h3 id="爬虫逻辑编写"><a href="#爬虫逻辑编写" class="headerlink" title="爬虫逻辑编写"></a>爬虫逻辑编写</h3><p>入口文件 main.py<br>编辑器是PyCharm，为了调试方便，添加main.py作为程序的入口，切换在articleSpider操作(当前路径 ~/python/articleSpider/articleSpider)</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/python3</span></span><br><span class="line"><span class="comment"># -*- coding: utf-8 -*-</span></span><br><span class="line">__author__ = <span class="string">&#x27;magicYou&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> scrapy.cmdline <span class="keyword">import</span> execute</span><br><span class="line"><span class="keyword">import</span> sys</span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(os.path.dirname(os.path.abspath(__file__)))</span><br><span class="line">sys.path.append(os.path.dirname(os.path.abspath(__file__)))</span><br><span class="line">execute([<span class="string">&quot;scrapy&quot;</span>, <span class="string">&quot;crawl&quot;</span>, <span class="string">&quot;jobbole&quot;</span>])</span><br></pre></td></tr></table></figure>
+
+<p>Spider爬虫使用parse(self,response)方法来解析所下载的页面。此方法返回一个包含新的URL资源网址的迭代对象，这些新的URL网址将被添加到下载队列中以供将来进行爬取数据和解析。<br>spider主要代码（python/articleSpider/articleSpider/jobbole.py）：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -*- coding: utf-8 -*-</span></span><br><span class="line"><span class="keyword">from</span> urllib <span class="keyword">import</span> parse</span><br><span class="line"><span class="keyword">from</span> datetime <span class="keyword">import</span> datetime</span><br><span class="line"><span class="keyword">from</span> scrapy.http <span class="keyword">import</span> Request</span><br><span class="line"><span class="keyword">from</span> articleSpider.items <span class="keyword">import</span> JobboleArticlespiderItem</span><br><span class="line"><span class="keyword">from</span> .utils.common <span class="keyword">import</span> get_md5</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">JobboleSpider</span>(<span class="params">scrapy.Spider</span>):</span></span><br><span class="line">    name = <span class="string">&#x27;jobbole&#x27;</span></span><br><span class="line">    allowed_domains = [<span class="string">&#x27;blog.jobbole.com&#x27;</span>]</span><br><span class="line">    start_urls = [<span class="string">&#x27;http://blog.jobbole.com/all-posts/&#x27;</span>]</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">parse</span>(<span class="params">self, response</span>):</span></span><br><span class="line">        <span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">        1.获取文章列表中的文章url并交给scrapy下载并进行解析</span></span><br><span class="line"><span class="string">        2.获取下一页的url并交给scary进行下载，下载完成后交给parse</span></span><br><span class="line"><span class="string">        &#x27;&#x27;&#x27;</span></span><br><span class="line">        post_nodes = response.css(<span class="string">&quot;#archive .floated-thumb .post-thumb a&quot;</span>)</span><br><span class="line">        <span class="keyword">for</span> post_node <span class="keyword">in</span> post_nodes:</span><br><span class="line">            image_url = post_node.css(<span class="string">&quot;img::attr(src)&quot;</span>).extract_first(<span class="string">&quot;&quot;</span>)</span><br><span class="line">            post_url = post_node.css(<span class="string">&quot;::attr(href)&quot;</span>).extract_first()</span><br><span class="line">            <span class="keyword">yield</span> Request(url=parse.urljoin(response.url, post_url), meta=&#123;<span class="string">&quot;front_image_url&quot;</span>:image_url&#125;, callback=self.parse_detail)</span><br><span class="line"></span><br><span class="line">        <span class="comment"># 提取下一页并交给scrapy进行下载</span></span><br><span class="line">        next_urls = response.css(<span class="string">&quot;.next.page-numbers::attr(href)&quot;</span>).extract_first(<span class="string">&quot;&quot;</span>)</span><br><span class="line">        <span class="keyword">if</span> next_urls:</span><br><span class="line">            <span class="keyword">yield</span> Request(url=parse.urljoin(response.url, next_urls), callback=self.parse)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">parse_detail</span>(<span class="params">self, response</span>):</span></span><br><span class="line">        <span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">        详情页信息提取</span></span><br><span class="line"><span class="string">        &#x27;&#x27;&#x27;</span></span><br><span class="line">        article = JobboleArticlespiderItem()</span><br><span class="line">        url = response.url</span><br><span class="line">        title = response.xpath(<span class="string">&quot;//div[@class=&#x27;entry-header&#x27;]/h1/text()&quot;</span>).extract()[<span class="number">0</span>]</span><br><span class="line">        create_date = response.xpath(<span class="string">&quot;//div[@class=&#x27;entry-meta&#x27;]/p[@class=&#x27;entry-meta-hide-on-mobile&#x27;]/text()&quot;</span>).extract()[<span class="number">0</span>].strip()</span><br><span class="line">        create_date = datetime.strptime(create_date.split()[<span class="number">0</span>], <span class="string">&quot;%Y/%m/%d&quot;</span>)</span><br><span class="line">        praise_nums = response.xpath(<span class="string">&quot;//div[@class=&#x27;post-adds&#x27;]/span[contains(@class, &#x27;vote-post-up&#x27;)]/h10/text()&quot;</span>).extract()[<span class="number">0</span>]</span><br><span class="line">        fav_nums = response.xpath(<span class="string">&quot;//div[@class=&#x27;post-adds&#x27;]/span[contains(@class, &#x27;bookmark-btn&#x27;)]/text()&quot;</span>).extract()[<span class="number">0</span>]</span><br><span class="line">        fav_nums = fav_nums.replace(<span class="string">&#x27;收藏&#x27;</span>, <span class="string">&#x27;&#x27;</span>) <span class="keyword">if</span> fav_nums.replace(<span class="string">&#x27;收藏&#x27;</span>, <span class="string">&#x27;&#x27;</span>).strip() <span class="keyword">else</span> <span class="number">0</span></span><br><span class="line">        comment_nums = response.xpath(<span class="string">&quot;//div[@class=&#x27;post-adds&#x27;]/a[@href=&#x27;#article-comment&#x27;]/span/text()&quot;</span>).extract()[<span class="number">0</span>]</span><br><span class="line">        comment_nums = comment_nums.replace(<span class="string">&#x27;评论&#x27;</span>, <span class="string">&#x27;&#x27;</span>) <span class="keyword">if</span> comment_nums.replace(<span class="string">&#x27;评论&#x27;</span>, <span class="string">&#x27;&#x27;</span>).strip() <span class="keyword">else</span> <span class="number">0</span></span><br><span class="line">        content = response.xpath(<span class="string">&quot;//div[@class=&#x27;entry&#x27;]&quot;</span>).extract()[<span class="number">0</span>]</span><br><span class="line"></span><br><span class="line">        <span class="comment"># 获取图片</span></span><br><span class="line">        front_image_url = response.meta.get(<span class="string">&quot;front_image_url&quot;</span>, <span class="string">&quot;&quot;</span>)</span><br><span class="line">        article_item = &#123;&#125;</span><br><span class="line">        article_item[<span class="string">&quot;url&quot;</span>] = url</span><br><span class="line">        article_item[<span class="string">&quot;url_object_id&quot;</span>] = get_md5(url)</span><br><span class="line">        article_item[<span class="string">&quot;title&quot;</span>] = title</span><br><span class="line">        article_item[<span class="string">&quot;create_date&quot;</span>] = create_date</span><br><span class="line">        article_item[<span class="string">&quot;praise_nums&quot;</span>] = <span class="built_in">int</span>(praise_nums)</span><br><span class="line">        article_item[<span class="string">&quot;fav_nums&quot;</span>] = <span class="built_in">int</span>(fav_nums)</span><br><span class="line">        article_item[<span class="string">&quot;comment_nums&quot;</span>] = <span class="built_in">int</span>(comment_nums)</span><br><span class="line">        article_item[<span class="string">&quot;content&quot;</span>] = content</span><br><span class="line">        article_item[<span class="string">&quot;front_image_url&quot;</span>] = [front_image_url]</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">yield</span> article_item</span><br></pre></td></tr></table></figure>
+<p>过程简单描述</p>
+<ol>
+<li>parse函数从start_urls为起始页，获取列表里的文章url，和文章的封面图url；</li>
+<li>讲步骤1中的获取的url交给parse_detail，进行详情处理，处理结果交付给item；</li>
+<li>获取下一页的url，作为参数再次交给parse函数，直到没有下一页为止。</li>
+</ol>
+<p>Item使用简单的class定义语法以及 Field 对象来声明<br>items主要代码（python/articleSpider/items.py）：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">import scrapy</span><br><span class="line"></span><br><span class="line">class ArticleItem(scrapy.Item):</span><br><span class="line">    title &#x3D; scrapy.Field()</span><br><span class="line">    url &#x3D; scrapy.Field()</span><br><span class="line">    url_object_id &#x3D; scrapy.Field()</span><br><span class="line">    crate_date &#x3D; scrapy.Field()</span><br><span class="line">    praise_nums &#x3D; scrapy.Field()</span><br><span class="line">    fav_nums &#x3D; scrapy.Field()</span><br><span class="line">    comment_nums &#x3D; scrapy.Field()</span><br><span class="line">    content &#x3D; scrapy.Field()</span><br><span class="line">    front_image_url &#x3D; scrapy.Field()</span><br></pre></td></tr></table></figure>
+<p>pipeline中接收item传过来的数据，并且存入数据库</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> scrapy.pipelines.images <span class="keyword">import</span> ImagesPipeline</span><br><span class="line"><span class="keyword">import</span> pymysql</span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> twisted.enterprise <span class="keyword">import</span> adbapi</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ArticleImagePipeline</span>(<span class="params">ImagesPipeline</span>):</span></span><br><span class="line">    <span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">    存储图片，并返回存储的路径</span></span><br><span class="line"><span class="string">    &#x27;&#x27;&#x27;</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">item_completed</span>(<span class="params">self, results, item, info</span>):</span></span><br><span class="line">        <span class="keyword">for</span> ok, value <span class="keyword">in</span> results:</span><br><span class="line">            image_file_path = value[<span class="string">&#x27;path&#x27;</span>]</span><br><span class="line">        <span class="comment"># 给item添加图片本地存储路径</span></span><br><span class="line">        item[<span class="string">&quot;front_image_path&quot;</span>] = image_file_path</span><br><span class="line">        <span class="keyword">return</span> item</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MysqlPipeline</span>():</span></span><br><span class="line">    <span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">    同步存储mysql，比较慢</span></span><br><span class="line"><span class="string">    &#x27;&#x27;&#x27;</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self, params</span>):</span></span><br><span class="line">        self.conn = pymysql.connect( host = params[<span class="string">&#x27;host&#x27;</span>],</span><br><span class="line">                                     user = params[<span class="string">&#x27;user&#x27;</span>],</span><br><span class="line">                                     password = params[<span class="string">&#x27;password&#x27;</span>],</span><br><span class="line">                                     db = params[<span class="string">&#x27;db&#x27;</span>],</span><br><span class="line">                                     charset = params[<span class="string">&#x27;charset&#x27;</span>],</span><br><span class="line">                                     cursorclass = pymysql.cursors.DictCursor)</span><br><span class="line">        self.cursor = self.conn.cursor()</span><br><span class="line"></span><br><span class="line"><span class="meta">    @classmethod</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">from_crawler</span>(<span class="params">cls, crawler</span>):</span></span><br><span class="line">        <span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">        获取settings文件中的配置</span></span><br><span class="line"><span class="string">        &#x27;&#x27;&#x27;</span></span><br><span class="line">        params = crawler.settings.get(<span class="string">&#x27;MYSQL&#x27;</span>)</span><br><span class="line">        <span class="keyword">return</span> cls(params)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">process_item</span>(<span class="params">self, item, spider</span>):</span></span><br><span class="line">        insert_sql = <span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">            insert into article </span></span><br><span class="line"><span class="string">               (title, create_date, url, url_object_id, front_image_url, front_image_path, comment_nums, fav_nums, praise_nums, content)</span></span><br><span class="line"><span class="string">            values </span></span><br><span class="line"><span class="string">                (&#x27;%s&#x27;, &#x27;%s&#x27;,&#x27;%s&#x27;, &#x27;%s&#x27;, &#x27;%s&#x27;, &#x27;%s&#x27;, %d, %d, %d,&#x27;%s&#x27;)</span></span><br><span class="line"><span class="string">        &#x27;&#x27;&#x27;</span> % (item[<span class="string">&#x27;title&#x27;</span>], item[<span class="string">&#x27;create_date&#x27;</span>], item[<span class="string">&#x27;url&#x27;</span>], item[<span class="string">&#x27;url_object_id&#x27;</span>], <span class="string">&#x27;,&#x27;</span>.join(item[<span class="string">&#x27;front_image_url&#x27;</span>]), item[<span class="string">&quot;front_image_path&quot;</span>], item[<span class="string">&#x27;comment_nums&#x27;</span>], item[<span class="string">&#x27;fav_nums&#x27;</span>], item[<span class="string">&#x27;praise_nums&#x27;</span>], item[<span class="string">&#x27;content&#x27;</span>])</span><br><span class="line">        self.cursor.execute(insert_sql)</span><br><span class="line">        self.conn.commit()</span><br><span class="line">        <span class="keyword">return</span> item</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MysqlTwistedPipline</span>(<span class="params"><span class="built_in">object</span></span>):</span></span><br><span class="line">    <span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">    异步存储mysql，相对较快</span></span><br><span class="line"><span class="string">    &#x27;&#x27;&#x27;</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self, params</span>):</span></span><br><span class="line">        <span class="comment"># 使用Twisted中的adbapi获取数据库连接池对象</span></span><br><span class="line">        self.dbpool = adbapi.ConnectionPool(<span class="string">&quot;pymysql&quot;</span>, **params)</span><br><span class="line"></span><br><span class="line"><span class="meta">    @classmethod</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">from_crawler</span>(<span class="params">cls,crawler</span>):</span></span><br><span class="line">        <span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">        获取settings文件中的配置</span></span><br><span class="line"><span class="string">        &#x27;&#x27;&#x27;</span></span><br><span class="line">        param = crawler.settings.get(<span class="string">&#x27;MYSQL&#x27;</span>)</span><br><span class="line">        params = <span class="built_in">dict</span>(</span><br><span class="line">            host = param[<span class="string">&#x27;host&#x27;</span>],</span><br><span class="line">            user = param[<span class="string">&#x27;user&#x27;</span>],</span><br><span class="line">            password = param[<span class="string">&#x27;password&#x27;</span>],</span><br><span class="line">            db = param[<span class="string">&#x27;db&#x27;</span>],</span><br><span class="line">            charset = param[<span class="string">&#x27;charset&#x27;</span>],</span><br><span class="line">            cursorclass = pymysql.cursors.DictCursor,</span><br><span class="line">        )</span><br><span class="line">        <span class="keyword">return</span> cls(params)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">process_item</span>(<span class="params">self, item, spider</span>):</span></span><br><span class="line">        <span class="comment"># 使用数据库连接池对象进行数据库操作,自动传递cursor对象到第一个参数</span></span><br><span class="line">        query = self.dbpool.runInteraction(self.do_insert, item)</span><br><span class="line">        <span class="comment"># 设置出错时的回调方法,自动传递出错消息对象failure到第一个参数</span></span><br><span class="line">        query.addErrback(self.handle_error)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">handle_error</span>(<span class="params">self,failure</span>):</span></span><br><span class="line">        <span class="built_in">print</span>(failure)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">do_insert</span>(<span class="params">self, cursor, item</span>):</span></span><br><span class="line">        insert_sql = <span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">            insert into article </span></span><br><span class="line"><span class="string">               (title, create_date, url, url_object_id, front_image_url, front_image_path, comment_nums, fav_nums, praise_nums, content)</span></span><br><span class="line"><span class="string">            values </span></span><br><span class="line"><span class="string">                (&#x27;%s&#x27;, &#x27;%s&#x27;,&#x27;%s&#x27;, &#x27;%s&#x27;, &#x27;%s&#x27;, &#x27;%s&#x27;, %d, %d, %d,&#x27;%s&#x27;)</span></span><br><span class="line"><span class="string">        &#x27;&#x27;&#x27;</span> % (item[<span class="string">&#x27;title&#x27;</span>], item[<span class="string">&#x27;create_date&#x27;</span>], item[<span class="string">&#x27;url&#x27;</span>], item[<span class="string">&#x27;url_object_id&#x27;</span>], <span class="string">&#x27;,&#x27;</span>.join(item[<span class="string">&#x27;front_image_url&#x27;</span>]), item[<span class="string">&quot;front_image_path&quot;</span>], item[<span class="string">&#x27;comment_nums&#x27;</span>], item[<span class="string">&#x27;fav_nums&#x27;</span>], item[<span class="string">&#x27;praise_nums&#x27;</span>], item[<span class="string">&#x27;content&#x27;</span>])</span><br><span class="line">        cursor.execute(insert_sql)</span><br></pre></td></tr></table></figure>
+<p>最重要的一步就是settings需要配置<br>关键的settings配置：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="comment"># Pipeline自定义一个，就要在这里添加一个，后面的数字表示执行的先后顺序，数字越大越靠后</span></span><br><span class="line">ITEM_PIPELINES = &#123;</span><br><span class="line">   <span class="comment"># &#x27;articleSpider.pipelines.ArticlespiderPipeline&#x27;: 300,</span></span><br><span class="line">    <span class="string">&#x27;scrapy.pipelines.images.ImagesPipeline&#x27;</span>: <span class="number">2</span>,</span><br><span class="line">    <span class="string">&#x27;articleSpider.pipelines.ArticleImagePipeline&#x27;</span>: <span class="number">1</span>,</span><br><span class="line">    <span class="string">&#x27;articleSpider.pipelines.MysqlPipeline&#x27;</span>: <span class="number">3</span>,</span><br><span class="line">   <span class="comment">#  &#x27;articleSpider.pipelines.MysqlTwistedPipline&#x27;: 3,</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment"># 图片下载</span></span><br><span class="line"><span class="comment"># item中要下载的图片路径，数值类型必须为list</span></span><br><span class="line">IMAGES_URLS_FIELD = <span class="string">&quot;front_image_url&quot;</span></span><br><span class="line"><span class="comment"># 获取当前绝对路径</span></span><br><span class="line">project_dir = os.path.abspath(os.path.dirname(__file__))</span><br><span class="line"><span class="comment"># 图片存储到本地路径</span></span><br><span class="line">IMAGES_STORE = os.path.join(project_dir, <span class="string">&#x27;images&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># mysql配置参数</span></span><br><span class="line">MYSQL = &#123;<span class="string">&#x27;host&#x27;</span>:<span class="string">&#x27;localhost&#x27;</span>,<span class="string">&#x27;user&#x27;</span>:<span class="string">&#x27;root&#x27;</span>,<span class="string">&#x27;password&#x27;</span>:<span class="string">&#x27;root&#x27;</span>,<span class="string">&#x27;db&#x27;</span>:<span class="string">&#x27;jobbole&#x27;</span>,<span class="string">&#x27;charset&#x27;</span>:<span class="string">&#x27;utf8&#x27;</span>&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h3 id="注意"><a href="#注意" class="headerlink" title="注意"></a>注意</h3><ol>
+<li>spiders目录下添加utils目录，存放常用的自定义公共方法common.py<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/python3</span></span><br><span class="line"><span class="comment"># -*- coding: utf-8 -*-</span></span><br><span class="line">__author__ = <span class="string">&#x27;magicYou&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> hashlib</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_md5</span>(<span class="params">url</span>):</span></span><br><span class="line">    <span class="keyword">if</span> <span class="built_in">isinstance</span>(url, <span class="built_in">str</span>):</span><br><span class="line">        url = url.encode(<span class="string">&quot;utf-8&quot;</span>)</span><br><span class="line">    m = hashlib.md5()</span><br><span class="line">    m.update(url)</span><br><span class="line">    <span class="keyword">return</span> m.hexdigest()</span><br></pre></td></tr></table></figure></li>
+<li>articleSpider目录下创建images，用来存储下载的图片</li>
+</ol>
+<h3 id="知识补充"><a href="#知识补充" class="headerlink" title="知识补充"></a>知识补充</h3><p>xpath基本语法</p>
+<table>
+<thead>
+<tr>
+<th>表达式</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>/body</td>
+<td>选出当前选择器的根元素body</td>
+</tr>
+<tr>
+<td>/body/div</td>
+<td>选取当前选择器文档的根元素body的所有div子元素</td>
+</tr>
+<tr>
+<td>/body/div[1]</td>
+<td>选取body根元素下面第一个div子元素</td>
+</tr>
+<tr>
+<td>/body/div[last()]</td>
+<td>选取body根元素下面最后一个div子元素</td>
+</tr>
+<tr>
+<td>/body/div[last()-1]</td>
+<td>选取body根元素下面倒数第二个div子元素</td>
+</tr>
+<tr>
+<td>//div</td>
+<td>选取所有div子元素(不论出现在文档任何地方)</td>
+</tr>
+<tr>
+<td>body//div</td>
+<td>选取所有属于body元素的后代的div元素(不论出现在body下的任何地方)</td>
+</tr>
+<tr>
+<td>/body/@id</td>
+<td>选取当前选择器文档的根元素body的id属性</td>
+</tr>
+<tr>
+<td>//@class</td>
+<td>选取所有元素的class属性</td>
+</tr>
+<tr>
+<td>//div[@class]</td>
+<td>选取所有拥有class属性的div元素</td>
+</tr>
+<tr>
+<td>//div[@class=’bold’]</td>
+<td>选取所有class属性等于bold的div元素</td>
+</tr>
+<tr>
+<td>//div[contains(@class,’bold’)]</td>
+<td>选取所有class属性包含bold的div元素</td>
+</tr>
+<tr>
+<td>/div/*</td>
+<td>选取当前文档根元素div的所有子元素</td>
+</tr>
+<tr>
+<td>//*</td>
+<td>选取文档所有节点</td>
+</tr>
+<tr>
+<td>//div[@*]</td>
+<td>获取所有带属性的div元素</td>
+</tr>
+<tr>
+<td>//div/a | //div/p</td>
+<td>选取所有div元素下面的子元素a和子元素p(并集)</td>
+</tr>
+<tr>
+<td>//p[@id=’content’]/text()</td>
+<td>选取id为content的p标签的内容(子元素的标签和内容都不会获取到)</td>
+</tr>
+</tbody></table>
+<p>一个用法实例：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">txt_header &#x3D; response.xpath(&quot;&#x2F;&#x2F;div[@id&#x3D;&#39;wrapper_header&#39;]&#x2F;h3&#x2F;text()&quot;).extract()[0] # 选取wrapper_header下h3标签的内容</span><br></pre></td></tr></table></figure>
+
+<p>CSS选择器</p>
+<table>
+<thead>
+<tr>
+<th>表达式</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>*</td>
+<td>选择所有节点</td>
+</tr>
+<tr>
+<td>#container</td>
+<td>选择Id为container的节点</td>
+</tr>
+<tr>
+<td>.container</td>
+<td>选取所有包含container类的节点</td>
+</tr>
+<tr>
+<td>li a</td>
+<td>选取所有li下的所有后代a元素(子和孙等所有的都会选中)</td>
+</tr>
+<tr>
+<td>ul + p</td>
+<td>选取ul后面的第一个相邻兄弟p元素</td>
+</tr>
+<tr>
+<td>div#container &gt; ul</td>
+<td>选取id为container的div的所有ul子元素</td>
+</tr>
+<tr>
+<td>ul ~ p</td>
+<td>选取与ul元素后面的所有兄弟p元素</td>
+</tr>
+<tr>
+<td>a[title]</td>
+<td>选取所有有title属性的a元素</td>
+</tr>
+<tr>
+<td>a[href=’<a target="_blank" rel="noopener" href="http://taobao.com&/#39;]">http://taobao.com&#39;]</a></td>
+<td>选取所有href属性等于<a target="_blank" rel="noopener" href="http://taobao.com的a元素/">http://taobao.com的a元素</a></td>
+</tr>
+<tr>
+<td>a[href*=’taobao’]</td>
+<td>选取所有href属性包含taobao的a元素</td>
+</tr>
+<tr>
+<td>a[href^=’http’]</td>
+<td>选取所有href属性开头为http的a元素</td>
+</tr>
+<tr>
+<td>a[href$=’.com’]</td>
+<td>选取所有href属性结尾为.com的a元素</td>
+</tr>
+<tr>
+<td>input[type=radio]:checked</td>
+<td>选取选中的radio的input元素</td>
+</tr>
+<tr>
+<td>div:not(#container)</td>
+<td>选取所有id非container的div元素</td>
+</tr>
+<tr>
+<td>li:nth-child(3)</td>
+<td>选取第三个li元素</td>
+</tr>
+<tr>
+<td>tr:nth-child(2n)</td>
+<td>选取偶数位的tr元素</td>
+</tr>
+<tr>
+<td>a::attr(href)</td>
+<td>获取所有a元素的href属性值</td>
+</tr>
+</tbody></table>
+<p>一个用法实例：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">txt_header &#x3D; response.css(&quot;#wrapper_header h3::text&quot;).extract_first()  # 选取wrapper_header下h3标签的内容</span><br></pre></td></tr></table></figure>
+
+<h3 id="参考资料、视频"><a href="#参考资料、视频" class="headerlink" title="参考资料、视频"></a>参考资料、视频</h3><ol>
+<li><a target="_blank" rel="noopener" href="https://scrapy-chs.readthedocs.io/zh_CN/0.24/">scrapy中文文档</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/wxystyle/article/details/81128026">Python爬虫框架Scrapy学习笔记原创（来自CSDN）</a></li>
+<li><a target="_blank" rel="noopener" href="https://coding.imooc.com/class/92.html">Python分布式爬虫打造搜索引擎（慕课视频）</a></li>
+</ol>
+
+      
+    </div>
+    <div class="article-footer">
+      <blockquote class="mt-2x">
+  <ul class="post-copyright list-unstyled">
+    
+    <li class="post-copyright-link hidden-xs">
+      <strong>本文链接：</strong>
+      <a href="https://blog.magicyou.cn/2018/10/10/Python-scrapy%E7%88%AC%E8%99%AB%E4%B9%8B%E5%88%9D%E6%AC%A1%E5%B0%9D%E8%AF%95/" title="scrapy爬虫之初次尝试" target="_blank" rel="external">https://blog.magicyou.cn/2018/10/10/Python-scrapy爬虫之初次尝试/</a>
+    </li>
+    
+    <li class="post-copyright-license">
+      <strong>版权声明： </strong> 本博客所有文章除特别声明外，均采用 <a href="http://creativecommons.org/licenses/by/4.0/deed.zh" target="_blank" rel="external">CC BY 4.0 CN协议</a> 许可协议。转载请注明出处！
+    </li>
+  </ul>
+</blockquote>
+
+
+<div class="panel panel-default panel-badger">
+  <div class="panel-body">
+    <figure class="media">
+      <div class="media-left">
+        <a href="https://github.com/magicyou" target="_blank" class="img-burn thumb-sm visible-lg">
+          <img src="http://tva3.sinaimg.cn/crop.0.0.180.180.180/a524faafjw1e8qgp5bmzyj2050050aa8.jpg" class="img-rounded w-full" alt="">
+        </a>
+      </div>
+      <div class="media-body">
+        <h3 class="media-heading"><a href="https://github.com/magicyou" target="_blank"><span class="text-dark">BruceLee</span><small class="ml-1x">Web Developer</small></a></h3>
+        <div>个人简介。</div>
+      </div>
+    </figure>
+  </div>
+</div>
+
+
+    </div>
+  </article>
+  
+    
+  <section id="comments">
+  	
+           
+    
+  </section>
+
+
+  
+</div>
+
+  <nav class="bar bar-footer clearfix" data-stick-bottom>
+  <div class="bar-inner">
+  
+  <ul class="pager pull-left">
+    
+    <li class="prev">
+      <a href="/2018/10/23/Python-%E8%84%9A%E6%9C%AC%E5%BE%AE%E5%8D%9A%E7%99%BB%E5%BD%95%E8%87%AA%E5%8A%A8%E5%8F%91%E5%BE%AE%E5%8D%9A%E5%B9%B6%E8%BF%94%E5%9B%9Ecookie/" title="脚本微博登录自动发微博并返回cookie"><i class="icon icon-angle-left" aria-hidden="true"></i><span>&nbsp;&nbsp;上一篇</span></a>
+    </li>
+    
+    
+    <li class="next">
+      <a href="/2018/09/26/Python-%E5%AE%89%E8%A3%85python%E7%9A%84crypto%E6%A8%A1%E5%9D%97/" title="安装python的crypto模块"><span>下一篇&nbsp;&nbsp;</span><i class="icon icon-angle-right" aria-hidden="true"></i></a>
+    </li>
+    
+    
+  </ul>
+  
+  
+  <!-- Button trigger modal -->
+  <button type="button" class="btn btn-fancy btn-donate pop-onhover bg-gradient-warning" data-toggle="modal" data-target="#donateModal"><span>赏</span></button>
+  <!-- <div class="wave-icon wave-icon-danger btn-donate" data-toggle="modal" data-target="#donateModal">
+    <div class="wave-circle"><span class="icon"><i class="icon icon-bill"></i></span></div>
+  </div> -->
+  
+  
+  <div class="bar-right">
+    
+    <div class="share-component" data-sites="weibo,qq,wechat" data-mobile-sites="weibo,qq,wechat"></div>
+    
+  </div>
+  </div>
+</nav>
+  
+<!-- Modal -->
+<div class="modal modal-center modal-small modal-xs-full fade" id="donateModal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content donate">
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      <div class="modal-body">
+        <div class="donate-box">
+          <div class="donate-head">
+            <p>感谢您的支持，我会继续努力的!</p>
+          </div>
+          <div class="tab-content">
+            <div role="tabpanel" class="tab-pane fade active in" id="alipay">
+              <div class="donate-payimg">
+                <img src="/images/donate/alipayimg.jpg" alt="扫码支持" title="扫一扫" />
+              </div>
+              <p class="text-muted mv">扫码打赏，你说多少就多少</p>
+              <p class="text-grey">打开支付宝扫一扫，即可进行扫码打赏哦</p>
+            </div>
+            <div role="tabpanel" class="tab-pane fade" id="wechatpay">
+              <div class="donate-payimg">
+                <img src="/images/donate/wechatpayimg.jpg" alt="扫码支持" title="扫一扫" />
+              </div>
+              <p class="text-muted mv">扫码打赏，你说多少就多少</p>
+              <p class="text-grey">打开微信扫一扫，即可进行扫码打赏哦</p>
+            </div>
+          </div>
+          <div class="donate-footer">
+            <ul class="nav nav-tabs nav-justified" role="tablist">
+              <li role="presentation" class="active">
+                <a href="#alipay" id="alipay-tab" role="tab" data-toggle="tab" aria-controls="alipay" aria-expanded="true"><i class="icon icon-alipay"></i> 支付宝</a>
+              </li>
+              <li role="presentation" class="">
+                <a href="#wechatpay" role="tab" id="wechatpay-tab" data-toggle="tab" aria-controls="wechatpay" aria-expanded="false"><i class="icon icon-wepay"></i> 微信支付</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+</main>
+
+  <footer class="footer" itemscope itemtype="http://schema.org/WPFooter">
+    <script src="http://127.0.0.1:7001/client.js"></script>
+    <span id="site_uv">
+        local 本站访客数<span id="web_site_uv_tips"></span>人
+    </span>
+
+	
+	
+    <ul class="social-links">
+    	
+        <li><a href="https://github.com/magicyou" target="_blank" title="Github" data-toggle=tooltip data-placement=top><i class="icon icon-github"></i></a></li>
+        
+        <li><a href="https://weibo.com/p/1005052770664111/home?from=page_100505&mod=TAB&is_all=1#place" target="_blank" title="Weibo" data-toggle=tooltip data-placement=top><i class="icon icon-weibo"></i></a></li>
+        
+    </ul>
+
+    
+    
+        <!-- 不蒜子统计 -->
+        <!-- <span id="busuanzi_container_site_pv">
+                本站总访问量<span id="busuanzi_value_site_pv"></span>次
+        </span> -->
+        <!-- <span class="post-meta-divider">|</span> -->
+        <span id="busuanzi_container_site_uv">
+                本站访客数<span id="busuanzi_value_site_uv"></span>人
+        </span>
+  
+    <div class="copyright">
+    	
+        <div class="publishby">
+        	Theme by <a href="https://github.com/cofess" target="_blank"> cofess </a>base on <a href="https://github.com/cofess/hexo-theme-pure" target="_blank">pure</a>.
+        </div>
+    </div>
+</footer>
+  <script src="//cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
+<script>
+window.jQuery || document.write('<script src="js/jquery.min.js"><\/script>')
+</script>
+
+<script src="/js/plugin.min.js"></script>
+
+
+<script src="/js/application.js"></script>
+
+
+    <script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+
+<script src="/js/insight.js"></script>
+
+
+
+
+
+
+   
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+   
+    
+  <!-- <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css"> -->
+  <script src="//cdn.jsdelivr.net/npm/gitalk@1.4.0/dist/gitalk.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/blueimp-md5@2.10.0/js/md5.min.js"></script>
+  <script type="text/javascript">
+  var gitalk = new Gitalk({
+    clientID: 'e6bd9b1c9667be2eba71',
+    clientSecret: '0749dfe86f83d7fb16beb133646555d83d5d7fc7',
+    repo: 'gitalk_comment',
+    owner: 'magicyou',
+    admin: ['magicyou'],
+    id: md5(location.pathname),
+    distractionFreeMode: true
+  })
+  gitalk.render('comments')
+  </script>
+
+      
+
+
+
+
+
+
+
+</body>
+</html>
+
+<script type="text/javascript">document.write(unescape("%3Cspan id='cnzz_stat_icon_1280958573'%3E%3C/span%3E%3Cscript src='https://s9.cnzz.com/z_stat.php%3Fid%3D1280958573%26show%3Dpic' type='text/javascript'%3E%3C/script%3E"));</script>

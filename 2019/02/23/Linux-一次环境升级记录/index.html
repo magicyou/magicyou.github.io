@@ -1,0 +1,810 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+  <meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="Cache-Control" content="no-transform" />
+  <meta http-equiv="Cache-Control" content="no-siteapp" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="format-detection" content="telephone=no,email=no,adress=no">
+  <!-- Color theme for statusbar -->
+  <meta name="theme-color" content="#000000" />
+  <!-- 强制页面在当前窗口以独立页面显示,防止别人在框架里调用页面 -->
+  <meta http-equiv="window-target" content="_top" />
+  
+  
+  <title>一次lnmp环境升级记录 | Hexo</title>
+  <meta name="description" content="集团内部要对所有服务器进行版本升级，因此代码要迁移，环境要搭建">
+<meta property="og:type" content="article">
+<meta property="og:title" content="一次lnmp环境升级记录">
+<meta property="og:url" content="https://blog.magicyou.cn/2019/02/23/Linux-%E4%B8%80%E6%AC%A1%E7%8E%AF%E5%A2%83%E5%8D%87%E7%BA%A7%E8%AE%B0%E5%BD%95/index.html">
+<meta property="og:site_name" content="MagicYou">
+<meta property="og:description" content="集团内部要对所有服务器进行版本升级，因此代码要迁移，环境要搭建">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2019-02-23T09:23:00.000Z">
+<meta property="article:modified_time" content="2019-02-23T09:23:00.000Z">
+<meta property="article:author" content="magicyou">
+<meta property="article:tag" content="Linux">
+<meta property="article:tag" content="Centos">
+<meta property="article:tag" content="PHP">
+<meta property="article:tag" content="Nginx">
+<meta property="article:tag" content="Apache">
+<meta name="twitter:card" content="summary">
+  <!-- Canonical links -->
+  <link rel="canonical" href="https://blog.magicyou.cn/2019/02/23/Linux-%E4%B8%80%E6%AC%A1%E7%8E%AF%E5%A2%83%E5%8D%87%E7%BA%A7%E8%AE%B0%E5%BD%95/index.html">
+  
+    <link rel="alternate" href="/atom.xml" title="MagicYou" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png" type="image/x-icon">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+  
+  
+  
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1.4.0/dist/gitalk.min.css">
+  
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body class="main-center" itemscope itemtype="http://schema.org/WebPage">
+  <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+  <div class="slimContent">
+    <div class="navbar-header">
+      
+      
+      <div class="profile-block text-center">
+        <a id="avatar" href="https://github.com/magicyou" target="_blank">
+          <img class="img-circle img-rotate" src="http://tva3.sinaimg.cn/crop.0.0.180.180.180/a524faafjw1e8qgp5bmzyj2050050aa8.jpg" width="200" height="200">
+        </a>
+        <h2 id="name" class="hidden-xs hidden-sm">BruceLee</h2>
+        <h3 id="title" class="hidden-xs hidden-sm hidden-md">Web Developer</h3>
+        <small id="location" class="text-muted hidden-xs hidden-sm"><i class="icon icon-map-marker"></i> Beijing, China</small>
+      </div>
+      
+      <div class="search" id="search-form-wrap">
+
+    <form class="search-form sidebar-form">
+        <div class="input-group">
+            <input type="text" class="search-form-input form-control" placeholder="搜索" />
+            <span class="input-group-btn">
+                <button type="submit" class="search-form-submit btn btn-flat" onclick="return false;"><i class="icon icon-search"></i></button>
+            </span>
+        </div>
+    </form>
+    <div class="ins-search">
+  <div class="ins-search-mask"></div>
+  <div class="ins-search-container">
+    <div class="ins-input-wrapper">
+      <input type="text" class="ins-search-input" placeholder="想要查找什么..." x-webkit-speech />
+      <button type="button" class="close ins-close ins-selectable" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+    </div>
+    <div class="ins-section-wrapper">
+      <div class="ins-section-container"></div>
+    </div>
+  </div>
+</div>
+
+
+</div>
+      <button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target="#main-navbar" aria-controls="main-navbar" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+    <nav id="main-navbar" class="collapse navbar-collapse" itemscope itemtype="http://schema.org/SiteNavigationElement" role="navigation">
+      <ul class="nav navbar-nav main-nav ">
+        
+        
+        <li class="menu-item menu-item-home">
+          <a href="/.">
+            
+            <i class="icon icon-home-fill"></i>
+            
+            <span class="menu-title">首页</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives">
+            
+            <i class="icon icon-archives-fill"></i>
+            
+            <span class="menu-title">归档</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories">
+            
+            <i class="icon icon-folder"></i>
+            
+            <span class="menu-title">分类</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags">
+            
+            <i class="icon icon-tags"></i>
+            
+            <span class="menu-title">标签</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-repository">
+          <a href="/repository">
+            
+            <i class="icon icon-project"></i>
+            
+            <span class="menu-title">项目</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-books">
+          <a href="/books">
+            
+            <i class="icon icon-book-fill"></i>
+            
+            <span class="menu-title">书单</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-links">
+          <a href="/links">
+            
+            <i class="icon icon-friendship"></i>
+            
+            <span class="menu-title">友链</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about">
+            
+            <i class="icon icon-cup-fill"></i>
+            
+            <span class="menu-title">关于</span>
+          </a>
+        </li>
+        
+      </ul>
+      
+	
+    <ul class="social-links">
+    	
+        <li><a href="https://github.com/magicyou" target="_blank" title="Github" data-toggle=tooltip data-placement=top><i class="icon icon-github"></i></a></li>
+        
+        <li><a href="https://weibo.com/p/1005052770664111/home?from=page_100505&mod=TAB&is_all=1#place" target="_blank" title="Weibo" data-toggle=tooltip data-placement=top><i class="icon icon-weibo"></i></a></li>
+        
+    </ul>
+
+    </nav>
+  </div>
+</header>
+
+  
+    <aside class="sidebar" itemscope itemtype="http://schema.org/WPSideBar">
+  <div class="slimContent">
+    
+      <div class="widget">
+    <h3 class="widget-title">公告</h3>
+    <div class="widget-body">
+        <div id="board">
+            <div class="content">
+                <p>欢迎交流与分享经验!</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">分类</h3>
+    <div class="widget-body">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/JAVA/">JAVA</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/JavaScript/">JavaScript</a><span class="category-list-count">28</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Linux/">Linux</a><span class="category-list-count">9</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/MacOS/">MacOS</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/PHP/">PHP</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Python/">Python</a><span class="category-list-count">7</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Vue/">Vue</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/uni-app/">uni-app</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a><span class="category-list-count">13</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%A0%91%E8%8E%93%E6%B4%BE/">树莓派</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/">算法</a><span class="category-list-count">6</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80/">计算机基础</a><span class="category-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget-body">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Apache/" rel="tag">Apache</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CSS/" rel="tag">CSS</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CSS3/" rel="tag">CSS3</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Centos/" rel="tag">Centos</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/HTML/" rel="tag">HTML</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/HTML5/" rel="tag">HTML5</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/JAVA/" rel="tag">JAVA</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/JavaScript/" rel="tag">JavaScript</a><span class="tag-list-count">40</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux/" rel="tag">Linux</a><span class="tag-list-count">11</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MacOS/" rel="tag">MacOS</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Next-js/" rel="tag">Next.js</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Nginx/" rel="tag">Nginx</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PHP/" rel="tag">PHP</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Python/" rel="tag">Python</a><span class="tag-list-count">7</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/React/" rel="tag">React</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Vue/" rel="tag">Vue</a><span class="tag-list-count">6</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/canvas/" rel="tag">canvas</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/git/" rel="tag">git</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jQuery/" rel="tag">jQuery</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/other/" rel="tag">other</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/react/" rel="tag">react</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/scrapy/" rel="tag">scrapy</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/uni-app/" rel="tag">uni-app</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%B0%8F%E7%A8%8B%E5%BA%8F/" rel="tag">小程序</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%BE%AE%E4%BF%A1/" rel="tag">微信</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%BE%AE%E4%BF%A1%E5%85%AC%E4%BC%97%E5%8F%B7/" rel="tag">微信公众号</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%BE%AE%E4%BF%A1%E5%B0%8F%E7%A8%8B%E5%BA%8F/" rel="tag">微信小程序</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%A0%91%E8%8E%93%E6%B4%BE/" rel="tag">树莓派</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%AE%97%E6%B3%95/" rel="tag">算法</a><span class="tag-list-count">6</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80/" rel="tag">计算机基础</a><span class="tag-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget-body tagcloud">
+      <a href="/tags/Apache/" style="font-size: 13px;">Apache</a> <a href="/tags/CSS/" style="font-size: 13px;">CSS</a> <a href="/tags/CSS3/" style="font-size: 13.43px;">CSS3</a> <a href="/tags/Centos/" style="font-size: 13.43px;">Centos</a> <a href="/tags/HTML/" style="font-size: 13px;">HTML</a> <a href="/tags/HTML5/" style="font-size: 13px;">HTML5</a> <a href="/tags/JAVA/" style="font-size: 13px;">JAVA</a> <a href="/tags/JavaScript/" style="font-size: 14px;">JavaScript</a> <a href="/tags/Linux/" style="font-size: 13.86px;">Linux</a> <a href="/tags/MacOS/" style="font-size: 13px;">MacOS</a> <a href="/tags/Next-js/" style="font-size: 13px;">Next.js</a> <a href="/tags/Nginx/" style="font-size: 13px;">Nginx</a> <a href="/tags/PHP/" style="font-size: 13.43px;">PHP</a> <a href="/tags/Python/" style="font-size: 13.71px;">Python</a> <a href="/tags/React/" style="font-size: 13px;">React</a> <a href="/tags/Vue/" style="font-size: 13.57px;">Vue</a> <a href="/tags/canvas/" style="font-size: 13px;">canvas</a> <a href="/tags/git/" style="font-size: 13px;">git</a> <a href="/tags/jQuery/" style="font-size: 13.14px;">jQuery</a> <a href="/tags/other/" style="font-size: 13px;">other</a> <a href="/tags/react/" style="font-size: 13px;">react</a> <a href="/tags/scrapy/" style="font-size: 13px;">scrapy</a> <a href="/tags/uni-app/" style="font-size: 13.14px;">uni-app</a> <a href="/tags/%E5%B0%8F%E7%A8%8B%E5%BA%8F/" style="font-size: 13px;">小程序</a> <a href="/tags/%E5%BE%AE%E4%BF%A1/" style="font-size: 13.14px;">微信</a> <a href="/tags/%E5%BE%AE%E4%BF%A1%E5%85%AC%E4%BC%97%E5%8F%B7/" style="font-size: 13px;">微信公众号</a> <a href="/tags/%E5%BE%AE%E4%BF%A1%E5%B0%8F%E7%A8%8B%E5%BA%8F/" style="font-size: 13.29px;">微信小程序</a> <a href="/tags/%E6%A0%91%E8%8E%93%E6%B4%BE/" style="font-size: 13.14px;">树莓派</a> <a href="/tags/%E7%AE%97%E6%B3%95/" style="font-size: 13.57px;">算法</a> <a href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80/" style="font-size: 13px;">计算机基础</a>
+    </div>
+  </div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget-body">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/08/">八月 2022</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/03/">三月 2022</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/12/">十二月 2021</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/11/">十一月 2021</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/10/">十月 2021</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/09/">九月 2021</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/04/">四月 2021</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/02/">二月 2021</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">十二月 2020</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">十月 2020</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">八月 2020</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">六月 2020</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">四月 2020</a><span class="archive-list-count">11</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">三月 2020</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">一月 2020</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">十二月 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/09/">九月 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/08/">八月 2019</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/07/">七月 2019</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/02/">二月 2019</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/10/">十月 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">九月 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">七月 2018</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">五月 2018</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">四月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/03/">三月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/02/">二月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/01/">一月 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/11/">十一月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/10/">十月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/08/">八月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/06/">六月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/04/">四月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/03/">三月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/02/">二月 2017</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/01/">一月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">十二月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/11/">十一月 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">九月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">八月 2016</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/07/">七月 2016</a><span class="archive-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget-body">
+      <ul class="recent-post-list list-unstyled no-thumbnail">
+        
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a>
+              </p>
+              <p class="item-title">
+                <a href="/2022/08/31/react-Next.js%20%E4%B8%80%E4%BA%9B%E4%B8%9C%E8%A5%BF/" class="title">Next.js 一些东西</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2022-08-31T13:33:00.000Z" itemprop="datePublished">2022-08-31</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/Vue/">Vue</a>
+              </p>
+              <p class="item-title">
+                <a href="/2022/03/11/vue-%E7%89%B9%E6%80%A7/" class="title">vue-</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2022-03-11T14:13:02.000Z" itemprop="datePublished">2022-03-11</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80/">计算机基础</a>
+              </p>
+              <p class="item-title">
+                <a href="/2021/12/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80-%E8%BF%9B%E5%88%B6%E8%BD%AC%E6%8D%A2/" class="title">计算机基础-进制转换</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2021-12-10T05:34:12.000Z" itemprop="datePublished">2021-12-10</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/Vue/">Vue</a>
+              </p>
+              <p class="item-title">
+                <a href="/2021/11/15/vue-%E9%80%9A%E4%BF%A1%E6%96%B9%E5%BC%8F/" class="title">vue-通信方式</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2021-11-15T14:13:02.000Z" itemprop="datePublished">2021-11-15</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/Vue/">Vue</a>
+              </p>
+              <p class="item-title">
+                <a href="/2021/10/11/vue-%E9%87%8D%E6%96%B0%E7%A0%94%E7%A9%B6%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F/" class="title">vue-重新研究生命周期</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2021-10-11T14:13:02.000Z" itemprop="datePublished">2021-10-11</time>
+              </p>
+            </div>
+          </li>
+          
+      </ul>
+    </div>
+  </div>
+  
+
+    
+  </div>
+</aside>
+
+  
+  
+<main class="main" role="main">
+  <div class="content">
+  <article id="post-Linux-一次环境升级记录" class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
+    
+    <div class="article-header">
+      
+        
+  
+    <h1 class="article-title" itemprop="name">
+      一次lnmp环境升级记录
+    </h1>
+  
+
+      
+      <div class="article-meta">
+        <span class="article-date">
+    <i class="icon icon-calendar-check"></i>
+	<a href="/2019/02/23/Linux-%E4%B8%80%E6%AC%A1%E7%8E%AF%E5%A2%83%E5%8D%87%E7%BA%A7%E8%AE%B0%E5%BD%95/" class="article-date">
+	  <time datetime="2019-02-23T09:23:00.000Z" itemprop="datePublished">2019-02-23</time>
+	</a>
+</span>
+        
+  <span class="article-category">
+    <i class="icon icon-folder"></i>
+    <a class="article-category-link" href="/categories/Linux/">Linux</a>
+  </span>
+
+        
+  <span class="article-tag">
+    <i class="icon icon-tags"></i>
+	<a class="article-tag-link-link" href="/tags/Apache/" rel="tag">Apache</a>, <a class="article-tag-link-link" href="/tags/Centos/" rel="tag">Centos</a>, <a class="article-tag-link-link" href="/tags/Linux/" rel="tag">Linux</a>, <a class="article-tag-link-link" href="/tags/Nginx/" rel="tag">Nginx</a>, <a class="article-tag-link-link" href="/tags/PHP/" rel="tag">PHP</a>
+  </span>
+
+
+        
+	<span class="article-read hidden-xs">
+	    <i class="icon icon-eye-fill" aria-hidden="true"></i>
+	    <span id="busuanzi_container_page_pv">
+			<span id="busuanzi_value_page_pv">0</span>
+		</span>
+	</span>
+
+
+        <span class="post-comment"><i class="icon icon-comment"></i> <a href="/2019/02/23/Linux-%E4%B8%80%E6%AC%A1%E7%8E%AF%E5%A2%83%E5%8D%87%E7%BA%A7%E8%AE%B0%E5%BD%95/#comments" class="article-comment-link">评论</a></span>
+        
+	
+		<span class="post-wordcount hidden-xs" itemprop="wordCount">字数统计: 2.3k(字)</span>
+	
+	
+		<span class="post-readcount hidden-xs" itemprop="timeRequired">阅读时长: 12(分)</span>
+	
+
+      </div>
+    </div>
+    <div class="article-entry marked-body" itemprop="articleBody">
+      
+        <p>集团内部要对所有服务器进行版本升级，因此代码要迁移，环境要搭建</p>
+<span id="more"></span>
+
+<h3 id="环境变化"><a href="#环境变化" class="headerlink" title="环境变化"></a>环境变化</h3><h4 id="现役环境："><a href="#现役环境：" class="headerlink" title="现役环境："></a>现役环境：</h4><table>
+<thead>
+<tr>
+<th align="center">服务器版本</th>
+<th align="center">PHP</th>
+<th align="center">Nginx</th>
+<th align="center">Apache</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">centos 6.8</td>
+<td align="center">php5.6</td>
+<td align="center">nginx/1.12.0</td>
+<td align="center">Apache/2.2.15 (Unix)</td>
+</tr>
+</tbody></table>
+<h4 id="升级后环境："><a href="#升级后环境：" class="headerlink" title="升级后环境："></a>升级后环境：</h4><table>
+<thead>
+<tr>
+<th align="center">服务器版本</th>
+<th align="center">PHP</th>
+<th align="center">Nginx</th>
+<th align="center">Apache</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">centos 7.4</td>
+<td align="center">php5.6</td>
+<td align="center">nginx/1.15.10</td>
+<td align="center">Apache/2.4.6 (CentOS)</td>
+</tr>
+</tbody></table>
+<h3 id="相关路径记录"><a href="#相关路径记录" class="headerlink" title="相关路径记录"></a>相关路径记录</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">nginx路径</span><br><span class="line">&#x2F;usr&#x2F;local&#x2F;nginx</span><br><span class="line"></span><br><span class="line">php路径</span><br><span class="line">&#x2F;usr&#x2F;local&#x2F;php56&#x2F;</span><br><span class="line"></span><br><span class="line">php.ini和php-fpm.conf路径</span><br><span class="line">&#x2F;usr&#x2F;local&#x2F;php56&#x2F;etc</span><br><span class="line"></span><br><span class="line">Php扩展路径</span><br><span class="line">&#x2F;usr&#x2F;local&#x2F;php56&#x2F;include&#x2F;php&#x2F;ext</span><br><span class="line">&#x2F;usr&#x2F;local&#x2F;php56&#x2F;lib&#x2F;php&#x2F;extensions</span><br></pre></td></tr></table></figure>
+
+<h3 id="安装记录"><a href="#安装记录" class="headerlink" title="安装记录"></a>安装记录</h3><h5 id="1-安装nginx"><a href="#1-安装nginx" class="headerlink" title="1. 安装nginx"></a>1. 安装nginx</h5><p>1.检查并安装Nginx基础依赖包pcre-devel   openssl-devel<br>名称中带有”devel”字符串的软件包是必须要安装的</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[appuser@xxxxx ~]# rpm -qa openssl-devel openssl</span><br><span class="line">openssl-1.0.2k-8.el7.x86_64</span><br><span class="line">[appuser@xxxxx ~]# rpm -qa pcre-devel pcre</span><br><span class="line">pcre-8.32-17.el7.x86_64</span><br></pre></td></tr></table></figure>
+
+
+<p>2.安装pcre-devel以及openssl-devel</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># yum install -y openssl-devel pcre-devel</span><br></pre></td></tr></table></figure>
+
+<p>安装后查看下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[appuser@xxxxx~]# rpm -qa openssl-devel openssl</span><br><span class="line">openssl-1.0.2k-8.el7.x86_64</span><br><span class="line">openssl-devel-1.0.2k-8.el7.x86_64</span><br><span class="line">[appuser@xxxxx~]# rpm -qa pcre-devel pcre</span><br><span class="line">pcre-devel-8.32-17.el7.x86_64</span><br><span class="line">pcre-8.32-17.el7.x86_64</span><br></pre></td></tr></table></figure>
+
+
+<p>3.开始安装Nginx：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># mkdir &#x2F;usr&#x2F;local&#x2F;nginx</span><br></pre></td></tr></table></figure>
+<p>进入目录</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># cd &#x2F;usr&#x2F;local&#x2F;nginx</span><br></pre></td></tr></table></figure>
+<p> 下载软件包，进入<a target="_blank" rel="noopener" href="http://nginx.org/download/%E5%A4%8D%E5%88%B6%E5%AF%B9%E5%BA%94%E7%89%88%E6%9C%AC%E7%9A%84%E4%B8%8B%E8%BD%BD%E9%93%BE%E6%8E%A5%E5%9C%B0%E5%9D%80%E3%80%82">http://nginx.org/download/复制对应版本的下载链接地址。</a> </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># wget http:&#x2F;&#x2F;nginx.org&#x2F;download&#x2F;nginx-1.15.10.tar.gz</span><br></pre></td></tr></table></figure>
+
+
+<p>解压安装</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[appuser@xxxxx nginx]# ls -l nginx-1.15.10.tar.gz</span><br><span class="line">-rw-r--r-- 1 root root 981687 Oct 17 21:20 nginx-1.15.10.tar.gz</span><br><span class="line">[appuser@xxxxx nginx]# useradd -M -s &#x2F;sbin&#x2F;nologin nginx </span><br><span class="line">[appuser@xxxxx nginx]# tar zxf nginx-1.15.10.tar.gz  </span><br><span class="line">[appuser@xxxxx nginx]# cd nginx-1.15.10&#x2F; </span><br></pre></td></tr></table></figure>
+
+<p>安装</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># .&#x2F;configure --prefix&#x3D;&#x2F;usr&#x2F;local&#x2F;nginx --with-http_dav_module --with-http_stub_status_module  --with-http_addition_module --with-http_sub_module  --with-http_flv_module --with-http_mp4_module --with-pcre --with-http_ssl_module --with-http_gzip_static_module  --user&#x3D;nginx  --group&#x3D;nginx</span><br><span class="line"># make &amp;&amp; make install</span><br></pre></td></tr></table></figure>
+
+<p>安装完成后的优化：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># ln -s &#x2F;usr&#x2F;local&#x2F;nginx&#x2F;sbin&#x2F;nginx &#x2F;usr&#x2F;local&#x2F;sbin&#x2F;</span><br></pre></td></tr></table></figure>
+
+<p>启动Nginx</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># nginx</span><br></pre></td></tr></table></figure>
+<p>查看</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># netstat -anput | grep nginx</span><br><span class="line"># ps -ef | grep nginx</span><br></pre></td></tr></table></figure>
+
+<p>停止</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">nginx -s stop   # 关闭</span><br><span class="line">nginx -s quit   # 退出（也是关闭）</span><br><span class="line">nginx -s reload   # 重新加载配置文件</span><br><span class="line">nginx -s reopen   # 重新打开日志文件</span><br><span class="line">nginx -t          # 测试配置文件</span><br></pre></td></tr></table></figure>
+
+<h5 id="2-安装php，php-fpm"><a href="#2-安装php，php-fpm" class="headerlink" title="2. 安装php，php-fpm"></a>2. 安装php，php-fpm</h5><h6 id="yum安装php5-6"><a href="#yum安装php5-6" class="headerlink" title="yum安装php5.6"></a>yum安装php5.6</h6><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># yum install --enablerepo&#x3D;remi --enablerepo&#x3D;remi-php56 php php-opcache php-devel php-mbstring php-mcrypt php-mysqlnd php-phpunit-PHPUnit php-pecl-xdebug php-pecl-xhprof -y</span><br></pre></td></tr></table></figure>
+<p>查看php版本</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"># php --version</span><br><span class="line"></span><br><span class="line">[appuser@xxxx &#x2F;]$ php -v</span><br><span class="line">PHP 5.6.0 (cli) (built: Apr  9 2019 16:00:50)</span><br><span class="line">Copyright (c) 1997-2014 The PHP Group</span><br><span class="line">Zend Engine v2.6.0, Copyright (c) 1998-2014 Zend Technologies</span><br></pre></td></tr></table></figure>
+
+<p>测试php-fpm</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># netstat -lnt | grep 9000</span><br></pre></td></tr></table></figure>
+
+
+<h6 id="安装php扩展"><a href="#安装php扩展" class="headerlink" title="安装php扩展"></a>安装php扩展</h6><p>pgsql 扩展</p>
+<p>找到相应的版本 php 5.6.0  <a target="_blank" rel="noopener" href="https://www.php.net/releases/">https://www.php.net/releases/</a></p>
+<p>1、从php官网下载一个合适版本的php;<br>2、从PHP解压包里ext目录找到pdo_pgsql 和 pgsql目录，并且复制放到liunx的 /root 目录（随便一个）<br>3、分别进入pdo_pgsql 和 pgsql目录 ：<br>phpize<br>./configure    (./configure –with-php-config=/usr/local/php56/bin/php-config)<br>make </p>
+<p> make install</p>
+<p>Ps：这里不要直接make &amp;&amp; make install，可能会报错，很抓狂</p>
+<p>4、修改php配置文件php.ini，添加pgsql.so、pdo_pgsql.so模块。<br>extension=pgsql.so</p>
+<p>5、重启php-fpm</p>
+<p>pdo_pgsql 扩展<br>按照相同的办法，安装 pdo_pgsql<br>还有php配置文件php.ini添加</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">extension&#x3D;pdo_pgsql.so</span><br></pre></td></tr></table></figure>
+
+
+<p>安装pgsql扩展时候报错如下： （不知道啥情况，先放着）</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Installing shared extensions:     &#x2F;usr&#x2F;local&#x2F;php56&#x2F;lib&#x2F;php&#x2F;extensions&#x2F;no-debug-non-zts-20131226&#x2F;</span><br><span class="line">cp: cannot create regular file &#39;&#x2F;usr&#x2F;local&#x2F;php56&#x2F;lib&#x2F;php&#x2F;extensions&#x2F;no-debug-non-zts-20131226&#x2F;#INST@558502#&#39;: Permission denied</span><br><span class="line">make: *** [install-modules] 错误 1</span><br></pre></td></tr></table></figure>
+
+<p>![image-20190410131947892](/Users/magicyou/Library/Application Support/typora-user-images/image-20190410131947892.png)</p>
+<h4 id="基本完成，配置nginx并上传代码"><a href="#基本完成，配置nginx并上传代码" class="headerlink" title="基本完成，配置nginx并上传代码"></a>基本完成，配置nginx并上传代码</h4><p>1.创建项目文件夹</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">cd &#x2F;</span><br><span class="line">mkdir www</span><br><span class="line">cd www</span><br><span class="line">mkdir web-osp</span><br><span class="line">chmod -R 777 web-osp</span><br></pre></td></tr></table></figure>
+<p>代码用命令行或者工具同步进服务器对应文件夹</p>
+<p>2.修改配置文件nginx.conf</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br></pre></td><td class="code"><pre><span class="line">#user  nobody;</span><br><span class="line">worker_processes  4;</span><br><span class="line"></span><br><span class="line">#error_log  logs&#x2F;error.log;</span><br><span class="line">#error_log  logs&#x2F;error.log  notice;</span><br><span class="line">#error_log  logs&#x2F;error.log  info;</span><br><span class="line"></span><br><span class="line">#pid        logs&#x2F;nginx.pid;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">events &#123;</span><br><span class="line">    worker_connections  1024;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">http &#123;</span><br><span class="line">    include       mime.types;</span><br><span class="line">    default_type  application&#x2F;octet-stream;</span><br><span class="line">    underscores_in_headers on;</span><br><span class="line"></span><br><span class="line">    log_format  main  &#39;$remote_addr - $remote_user [$time_local] &quot;$request&quot; &#39;</span><br><span class="line">                      &#39;$status $body_bytes_sent &quot;$http_referer&quot; &#39;</span><br><span class="line">                      &#39;&quot;$http_user_agent&quot; &quot;$http_x_forwarded_for&quot;&#39;;</span><br><span class="line">    log_format addHeaderlog &#39;$remote_addr - $remote_user [$time_local] &#39;</span><br><span class="line">                    &#39;&quot;$request&quot; $status $body_bytes_sent &#39;</span><br><span class="line">                    &#39;&quot;$http_referer&quot; &quot;$http_user_agent&quot; &quot;$http_x_forwarded_for&quot; [&quot;$http_oam_uid&quot;]&#39;;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    access_log  logs&#x2F;access.log  addHeaderlog;</span><br><span class="line"></span><br><span class="line">    sendfile        on;</span><br><span class="line">    #tcp_nopush     on;</span><br><span class="line"></span><br><span class="line">    #keepalive_timeout  0;</span><br><span class="line">    keepalive_timeout  65;</span><br><span class="line">    fastcgi_connect_timeout 300s;</span><br><span class="line">    fastcgi_send_timeout 300s;</span><br><span class="line">    fastcgi_read_timeout 300s;</span><br><span class="line">    fastcgi_buffer_size 128k;</span><br><span class="line">    fastcgi_buffers 8 128k;#8 128</span><br><span class="line">    fastcgi_busy_buffers_size 256k;</span><br><span class="line">    fastcgi_temp_file_write_size 256k;</span><br><span class="line">    fastcgi_intercept_errors on;</span><br><span class="line">    #gzip  on;</span><br><span class="line"> </span><br><span class="line">    server &#123;</span><br><span class="line">    listen       80;</span><br><span class="line">        server_name test.data.com.cn;</span><br><span class="line">        location &#x2F; &#123;</span><br><span class="line">             proxy_pass http:&#x2F;&#x2F;10.0.xx.x:9010&#x2F;;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    server &#123;</span><br><span class="line"></span><br><span class="line">    include conf.d&#x2F;*.conf;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>编辑conf.d文件夹下的配置文件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line">server &#123;</span><br><span class="line">    listen       9010;</span><br><span class="line">    server_name  127.0.0.1;</span><br><span class="line">    root   &quot;&#x2F;www&#x2F;web-ceshi&quot;;</span><br><span class="line">    index  index.html index.htm index.php info.php;</span><br><span class="line">    location &#x2F; &#123;</span><br><span class="line">       try_files $uri @rewrite;</span><br><span class="line">       proxy_set_header OAM_UID $http_OAM_UID;</span><br><span class="line">       proxy_pass_request_headers      on;</span><br><span class="line">    &#125;</span><br><span class="line">    location @rewrite &#123;</span><br><span class="line">        set $static 0;</span><br><span class="line">        if  ($uri ~ \.(css|js|jpg|jpeg|png|gif|ico|woff|eot|svg|css\.map|min\.map)$) &#123;</span><br><span class="line">            set $static 1;</span><br><span class="line">        &#125;</span><br><span class="line">        if ($static &#x3D; 0) &#123;</span><br><span class="line">            rewrite ^&#x2F;(.*)$ &#x2F;index.php?s&#x3D;&#x2F;$1;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    location ~ &#x2F;Uploads&#x2F;.*\.php$ &#123;</span><br><span class="line">        deny all;</span><br><span class="line">    &#125;</span><br><span class="line">    location ~ \.php&#x2F; &#123;</span><br><span class="line">       if ($request_uri ~ ^(.+\.php)(&#x2F;.+?)($|\?)) &#123; &#125;</span><br><span class="line">       fastcgi_pass 127.0.0.1:9000;</span><br><span class="line">       include fastcgi_params;</span><br><span class="line">       fastcgi_param SCRIPT_NAME     $1;</span><br><span class="line">       fastcgi_param PATH_INFO       $2;</span><br><span class="line">       fastcgi_param SCRIPT_FILENAME $document_root$1;</span><br><span class="line">    &#125;</span><br><span class="line">    location ~ \.php$ &#123;</span><br><span class="line">        fastcgi_pass 127.0.0.1:9000;</span><br><span class="line">        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;</span><br><span class="line">        include fastcgi_params;</span><br><span class="line">    &#125;</span><br><span class="line">    location ~ &#x2F;\.ht &#123;</span><br><span class="line">        deny  all;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>重启php-fpm、nginx</p>
+<h4 id="部署基本完毕，尝试进入项目，出现两次502，记录如下"><a href="#部署基本完毕，尝试进入项目，出现两次502，记录如下" class="headerlink" title="部署基本完毕，尝试进入项目，出现两次502，记录如下"></a>部署基本完毕，尝试进入项目，出现两次502，记录如下</h4><h5 id="第一次-502-Bad-Gateway"><a href="#第一次-502-Bad-Gateway" class="headerlink" title="第一次  502 Bad Gateway"></a>第一次  502 Bad Gateway</h5><p>nginx配置和php-fpm端口不一致，改好，能登录</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">fastcgi_pass 127.0.0.1:9000;</span><br></pre></td></tr></table></figure>
+
+<h5 id="第二次-502-Bad-Gateway"><a href="#第二次-502-Bad-Gateway" class="headerlink" title="第二次  502 Bad Gateway"></a>第二次  502 Bad Gateway</h5><p>登录后进入主页 502</p>
+<p>查找问题</p>
+<p><a target="_blank" rel="noopener" href="https://host.zzidc.com/wljc/928.html">https://host.zzidc.com/wljc/928.html</a></p>
+<p>查看是否是php-fpm的问题，找到正在使用的配置文件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[appuser@XXXXX lib]$ ps -ef | grep php-fpm</span><br><span class="line">root     13824     1  0  2018 ?        00:17:16 php-fpm: master process (&#x2F;usr&#x2F;local&#x2F;etc&#x2F;php-fpm.conf)</span><br><span class="line">www      18922 13824  0 12:48 ?        00:00:01 php-fpm: pool www</span><br><span class="line">www      24891 13824  0 14:08 ?        00:00:01 php-fpm: pool www</span><br><span class="line">www      25449 13824  0 14:15 ?        00:00:00 php-fpm: pool www</span><br><span class="line">appuser  28587 25750  0 14:46 pts&#x2F;1    00:00:00 grep php-fpm</span><br></pre></td></tr></table></figure>
+
+<p>编辑php-fpm.conf</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># &#x2F;usr&#x2F;local&#x2F;php&#x2F;etc&#x2F;php-fpm.conf</span><br></pre></td></tr></table></figure>
+
+<p>没有 php-fpm.conf 的话</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># cp php-fpm.conf.default php-fpm.conf</span><br></pre></td></tr></table></figure>
+<p>设置</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">request_terminate_timeout</span><br><span class="line"></span><br><span class="line">request_terminate_timeout &#x3D; 600</span><br></pre></td></tr></table></figure>
+
+<p>重启php-fpm，还是不行</p>
+<p>去看php-fpm日志记录，发现日志没开，先打开日志记录</p>
+<ul>
+<li>1.修改php-fpm.conf中的配置**，如果没有请增加:</li>
+</ul>
+<p>复制代码 代码如下:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[global]</span><br><span class="line">error_log &#x3D; log&#x2F;php_error_log</span><br><span class="line">[www]</span><br><span class="line">catch_workers_output &#x3D; yes</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>2.修改php.ini中配置</li>
+</ul>
+<p>，没有则增加:</p>
+<p>复制代码 代码如下:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">log_errors &#x3D; On</span><br><span class="line">error_log &#x3D; &quot;&#x2F;usr&#x2F;local&#x2F;php&#x2F;var&#x2F;log&#x2F;error_log&quot;</span><br><span class="line">error_reporting&#x3D;E_ALL&amp;~E_NOTICE</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>3.重启php-fpm</li>
+</ul>
+<p>当PHP执行错误时就能看到错误日志在”/usr/local/php56/var/log/php_error_log”中了</p>
+<ul>
+<li>4.浏览器进项目，然后查看看日志</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># &#x2F;usr&#x2F;local&#x2F;php56&#x2F;var&#x2F;log&#x2F;php_error_log</span><br><span class="line">[10-Apr-2019 15:30:58] WARNING: [pool www] child 272566 said into stderr: &quot;php-fpm: pool www: symbol lookup error: &#x2F;usr&#x2F;local&#x2F;php56&#x2F;lib&#x2F;php&#x2F;extensions&#x2F;no-debug-non-zts-20131226&#x2F;pgsql.so: undefined symbol: _safe_emalloc_string&quot;</span><br></pre></td></tr></table></figure>
+
+
+<p>重新装pgsql扩展<br>安装的时候不要make &amp;&amp; make install<br>先 make， 然后make install</p>
+<h3 id="刷新网页"><a href="#刷新网页" class="headerlink" title="刷新网页"></a>刷新网页</h3><h1 id="Call-to-undefined-function-bcdiv"><a href="#Call-to-undefined-function-bcdiv" class="headerlink" title="Call to undefined function bcdiv()"></a>Call to undefined function bcdiv()</h1><p>继续填坑</p>
+<p>查找问题，没有安装扩展bcmath</p>
+<p>同安装pgsql一样，安装后基本没发现其他问题</p>
+<p>后续配置Apache，ldap集团单点登录</p>
+<h3 id="Apache的单点登录配置简单预热，详细看下一篇"><a href="#Apache的单点登录配置简单预热，详细看下一篇" class="headerlink" title="Apache的单点登录配置简单预热，详细看下一篇"></a>Apache的单点登录配置简单预热，详细看下一篇</h3><p>cd /etc/httpd/conf/</p>
+<p>sudo vim httpd-vhosts.conf</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&lt;VirtualHost *:9008&gt;</span><br><span class="line">ServerAdmin jituan-web-osp</span><br><span class="line">DocumentRoot &quot;&#x2F;www&#x2F;jituan-web&quot;</span><br><span class="line">ServerName jituan-web-osp</span><br><span class="line">ServerAlias jituan-web-osp</span><br><span class="line">&lt;&#x2F;VirtualHost&gt;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>查看httpd进程</p>
+<p>ps -ef | grep httpd</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">第一、启动、终止、重启</span><br><span class="line"></span><br><span class="line">systemctl start httpd.service #启动</span><br><span class="line"></span><br><span class="line">systemctl stop httpd.service #停止</span><br><span class="line"></span><br><span class="line">systemctl restart httpd.service #重启</span><br></pre></td></tr></table></figure>
+
+
+
+<p>启动报错</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">appuser@xxxx conf]$ sudo systemctl status httpd.service</span><br><span class="line">● httpd.service - The Apache HTTP Server</span><br><span class="line">   Loaded: loaded (&#x2F;usr&#x2F;lib&#x2F;systemd&#x2F;system&#x2F;httpd.service; disabled; vendor preset: disabled)</span><br><span class="line">   Active: failed (Result: exit-code) since 三 2019-04-10 17:18:23 CST; 10min ago</span><br><span class="line">     Docs: man:httpd(8)</span><br><span class="line">           man:apachectl(8)</span><br><span class="line">  Process: 604898 ExecStop&#x3D;&#x2F;bin&#x2F;kill -WINCH $&#123;MAINPID&#125; (code&#x3D;exited, status&#x3D;1&#x2F;FAILURE)</span><br><span class="line">  Process: 604895 ExecStart&#x3D;&#x2F;usr&#x2F;sbin&#x2F;httpd $OPTIONS -DFOREGROUND (code&#x3D;exited, status&#x3D;1&#x2F;FAILURE)</span><br><span class="line"> Main PID: 604895 (code&#x3D;exited, status&#x3D;1&#x2F;FAILURE)</span><br><span class="line"></span><br><span class="line">4月 10 17:18:23 xxxx systemd[1]: Starting The Apache HTTP Server...</span><br><span class="line">4月 10 17:18:23 xxxx httpd[604895]: (98)Address already in use: AH00072: make_sock: could not bind to address 0.0.0.0:80</span><br><span class="line">4月 10 17:18:23 xxxx httpd[604895]: no listening sockets available, shutting down</span><br><span class="line">4月 10 17:18:23 xxxx httpd[604895]: AH00015: Unable to open logs</span><br><span class="line">4月 10 17:18:23 xxxx systemd[1]: httpd.service: main process exited, code&#x3D;exited, status&#x3D;1&#x2F;FAILURE</span><br><span class="line">4月 10 17:18:23 xxxx kill[604898]: kill: cannot find process &quot;&quot;</span><br><span class="line">4月 10 17:18:23 xxxx systemd[1]: httpd.service: control process exited, code&#x3D;exited status&#x3D;1</span><br><span class="line">4月 10 17:18:23 xxxx systemd[1]: Failed to start The Apache HTTP Server.</span><br><span class="line">4月 10 17:18:23 xxxx systemd[1]: Unit httpd.service entered failed state.</span><br><span class="line">4月 10 17:18:23 xxxx systemd[1]: httpd.service failed.</span><br></pre></td></tr></table></figure>
+<p>更根据上面的信息</p>
+<p>修改端口80为9008</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">[appuser@xxxx &#x2F;]$ sudo systemctl restart httpd.service</span><br><span class="line">您在 &#x2F;var&#x2F;spool&#x2F;mail&#x2F;appuser 中有新邮件</span><br><span class="line">[appuser@xxxx &#x2F;]$ sudo systemctl status httpd.service</span><br><span class="line">● httpd.service - The Apache HTTP Server</span><br><span class="line">   Loaded: loaded (&#x2F;usr&#x2F;lib&#x2F;systemd&#x2F;system&#x2F;httpd.service; disabled; vendor preset: disabled)</span><br><span class="line">   Active: active (running) since 三 2019-04-10 17:35:06 CST; 8s ago</span><br><span class="line">     Docs: man:httpd(8)</span><br><span class="line">           man:apachectl(8)</span><br><span class="line">  Process: 604898 ExecStop&#x3D;&#x2F;bin&#x2F;kill -WINCH $&#123;MAINPID&#125; (code&#x3D;exited, status&#x3D;1&#x2F;FAILURE)</span><br><span class="line"> Main PID: 654829 (httpd)</span><br><span class="line">   Status: &quot;Processing requests...&quot;</span><br><span class="line">   CGroup: &#x2F;system.slice&#x2F;httpd.service</span><br><span class="line">           ├─654829 &#x2F;usr&#x2F;sbin&#x2F;httpd -DFOREGROUND</span><br><span class="line">           ├─654834 &#x2F;usr&#x2F;sbin&#x2F;httpd -DFOREGROUND</span><br><span class="line">           ├─654835 &#x2F;usr&#x2F;sbin&#x2F;httpd -DFOREGROUND</span><br><span class="line">           ├─654836 &#x2F;usr&#x2F;sbin&#x2F;httpd -DFOREGROUND</span><br><span class="line">           ├─654837 &#x2F;usr&#x2F;sbin&#x2F;httpd -DFOREGROUND</span><br><span class="line">           └─654838 &#x2F;usr&#x2F;sbin&#x2F;httpd -DFOREGROUND</span><br><span class="line"></span><br><span class="line">4月 10 17:35:06 xxxx systemd[1]: Starting The Apache HTTP Server...</span><br><span class="line">4月 10 17:35:06 xxxx systemd[1]: Started The Apache HTTP Server.</span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+    <div class="article-footer">
+      <blockquote class="mt-2x">
+  <ul class="post-copyright list-unstyled">
+    
+    <li class="post-copyright-link hidden-xs">
+      <strong>本文链接：</strong>
+      <a href="https://blog.magicyou.cn/2019/02/23/Linux-%E4%B8%80%E6%AC%A1%E7%8E%AF%E5%A2%83%E5%8D%87%E7%BA%A7%E8%AE%B0%E5%BD%95/" title="一次lnmp环境升级记录" target="_blank" rel="external">https://blog.magicyou.cn/2019/02/23/Linux-一次环境升级记录/</a>
+    </li>
+    
+    <li class="post-copyright-license">
+      <strong>版权声明： </strong> 本博客所有文章除特别声明外，均采用 <a href="http://creativecommons.org/licenses/by/4.0/deed.zh" target="_blank" rel="external">CC BY 4.0 CN协议</a> 许可协议。转载请注明出处！
+    </li>
+  </ul>
+</blockquote>
+
+
+<div class="panel panel-default panel-badger">
+  <div class="panel-body">
+    <figure class="media">
+      <div class="media-left">
+        <a href="https://github.com/magicyou" target="_blank" class="img-burn thumb-sm visible-lg">
+          <img src="http://tva3.sinaimg.cn/crop.0.0.180.180.180/a524faafjw1e8qgp5bmzyj2050050aa8.jpg" class="img-rounded w-full" alt="">
+        </a>
+      </div>
+      <div class="media-body">
+        <h3 class="media-heading"><a href="https://github.com/magicyou" target="_blank"><span class="text-dark">BruceLee</span><small class="ml-1x">Web Developer</small></a></h3>
+        <div>个人简介。</div>
+      </div>
+    </figure>
+  </div>
+</div>
+
+
+    </div>
+  </article>
+  
+    
+  <section id="comments">
+  	
+           
+    
+  </section>
+
+
+  
+</div>
+
+  <nav class="bar bar-footer clearfix" data-stick-bottom>
+  <div class="bar-inner">
+  
+  <ul class="pager pull-left">
+    
+    <li class="prev">
+      <a href="/2019/02/24/Linux-%E5%8D%95%E7%82%B9%E7%99%BB%E5%BD%95%E9%85%8D%E7%BD%AE%20%E8%AE%B0%E5%BD%95/" title="配置webgate拦截跳转到ldap登录页实现单点登录"><i class="icon icon-angle-left" aria-hidden="true"></i><span>&nbsp;&nbsp;上一篇</span></a>
+    </li>
+    
+    
+    <li class="next">
+      <a href="/2019/02/03/Linux-yum%E6%BA%90%E7%9A%84%E4%BB%A3%E7%90%86%E8%AE%BE%E7%BD%AE%E5%8F%8A%E4%BF%AE%E6%94%B9/" title="yum源的代理设置及修改"><span>下一篇&nbsp;&nbsp;</span><i class="icon icon-angle-right" aria-hidden="true"></i></a>
+    </li>
+    
+    
+  </ul>
+  
+  
+  <!-- Button trigger modal -->
+  <button type="button" class="btn btn-fancy btn-donate pop-onhover bg-gradient-warning" data-toggle="modal" data-target="#donateModal"><span>赏</span></button>
+  <!-- <div class="wave-icon wave-icon-danger btn-donate" data-toggle="modal" data-target="#donateModal">
+    <div class="wave-circle"><span class="icon"><i class="icon icon-bill"></i></span></div>
+  </div> -->
+  
+  
+  <div class="bar-right">
+    
+    <div class="share-component" data-sites="weibo,qq,wechat" data-mobile-sites="weibo,qq,wechat"></div>
+    
+  </div>
+  </div>
+</nav>
+  
+<!-- Modal -->
+<div class="modal modal-center modal-small modal-xs-full fade" id="donateModal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content donate">
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      <div class="modal-body">
+        <div class="donate-box">
+          <div class="donate-head">
+            <p>感谢您的支持，我会继续努力的!</p>
+          </div>
+          <div class="tab-content">
+            <div role="tabpanel" class="tab-pane fade active in" id="alipay">
+              <div class="donate-payimg">
+                <img src="/images/donate/alipayimg.jpg" alt="扫码支持" title="扫一扫" />
+              </div>
+              <p class="text-muted mv">扫码打赏，你说多少就多少</p>
+              <p class="text-grey">打开支付宝扫一扫，即可进行扫码打赏哦</p>
+            </div>
+            <div role="tabpanel" class="tab-pane fade" id="wechatpay">
+              <div class="donate-payimg">
+                <img src="/images/donate/wechatpayimg.jpg" alt="扫码支持" title="扫一扫" />
+              </div>
+              <p class="text-muted mv">扫码打赏，你说多少就多少</p>
+              <p class="text-grey">打开微信扫一扫，即可进行扫码打赏哦</p>
+            </div>
+          </div>
+          <div class="donate-footer">
+            <ul class="nav nav-tabs nav-justified" role="tablist">
+              <li role="presentation" class="active">
+                <a href="#alipay" id="alipay-tab" role="tab" data-toggle="tab" aria-controls="alipay" aria-expanded="true"><i class="icon icon-alipay"></i> 支付宝</a>
+              </li>
+              <li role="presentation" class="">
+                <a href="#wechatpay" role="tab" id="wechatpay-tab" data-toggle="tab" aria-controls="wechatpay" aria-expanded="false"><i class="icon icon-wepay"></i> 微信支付</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+</main>
+
+  <footer class="footer" itemscope itemtype="http://schema.org/WPFooter">
+    <script src="http://127.0.0.1:7001/client.js"></script>
+    <span id="site_uv">
+        local 本站访客数<span id="web_site_uv_tips"></span>人
+    </span>
+
+	
+	
+    <ul class="social-links">
+    	
+        <li><a href="https://github.com/magicyou" target="_blank" title="Github" data-toggle=tooltip data-placement=top><i class="icon icon-github"></i></a></li>
+        
+        <li><a href="https://weibo.com/p/1005052770664111/home?from=page_100505&mod=TAB&is_all=1#place" target="_blank" title="Weibo" data-toggle=tooltip data-placement=top><i class="icon icon-weibo"></i></a></li>
+        
+    </ul>
+
+    
+    
+        <!-- 不蒜子统计 -->
+        <!-- <span id="busuanzi_container_site_pv">
+                本站总访问量<span id="busuanzi_value_site_pv"></span>次
+        </span> -->
+        <!-- <span class="post-meta-divider">|</span> -->
+        <span id="busuanzi_container_site_uv">
+                本站访客数<span id="busuanzi_value_site_uv"></span>人
+        </span>
+  
+    <div class="copyright">
+    	
+        <div class="publishby">
+        	Theme by <a href="https://github.com/cofess" target="_blank"> cofess </a>base on <a href="https://github.com/cofess/hexo-theme-pure" target="_blank">pure</a>.
+        </div>
+    </div>
+</footer>
+  <script src="//cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
+<script>
+window.jQuery || document.write('<script src="js/jquery.min.js"><\/script>')
+</script>
+
+<script src="/js/plugin.min.js"></script>
+
+
+<script src="/js/application.js"></script>
+
+
+    <script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+
+<script src="/js/insight.js"></script>
+
+
+
+
+
+
+   
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+   
+    
+  <!-- <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css"> -->
+  <script src="//cdn.jsdelivr.net/npm/gitalk@1.4.0/dist/gitalk.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/blueimp-md5@2.10.0/js/md5.min.js"></script>
+  <script type="text/javascript">
+  var gitalk = new Gitalk({
+    clientID: 'e6bd9b1c9667be2eba71',
+    clientSecret: '0749dfe86f83d7fb16beb133646555d83d5d7fc7',
+    repo: 'gitalk_comment',
+    owner: 'magicyou',
+    admin: ['magicyou'],
+    id: md5(location.pathname),
+    distractionFreeMode: true
+  })
+  gitalk.render('comments')
+  </script>
+
+      
+
+
+
+
+
+
+
+</body>
+</html>
+
+<script type="text/javascript">document.write(unescape("%3Cspan id='cnzz_stat_icon_1280958573'%3E%3C/span%3E%3Cscript src='https://s9.cnzz.com/z_stat.php%3Fid%3D1280958573%26show%3Dpic' type='text/javascript'%3E%3C/script%3E"));</script>

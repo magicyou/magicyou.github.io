@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+  <meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="Cache-Control" content="no-transform" />
+  <meta http-equiv="Cache-Control" content="no-siteapp" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="format-detection" content="telephone=no,email=no,adress=no">
+  <!-- Color theme for statusbar -->
+  <meta name="theme-color" content="#000000" />
+  <!-- 强制页面在当前窗口以独立页面显示,防止别人在框架里调用页面 -->
+  <meta http-equiv="window-target" content="_top" />
+  
+  
+  <title>可拖拽的弹出框 | Hexo</title>
+  <meta name="description" content="闲来无聊，拿来许久以前的可拖拽弹出框特效分享给过路的。以百度首页的登录框为样版，来一一说明怎么实现相同的效果。喜欢的也可以来看看原文原文">
+<meta property="og:type" content="article">
+<meta property="og:title" content="可拖拽的弹出框">
+<meta property="og:url" content="https://blog.magicyou.cn/2016/12/09/javascript-%E5%8F%AF%E6%8B%96%E6%8B%BD%E7%9A%84%E5%BC%B9%E5%87%BA%E6%A1%86/index.html">
+<meta property="og:site_name" content="MagicYou">
+<meta property="og:description" content="闲来无聊，拿来许久以前的可拖拽弹出框特效分享给过路的。以百度首页的登录框为样版，来一一说明怎么实现相同的效果。喜欢的也可以来看看原文原文">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2016-12-09T14:12:23.000Z">
+<meta property="article:modified_time" content="2016-12-09T15:45:02.000Z">
+<meta property="article:author" content="magicyou">
+<meta property="article:tag" content="JavaScript">
+<meta name="twitter:card" content="summary">
+  <!-- Canonical links -->
+  <link rel="canonical" href="https://blog.magicyou.cn/2016/12/09/javascript-%E5%8F%AF%E6%8B%96%E6%8B%BD%E7%9A%84%E5%BC%B9%E5%87%BA%E6%A1%86/index.html">
+  
+    <link rel="alternate" href="/atom.xml" title="MagicYou" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png" type="image/x-icon">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+  
+  
+  
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1.4.0/dist/gitalk.min.css">
+  
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body class="main-center" itemscope itemtype="http://schema.org/WebPage">
+  <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+  <div class="slimContent">
+    <div class="navbar-header">
+      
+      
+      <div class="profile-block text-center">
+        <a id="avatar" href="https://github.com/magicyou" target="_blank">
+          <img class="img-circle img-rotate" src="http://tva3.sinaimg.cn/crop.0.0.180.180.180/a524faafjw1e8qgp5bmzyj2050050aa8.jpg" width="200" height="200">
+        </a>
+        <h2 id="name" class="hidden-xs hidden-sm">BruceLee</h2>
+        <h3 id="title" class="hidden-xs hidden-sm hidden-md">Web Developer</h3>
+        <small id="location" class="text-muted hidden-xs hidden-sm"><i class="icon icon-map-marker"></i> Beijing, China</small>
+      </div>
+      
+      <div class="search" id="search-form-wrap">
+
+    <form class="search-form sidebar-form">
+        <div class="input-group">
+            <input type="text" class="search-form-input form-control" placeholder="搜索" />
+            <span class="input-group-btn">
+                <button type="submit" class="search-form-submit btn btn-flat" onclick="return false;"><i class="icon icon-search"></i></button>
+            </span>
+        </div>
+    </form>
+    <div class="ins-search">
+  <div class="ins-search-mask"></div>
+  <div class="ins-search-container">
+    <div class="ins-input-wrapper">
+      <input type="text" class="ins-search-input" placeholder="想要查找什么..." x-webkit-speech />
+      <button type="button" class="close ins-close ins-selectable" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+    </div>
+    <div class="ins-section-wrapper">
+      <div class="ins-section-container"></div>
+    </div>
+  </div>
+</div>
+
+
+</div>
+      <button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target="#main-navbar" aria-controls="main-navbar" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+    <nav id="main-navbar" class="collapse navbar-collapse" itemscope itemtype="http://schema.org/SiteNavigationElement" role="navigation">
+      <ul class="nav navbar-nav main-nav ">
+        
+        
+        <li class="menu-item menu-item-home">
+          <a href="/.">
+            
+            <i class="icon icon-home-fill"></i>
+            
+            <span class="menu-title">首页</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives">
+            
+            <i class="icon icon-archives-fill"></i>
+            
+            <span class="menu-title">归档</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories">
+            
+            <i class="icon icon-folder"></i>
+            
+            <span class="menu-title">分类</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags">
+            
+            <i class="icon icon-tags"></i>
+            
+            <span class="menu-title">标签</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-repository">
+          <a href="/repository">
+            
+            <i class="icon icon-project"></i>
+            
+            <span class="menu-title">项目</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-books">
+          <a href="/books">
+            
+            <i class="icon icon-book-fill"></i>
+            
+            <span class="menu-title">书单</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-links">
+          <a href="/links">
+            
+            <i class="icon icon-friendship"></i>
+            
+            <span class="menu-title">友链</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about">
+            
+            <i class="icon icon-cup-fill"></i>
+            
+            <span class="menu-title">关于</span>
+          </a>
+        </li>
+        
+      </ul>
+      
+	
+    <ul class="social-links">
+    	
+        <li><a href="https://github.com/magicyou" target="_blank" title="Github" data-toggle=tooltip data-placement=top><i class="icon icon-github"></i></a></li>
+        
+        <li><a href="https://weibo.com/p/1005052770664111/home?from=page_100505&mod=TAB&is_all=1#place" target="_blank" title="Weibo" data-toggle=tooltip data-placement=top><i class="icon icon-weibo"></i></a></li>
+        
+    </ul>
+
+    </nav>
+  </div>
+</header>
+
+  
+    <aside class="sidebar" itemscope itemtype="http://schema.org/WPSideBar">
+  <div class="slimContent">
+    
+      <div class="widget">
+    <h3 class="widget-title">公告</h3>
+    <div class="widget-body">
+        <div id="board">
+            <div class="content">
+                <p>欢迎交流与分享经验!</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">分类</h3>
+    <div class="widget-body">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/JAVA/">JAVA</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/JavaScript/">JavaScript</a><span class="category-list-count">28</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Linux/">Linux</a><span class="category-list-count">9</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/MacOS/">MacOS</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/PHP/">PHP</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Python/">Python</a><span class="category-list-count">7</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Vue/">Vue</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/uni-app/">uni-app</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a><span class="category-list-count">13</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%A0%91%E8%8E%93%E6%B4%BE/">树莓派</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/">算法</a><span class="category-list-count">6</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80/">计算机基础</a><span class="category-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget-body">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Apache/" rel="tag">Apache</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CSS/" rel="tag">CSS</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CSS3/" rel="tag">CSS3</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Centos/" rel="tag">Centos</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/HTML/" rel="tag">HTML</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/HTML5/" rel="tag">HTML5</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/JAVA/" rel="tag">JAVA</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/JavaScript/" rel="tag">JavaScript</a><span class="tag-list-count">40</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux/" rel="tag">Linux</a><span class="tag-list-count">11</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MacOS/" rel="tag">MacOS</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Next-js/" rel="tag">Next.js</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Nginx/" rel="tag">Nginx</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PHP/" rel="tag">PHP</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Python/" rel="tag">Python</a><span class="tag-list-count">7</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/React/" rel="tag">React</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Vue/" rel="tag">Vue</a><span class="tag-list-count">6</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/canvas/" rel="tag">canvas</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/git/" rel="tag">git</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jQuery/" rel="tag">jQuery</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/other/" rel="tag">other</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/react/" rel="tag">react</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/scrapy/" rel="tag">scrapy</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/uni-app/" rel="tag">uni-app</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%B0%8F%E7%A8%8B%E5%BA%8F/" rel="tag">小程序</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%BE%AE%E4%BF%A1/" rel="tag">微信</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%BE%AE%E4%BF%A1%E5%85%AC%E4%BC%97%E5%8F%B7/" rel="tag">微信公众号</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%BE%AE%E4%BF%A1%E5%B0%8F%E7%A8%8B%E5%BA%8F/" rel="tag">微信小程序</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%A0%91%E8%8E%93%E6%B4%BE/" rel="tag">树莓派</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%AE%97%E6%B3%95/" rel="tag">算法</a><span class="tag-list-count">6</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80/" rel="tag">计算机基础</a><span class="tag-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget-body tagcloud">
+      <a href="/tags/Apache/" style="font-size: 13px;">Apache</a> <a href="/tags/CSS/" style="font-size: 13px;">CSS</a> <a href="/tags/CSS3/" style="font-size: 13.43px;">CSS3</a> <a href="/tags/Centos/" style="font-size: 13.43px;">Centos</a> <a href="/tags/HTML/" style="font-size: 13px;">HTML</a> <a href="/tags/HTML5/" style="font-size: 13px;">HTML5</a> <a href="/tags/JAVA/" style="font-size: 13px;">JAVA</a> <a href="/tags/JavaScript/" style="font-size: 14px;">JavaScript</a> <a href="/tags/Linux/" style="font-size: 13.86px;">Linux</a> <a href="/tags/MacOS/" style="font-size: 13px;">MacOS</a> <a href="/tags/Next-js/" style="font-size: 13px;">Next.js</a> <a href="/tags/Nginx/" style="font-size: 13px;">Nginx</a> <a href="/tags/PHP/" style="font-size: 13.43px;">PHP</a> <a href="/tags/Python/" style="font-size: 13.71px;">Python</a> <a href="/tags/React/" style="font-size: 13px;">React</a> <a href="/tags/Vue/" style="font-size: 13.57px;">Vue</a> <a href="/tags/canvas/" style="font-size: 13px;">canvas</a> <a href="/tags/git/" style="font-size: 13px;">git</a> <a href="/tags/jQuery/" style="font-size: 13.14px;">jQuery</a> <a href="/tags/other/" style="font-size: 13px;">other</a> <a href="/tags/react/" style="font-size: 13px;">react</a> <a href="/tags/scrapy/" style="font-size: 13px;">scrapy</a> <a href="/tags/uni-app/" style="font-size: 13.14px;">uni-app</a> <a href="/tags/%E5%B0%8F%E7%A8%8B%E5%BA%8F/" style="font-size: 13px;">小程序</a> <a href="/tags/%E5%BE%AE%E4%BF%A1/" style="font-size: 13.14px;">微信</a> <a href="/tags/%E5%BE%AE%E4%BF%A1%E5%85%AC%E4%BC%97%E5%8F%B7/" style="font-size: 13px;">微信公众号</a> <a href="/tags/%E5%BE%AE%E4%BF%A1%E5%B0%8F%E7%A8%8B%E5%BA%8F/" style="font-size: 13.29px;">微信小程序</a> <a href="/tags/%E6%A0%91%E8%8E%93%E6%B4%BE/" style="font-size: 13.14px;">树莓派</a> <a href="/tags/%E7%AE%97%E6%B3%95/" style="font-size: 13.57px;">算法</a> <a href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80/" style="font-size: 13px;">计算机基础</a>
+    </div>
+  </div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget-body">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/08/">八月 2022</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/03/">三月 2022</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/12/">十二月 2021</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/11/">十一月 2021</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/10/">十月 2021</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/09/">九月 2021</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/04/">四月 2021</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/02/">二月 2021</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">十二月 2020</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">十月 2020</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">八月 2020</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">六月 2020</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">四月 2020</a><span class="archive-list-count">11</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">三月 2020</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">一月 2020</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">十二月 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/09/">九月 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/08/">八月 2019</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/07/">七月 2019</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/02/">二月 2019</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/10/">十月 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">九月 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">七月 2018</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">五月 2018</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">四月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/03/">三月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/02/">二月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/01/">一月 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/11/">十一月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/10/">十月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/08/">八月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/06/">六月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/04/">四月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/03/">三月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/02/">二月 2017</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/01/">一月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">十二月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/11/">十一月 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">九月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">八月 2016</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/07/">七月 2016</a><span class="archive-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget-body">
+      <ul class="recent-post-list list-unstyled no-thumbnail">
+        
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a>
+              </p>
+              <p class="item-title">
+                <a href="/2022/08/31/react-Next.js%20%E4%B8%80%E4%BA%9B%E4%B8%9C%E8%A5%BF/" class="title">Next.js 一些东西</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2022-08-31T13:33:00.000Z" itemprop="datePublished">2022-08-31</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/Vue/">Vue</a>
+              </p>
+              <p class="item-title">
+                <a href="/2022/03/11/vue-%E7%89%B9%E6%80%A7/" class="title">vue-</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2022-03-11T14:13:02.000Z" itemprop="datePublished">2022-03-11</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80/">计算机基础</a>
+              </p>
+              <p class="item-title">
+                <a href="/2021/12/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80-%E8%BF%9B%E5%88%B6%E8%BD%AC%E6%8D%A2/" class="title">计算机基础-进制转换</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2021-12-10T05:34:12.000Z" itemprop="datePublished">2021-12-10</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/Vue/">Vue</a>
+              </p>
+              <p class="item-title">
+                <a href="/2021/11/15/vue-%E9%80%9A%E4%BF%A1%E6%96%B9%E5%BC%8F/" class="title">vue-通信方式</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2021-11-15T14:13:02.000Z" itemprop="datePublished">2021-11-15</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/Vue/">Vue</a>
+              </p>
+              <p class="item-title">
+                <a href="/2021/10/11/vue-%E9%87%8D%E6%96%B0%E7%A0%94%E7%A9%B6%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F/" class="title">vue-重新研究生命周期</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2021-10-11T14:13:02.000Z" itemprop="datePublished">2021-10-11</time>
+              </p>
+            </div>
+          </li>
+          
+      </ul>
+    </div>
+  </div>
+  
+
+    
+  </div>
+</aside>
+
+  
+  
+<main class="main" role="main">
+  <div class="content">
+  <article id="post-javascript-可拖拽的弹出框" class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
+    
+    <div class="article-header">
+      
+        
+  
+    <h1 class="article-title" itemprop="name">
+      可拖拽的弹出框
+    </h1>
+  
+
+      
+      <div class="article-meta">
+        <span class="article-date">
+    <i class="icon icon-calendar-check"></i>
+	<a href="/2016/12/09/javascript-%E5%8F%AF%E6%8B%96%E6%8B%BD%E7%9A%84%E5%BC%B9%E5%87%BA%E6%A1%86/" class="article-date">
+	  <time datetime="2016-12-09T14:12:23.000Z" itemprop="datePublished">2016-12-09</time>
+	</a>
+</span>
+        
+  <span class="article-category">
+    <i class="icon icon-folder"></i>
+    <a class="article-category-link" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a>
+  </span>
+
+        
+  <span class="article-tag">
+    <i class="icon icon-tags"></i>
+	<a class="article-tag-link-link" href="/tags/JavaScript/" rel="tag">JavaScript</a>
+  </span>
+
+
+        
+	<span class="article-read hidden-xs">
+	    <i class="icon icon-eye-fill" aria-hidden="true"></i>
+	    <span id="busuanzi_container_page_pv">
+			<span id="busuanzi_value_page_pv">0</span>
+		</span>
+	</span>
+
+
+        <span class="post-comment"><i class="icon icon-comment"></i> <a href="/2016/12/09/javascript-%E5%8F%AF%E6%8B%96%E6%8B%BD%E7%9A%84%E5%BC%B9%E5%87%BA%E6%A1%86/#comments" class="article-comment-link">评论</a></span>
+        
+	
+		<span class="post-wordcount hidden-xs" itemprop="wordCount">字数统计: 2k(字)</span>
+	
+	
+		<span class="post-readcount hidden-xs" itemprop="timeRequired">阅读时长: 9(分)</span>
+	
+
+      </div>
+    </div>
+    <div class="article-entry marked-body" itemprop="articleBody">
+      
+        <p>闲来无聊，拿来许久以前的可拖拽弹出框特效分享给过路的。<br>以百度首页的登录框为样版，来一一说明怎么实现相同的效果。喜欢的也可以来看看原文<br><a target="_blank" rel="noopener" href="http://www.magicyou.cn/index.php/archives/21/">原文</a></p>
+<span id="more"></span>
+
+
+<h2 id="1-基本思路"><a href="#1-基本思路" class="headerlink" title="1.基本思路"></a>1.基本思路</h2><h3 id="1-1-概述"><a href="#1-1-概述" class="headerlink" title="1.1 概述"></a>1.1 概述</h3><p>可拖拽弹出框，顾名思义：弹出，可以拖拽。简单明了。看到百度首页的登录弹出框，还多了几个，总结了一下，如下几条：<br>1.点击登录弹出登录框<br>2.点击小叉叉，关闭登录框<br>3.登录框弹出的同时有个遮罩层遮罩覆盖了除登录框以外的内容<br>4.鼠标在登录框上部分时，可以拖拽，任意摆放位置，并且不会跑出可视区域<br>5.每次改变浏览器大小时，弹出框都会再次居中</p>
+<h3 id="1-2-复习几个js知识"><a href="#1-2-复习几个js知识" class="headerlink" title="1.2 复习几个js知识"></a>1.2 复习几个js知识</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">网页可见区域宽： document.body.clientWidth  </span><br><span class="line">网页可见区域高： document.body.clientHeight  </span><br><span class="line">网页可见区域宽： document.body.offsetWidth (包括边线的宽)  </span><br><span class="line">网页可见区域高： document.body.offsetHeight (包括边线的高)  </span><br><span class="line">网页正文全文宽： document.body.scrollWidth  </span><br><span class="line">网页正文全文高： document.body.scrollHeight  </span><br><span class="line">网页被卷去的高： document.body.scrollTop  </span><br><span class="line">网页被卷去的左： document.body.scrollLeft  </span><br><span class="line">网页正文部分上： window.screenTop  </span><br><span class="line">网页正文部分左： window.screenLeft  </span><br><span class="line">屏幕分辨率的高： window.screen.height  </span><br><span class="line">屏幕分辨率的宽： window.screen.width  </span><br><span class="line">屏幕可用工作区高度： window.screen.availHeight  </span><br><span class="line">屏幕可用工作区宽度： window.screen.availWidth  </span><br><span class="line"></span><br><span class="line">获取元素宽度：oDiv.offsetWidth</span><br><span class="line">获取元素高度：oDiv.offsetHeight</span><br><span class="line"></span><br><span class="line">获取坐标</span><br><span class="line">(处理兼容：var e &#x3D; event || window.event;)</span><br><span class="line">相对于屏幕:e.screenX,e.screenY</span><br><span class="line">相对浏览器窗口:e.clientX,e.clientY</span><br><span class="line">相对文档:e.pageX || e.clientX + scrollX,</span><br><span class="line">       e.pageY || e.clientY + scrollY;</span><br></pre></td></tr></table></figure>
+
+<h3 id="1-3-js设计原理"><a href="#1-3-js设计原理" class="headerlink" title="1.3 js设计原理"></a>1.3 js设计原理</h3><h4 id="1-3-1-点击登录弹出登录框"><a href="#1-3-1-点击登录弹出登录框" class="headerlink" title="1.3.1 点击登录弹出登录框"></a>1.3.1 点击登录弹出登录框</h4><p>页面加载初，css设置弹出框默认隐藏，点击登录按钮，js设置样式弹出框显示</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mask.style.display &#x3D; &#39;block&#39;;</span><br></pre></td></tr></table></figure>
+<h4 id="1-3-2-点击小叉叉，关闭登录框"><a href="#1-3-2-点击小叉叉，关闭登录框" class="headerlink" title="1.3.2 点击小叉叉，关闭登录框"></a>1.3.2 点击小叉叉，关闭登录框</h4><p>点击小叉叉，js设置样式弹出框再次隐藏</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mask.style.display &#x3D; &#39;none&#39;;</span><br></pre></td></tr></table></figure>
+<h4 id="1-3-3-登录框弹出的同时有个遮罩层…"><a href="#1-3-3-登录框弹出的同时有个遮罩层…" class="headerlink" title="1.3.3 登录框弹出的同时有个遮罩层…"></a>1.3.3 登录框弹出的同时有个遮罩层…</h4><p>这里做一下说明，我这里的遮罩层直接包裹在了登录框外，上面说的弹出框隐藏出现的，实际上是遮罩层隐藏出现，为了说明问题，我还是当做弹出框对待</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&lt;div class&#x3D;&quot;mask&quot; id&#x3D;&quot;mask&quot;&gt;</span><br><span class="line">            &lt;div class&#x3D;&quot;login&quot; id&#x3D;&quot;login&quot;&gt;</span><br><span class="line">                &lt;div class&#x3D;&quot;title-dragable&quot; id&#x3D;&quot;dragable&quot;&gt;</span><br><span class="line">                    &lt;sapn class&#x3D;&quot;close&quot; id&#x3D;&quot;close&quot;&gt;×&lt;&#x2F;span&gt;</span><br><span class="line">                &lt;&#x2F;div&gt;</span><br><span class="line">            &lt;&#x2F;div&gt;</span><br><span class="line">        &lt;&#x2F;div&gt;</span><br></pre></td></tr></table></figure>
+<h4 id="1-3-4-拖拽不会跑出可视区域"><a href="#1-3-4-拖拽不会跑出可视区域" class="headerlink" title="1.3.4 拖拽不会跑出可视区域"></a>1.3.4 拖拽不会跑出可视区域</h4><p>鼠标对弹出框拖拽时，对left和top值进行判断处理，使得弹出框极限时只能在可是区域内沿边移动</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">left &#x3D; left &lt;&#x3D; 0 ? 0 : left;</span><br><span class="line">left &#x3D; left &gt;&#x3D; (mask.offsetWidth - node.offsetWidth) ? (mask.offsetWidth - node.offsetWidth) : left;</span><br><span class="line">top &#x3D; top &lt;&#x3D; 0 ? 0 : top;</span><br><span class="line">top &#x3D; top &gt;&#x3D; (mask.offsetHeight - node.offsetHeight) ? (mask.offsetHeight - node.offsetHeight) : top;</span><br></pre></td></tr></table></figure>
+<p>更为详细的说明下面代码中都有注释详细说明，如下</p>
+<h2 id="2-代码"><a href="#2-代码" class="headerlink" title="2.代码"></a>2.代码</h2><h3 id="2-1-html代码"><a href="#2-1-html代码" class="headerlink" title="2.1 html代码"></a>2.1 html代码</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">&lt;div class&#x3D;&quot;container&quot; id&#x3D;&quot;container&quot;&gt;</span><br><span class="line">       &lt;div class&#x3D;&quot;header&quot;&gt;</span><br><span class="line">           &lt;ul&gt;</span><br><span class="line">               &lt;li&gt;&lt;a href&#x3D;&quot;##&quot;&gt;糯米&lt;&#x2F;a&gt;&lt;&#x2F;li&gt;</span><br><span class="line">               &lt;li&gt;&lt;a href&#x3D;&quot;##&quot;&gt;新闻&lt;&#x2F;a&gt;&lt;&#x2F;li&gt;</span><br><span class="line">               &lt;li&gt;&lt;a href&#x3D;&quot;##&quot;&gt;hao123&lt;&#x2F;a&gt;&lt;&#x2F;li&gt;</span><br><span class="line">               &lt;li&gt;&lt;a href&#x3D;&quot;##&quot;&gt;地图&lt;&#x2F;a&gt;&lt;&#x2F;li&gt;</span><br><span class="line">               &lt;li&gt;&lt;a href&#x3D;&quot;##&quot;&gt;视频&lt;&#x2F;a&gt;&lt;&#x2F;li&gt;</span><br><span class="line">               &lt;li&gt;&lt;a href&#x3D;&quot;##&quot;&gt;视频贴吧&lt;&#x2F;a&gt;&lt;&#x2F;li&gt;</span><br><span class="line">               &lt;li&gt;&lt;a href&#x3D;&quot;javascript:;&quot; id&#x3D;&quot;dl&quot;&gt;登录&lt;&#x2F;a&gt;&lt;&#x2F;li&gt;</span><br><span class="line">               &lt;li&gt;&lt;a href&#x3D;&quot;##&quot;&gt;设置&lt;&#x2F;a&gt;&lt;&#x2F;li&gt;</span><br><span class="line">               &lt;li class&#x3D;&quot;more&quot;&gt;&lt;a href&#x3D;&quot;##&quot;&gt;更多商品&lt;&#x2F;a&gt;&lt;&#x2F;li&gt;</span><br><span class="line">           &lt;&#x2F;ul&gt;</span><br><span class="line">       &lt;&#x2F;div&gt;</span><br><span class="line">       &lt;div class&#x3D;&quot;content&quot;&gt;</span><br><span class="line">       &lt;&#x2F;div&gt;</span><br><span class="line">       &lt;div class&#x3D;&quot;footer&quot;&gt;</span><br><span class="line"></span><br><span class="line">       &lt;&#x2F;div&gt;</span><br><span class="line">       &lt;!--    登录弹出框--&gt;</span><br><span class="line">       &lt;div class&#x3D;&quot;mask&quot; id&#x3D;&quot;mask&quot;&gt;</span><br><span class="line">           &lt;div class&#x3D;&quot;login&quot; id&#x3D;&quot;login&quot;&gt;</span><br><span class="line">               &lt;div class&#x3D;&quot;title-dragable&quot; id&#x3D;&quot;dragable&quot;&gt;</span><br><span class="line">                   &lt;sapn class&#x3D;&quot;close&quot; id&#x3D;&quot;close&quot;&gt;×&lt;&#x2F;span&gt;</span><br><span class="line">               &lt;&#x2F;div&gt;</span><br><span class="line">           &lt;&#x2F;div&gt;</span><br><span class="line">       &lt;&#x2F;div&gt;</span><br><span class="line">   &lt;&#x2F;div&gt;</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-2-css代码"><a href="#2-2-css代码" class="headerlink" title="2.2 css代码"></a>2.2 css代码</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br></pre></td><td class="code"><pre><span class="line">* &#123;</span><br><span class="line">          padding: 0;</span><br><span class="line">          margin: 0;</span><br><span class="line">      &#125;</span><br><span class="line">      .container &#123;</span><br><span class="line">          min-width: 1000px;</span><br><span class="line">          width: 100%;</span><br><span class="line">          margin: 0 auto;</span><br><span class="line">      &#125;   </span><br><span class="line">      .header &#123;</span><br><span class="line">          height: 24px;</span><br><span class="line">          margin: 19px 0 5px;</span><br><span class="line">      &#125;   </span><br><span class="line">      .header ul &#123;</span><br><span class="line">          height: 24px;</span><br><span class="line">          float: right;</span><br><span class="line">          margin-right: 20px;</span><br><span class="line">      &#125;        </span><br><span class="line">      .header ul li &#123;</span><br><span class="line">          float: left;</span><br><span class="line">          list-style: none;</span><br><span class="line">          line-height: 24px;</span><br><span class="line">          margin-left: 20px;</span><br><span class="line">      &#125;       </span><br><span class="line">      .header ul li a &#123;</span><br><span class="line">          color: #333;</span><br><span class="line">          font-weight: 700;</span><br><span class="line">          font-size: 13px;</span><br><span class="line">          text-decoration: underline;</span><br><span class="line">      &#125;       </span><br><span class="line">      .header ul .more &#123;</span><br><span class="line">          width: 60px;</span><br><span class="line">          height: 23px;</span><br><span class="line">          background: #38f;</span><br><span class="line">          line-height: 24px;</span><br><span class="line">          text-align: center;</span><br><span class="line">          overflow: hidden;</span><br><span class="line">          border-bottom: 1px solid #38f;</span><br><span class="line">          margin-left: 19px;</span><br><span class="line">          margin-right: 2px;</span><br><span class="line">      &#125;        </span><br><span class="line">      .header ul .more a &#123;</span><br><span class="line">          font-size: 13px;</span><br><span class="line">          color: #fff;</span><br><span class="line">          text-decoration: none;</span><br><span class="line">      &#125;        </span><br><span class="line">      .mask &#123;</span><br><span class="line">          width: 100%;</span><br><span class="line">          height: 100%;</span><br><span class="line">          background: rgba(0, 0, 0, .3);</span><br><span class="line">          position: absolute;</span><br><span class="line">          top: 0;</span><br><span class="line">          left: 0;</span><br><span class="line">          z-index: 99;</span><br><span class="line">          display: none;</span><br><span class="line">      &#125;       </span><br><span class="line">      .login &#123;</span><br><span class="line">          width: 393px;</span><br><span class="line">          height: 505px;</span><br><span class="line">          background: #FFF;</span><br><span class="line">          position: absolute;</span><br><span class="line">          top: 50%;</span><br><span class="line">          left: 50%;</span><br><span class="line">      &#125;</span><br><span class="line">      .title-dragable &#123;</span><br><span class="line">          width: 391px;</span><br><span class="line">          height: 46px;</span><br><span class="line">          background-color: #f7f7f7;</span><br><span class="line">          border: 1px solid #ddd;</span><br><span class="line">          cursor: move;</span><br><span class="line">      &#125;</span><br><span class="line">      </span><br><span class="line">      .close &#123;</span><br><span class="line">          display: block;</span><br><span class="line">          float: right;</span><br><span class="line">          width: 16px;</span><br><span class="line">          height: 16px;</span><br><span class="line">          font-size: 18px;</span><br><span class="line">          cursor: pointer;</span><br><span class="line">          text-align: center;</span><br><span class="line">          line-height: 16px;</span><br><span class="line">          margin: 15px;</span><br><span class="line">          color: #ccc;</span><br><span class="line">      &#125;</span><br><span class="line">      .close:hover &#123;</span><br><span class="line">          color: #333;</span><br><span class="line">      &#125;</span><br><span class="line">      </span><br></pre></td></tr></table></figure>
+
+<h3 id="2-3-js代码"><a href="#2-3-js代码" class="headerlink" title="2.3 js代码"></a>2.3 js代码</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br></pre></td><td class="code"><pre><span class="line">window.onload &#x3D; function() &#123;</span><br><span class="line">       &#x2F;&#x2F;点击登录弹出登录框</span><br><span class="line">       var dl &#x3D; document.getElementById(&#39;dl&#39;);</span><br><span class="line">       var mask &#x3D; document.getElementById(&#39;mask&#39;);</span><br><span class="line">       dl.onclick &#x3D; function() &#123;</span><br><span class="line">               mask.style.display &#x3D; &#39;block&#39;;</span><br><span class="line">           center();</span><br><span class="line">           &#125;</span><br><span class="line">           &#x2F;&#x2F;点击小叉叉关闭登录框</span><br><span class="line">       var close &#x3D; document.getElementById(&#39;close&#39;);</span><br><span class="line">       close.onclick &#x3D; function() &#123;</span><br><span class="line">               mask.style.display &#x3D; &#39;none&#39;;</span><br><span class="line">           &#125;</span><br><span class="line">           &#x2F;&#x2F;开始为登录框添加鼠标拖动效果</span><br><span class="line">       var dragBar &#x3D; document.getElementById(&#39;dragable&#39;);</span><br><span class="line">       dragBar.onmousedown &#x3D; function(e) &#123;</span><br><span class="line">           var e &#x3D; e || window.e;</span><br><span class="line">           var node &#x3D; this.parentNode;</span><br><span class="line">           &#x2F;&#x2F; 获取当前鼠标z相对dragBar的坐标，记录下来，供拖拽时使用</span><br><span class="line">           var offsetX &#x3D; e.offsetX;</span><br><span class="line">           var offsetY &#x3D; e.offsetY;</span><br><span class="line">           &#x2F;&#x2F;添加鼠标在dragBar按下且未松开时的window事件</span><br><span class="line">           window.onmousemove &#x3D; function(e) &#123;</span><br><span class="line">               var e &#x3D; e || window.e;</span><br><span class="line">               &#x2F;&#x2F; 再次获取当前鼠标的位置坐标</span><br><span class="line">               var moveX &#x3D; e.clientX;</span><br><span class="line">               var moveY &#x3D; e.clientY;</span><br><span class="line">               &#x2F;&#x2F; 计算拖动时应有的偏移量</span><br><span class="line">               var left &#x3D; moveX - offsetX;</span><br><span class="line">               var top &#x3D; moveY - offsetY;</span><br><span class="line">               &#x2F;&#x2F;对偏移量进行处理，使得被拖拽的元素不会跑出可视范围，算是获得好的客户体验吧</span><br><span class="line">               left &#x3D; left &lt;&#x3D; 0 ? 0 : left;</span><br><span class="line">               left &#x3D; left &gt;&#x3D; (mask.offsetWidth - node.offsetWidth) ? (mask.offsetWidth - node.offsetWidth) : left;</span><br><span class="line">               top &#x3D; top &lt;&#x3D; 0 ? 0 : top;</span><br><span class="line">               top &#x3D; top &gt;&#x3D; (mask.offsetHeight - node.offsetHeight) ? (mask.offsetHeight - node.offsetHeight) : top;</span><br><span class="line">               &#x2F;&#x2F;将处理过的偏移量添加到拖拽元素样式</span><br><span class="line">               node.style.top &#x3D; top + &#39;px&#39;;</span><br><span class="line">               node.style.left &#x3D; left + &#39;px&#39;;       </span><br><span class="line">           &#125;</span><br><span class="line">           &#x2F;&#x2F;鼠标按键松开，拖拽结束</span><br><span class="line">           window.onmouseup &#x3D; function() &#123;</span><br><span class="line">               window.onmousemove &#x3D; null;</span><br><span class="line">           &#125;</span><br><span class="line">       &#125;</span><br><span class="line">       &#x2F;&#x2F;处理login弹出框，使得每次浏览器窗口大小改变，login弹出框居中</span><br><span class="line">       var login &#x3D; document.getElementById(&#39;login&#39;);</span><br><span class="line">       var container &#x3D; document.getElementById(&#39;container&#39;);</span><br><span class="line">       window.onresize &#x3D; function() &#123;</span><br><span class="line">           center();</span><br><span class="line">       &#125;</span><br><span class="line">       &#x2F;&#x2F;封装成单独函数，便于调用</span><br><span class="line">       function center() &#123;</span><br><span class="line">            mask.style.width &#x3D; document.body.clientWidth&gt;container.offsetWidth?document.body.clientWidth+&#39;px&#39;:container.offsetWidth+&#39;px&#39;;</span><br><span class="line">           var left &#x3D; (mask.offsetWidth - login.offsetWidth) &#x2F; 2;</span><br><span class="line">           var top &#x3D; (mask.offsetHeight - login.offsetHeight) &#x2F; 2;</span><br><span class="line">           login.style.top &#x3D; top + &#39;px&#39;;</span><br><span class="line">           login.style.left &#x3D; left + &#39;px&#39;;</span><br><span class="line">       &#125;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+<h2 id="3、补充说明"><a href="#3、补充说明" class="headerlink" title="3、补充说明"></a>3、补充说明</h2><p>移动端时不支持的！移动端时不支持的！移动端时不支持的！重要的事情说三遍。对于移动端，拖拽效果貌似没什么必要，毕竟只是个登录框，移动端屏幕也就那么大（iPad之类的当我没说）。不过移动端的拖拽会有另一篇做介绍，以及功能实现。</p>
+<h2 id="4、在线演示"><a href="#4、在线演示" class="headerlink" title="4、在线演示"></a>4、在线演示</h2><p><a target="_blank" rel="noopener" href="http://www.magicyou.cn/resource/20161209/">在线演示</a></p>
+
+      
+    </div>
+    <div class="article-footer">
+      <blockquote class="mt-2x">
+  <ul class="post-copyright list-unstyled">
+    
+    <li class="post-copyright-link hidden-xs">
+      <strong>本文链接：</strong>
+      <a href="https://blog.magicyou.cn/2016/12/09/javascript-%E5%8F%AF%E6%8B%96%E6%8B%BD%E7%9A%84%E5%BC%B9%E5%87%BA%E6%A1%86/" title="可拖拽的弹出框" target="_blank" rel="external">https://blog.magicyou.cn/2016/12/09/javascript-可拖拽的弹出框/</a>
+    </li>
+    
+    <li class="post-copyright-license">
+      <strong>版权声明： </strong> 本博客所有文章除特别声明外，均采用 <a href="http://creativecommons.org/licenses/by/4.0/deed.zh" target="_blank" rel="external">CC BY 4.0 CN协议</a> 许可协议。转载请注明出处！
+    </li>
+  </ul>
+</blockquote>
+
+
+<div class="panel panel-default panel-badger">
+  <div class="panel-body">
+    <figure class="media">
+      <div class="media-left">
+        <a href="https://github.com/magicyou" target="_blank" class="img-burn thumb-sm visible-lg">
+          <img src="http://tva3.sinaimg.cn/crop.0.0.180.180.180/a524faafjw1e8qgp5bmzyj2050050aa8.jpg" class="img-rounded w-full" alt="">
+        </a>
+      </div>
+      <div class="media-body">
+        <h3 class="media-heading"><a href="https://github.com/magicyou" target="_blank"><span class="text-dark">BruceLee</span><small class="ml-1x">Web Developer</small></a></h3>
+        <div>个人简介。</div>
+      </div>
+    </figure>
+  </div>
+</div>
+
+
+    </div>
+  </article>
+  
+    
+  <section id="comments">
+  	
+           
+    
+  </section>
+
+
+  
+</div>
+
+  <nav class="bar bar-footer clearfix" data-stick-bottom>
+  <div class="bar-inner">
+  
+  <ul class="pager pull-left">
+    
+    <li class="prev">
+      <a href="/2017/01/20/javascript-%E6%89%8B%E5%8A%A8%E5%AE%9E%E7%8E%B0%E7%A7%BB%E5%8A%A8%E7%AB%AF%E7%A1%AE%E8%AE%A4%E6%A1%86%EF%BC%88%E9%98%BF%E9%87%8C%E5%BC%80%E6%BA%90%E7%9A%84SUI%20Mobile%E6%A1%86%E6%9E%B6%E7%9A%84%E6%93%8D%E4%BD%9C%E8%A1%A8%EF%BC%89/" title="手动实现移动端确认框（阿里开源的SUI Mobile框架的操作表）"><i class="icon icon-angle-left" aria-hidden="true"></i><span>&nbsp;&nbsp;上一篇</span></a>
+    </li>
+    
+    
+    <li class="next">
+      <a href="/2016/12/01/javascript-%E6%97%A0%E9%99%90%E5%88%86%E9%A1%B5%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B0/" title="无限分页设计与实现"><span>下一篇&nbsp;&nbsp;</span><i class="icon icon-angle-right" aria-hidden="true"></i></a>
+    </li>
+    
+    
+  </ul>
+  
+  
+  <!-- Button trigger modal -->
+  <button type="button" class="btn btn-fancy btn-donate pop-onhover bg-gradient-warning" data-toggle="modal" data-target="#donateModal"><span>赏</span></button>
+  <!-- <div class="wave-icon wave-icon-danger btn-donate" data-toggle="modal" data-target="#donateModal">
+    <div class="wave-circle"><span class="icon"><i class="icon icon-bill"></i></span></div>
+  </div> -->
+  
+  
+  <div class="bar-right">
+    
+    <div class="share-component" data-sites="weibo,qq,wechat" data-mobile-sites="weibo,qq,wechat"></div>
+    
+  </div>
+  </div>
+</nav>
+  
+<!-- Modal -->
+<div class="modal modal-center modal-small modal-xs-full fade" id="donateModal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content donate">
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      <div class="modal-body">
+        <div class="donate-box">
+          <div class="donate-head">
+            <p>感谢您的支持，我会继续努力的!</p>
+          </div>
+          <div class="tab-content">
+            <div role="tabpanel" class="tab-pane fade active in" id="alipay">
+              <div class="donate-payimg">
+                <img src="/images/donate/alipayimg.jpg" alt="扫码支持" title="扫一扫" />
+              </div>
+              <p class="text-muted mv">扫码打赏，你说多少就多少</p>
+              <p class="text-grey">打开支付宝扫一扫，即可进行扫码打赏哦</p>
+            </div>
+            <div role="tabpanel" class="tab-pane fade" id="wechatpay">
+              <div class="donate-payimg">
+                <img src="/images/donate/wechatpayimg.jpg" alt="扫码支持" title="扫一扫" />
+              </div>
+              <p class="text-muted mv">扫码打赏，你说多少就多少</p>
+              <p class="text-grey">打开微信扫一扫，即可进行扫码打赏哦</p>
+            </div>
+          </div>
+          <div class="donate-footer">
+            <ul class="nav nav-tabs nav-justified" role="tablist">
+              <li role="presentation" class="active">
+                <a href="#alipay" id="alipay-tab" role="tab" data-toggle="tab" aria-controls="alipay" aria-expanded="true"><i class="icon icon-alipay"></i> 支付宝</a>
+              </li>
+              <li role="presentation" class="">
+                <a href="#wechatpay" role="tab" id="wechatpay-tab" data-toggle="tab" aria-controls="wechatpay" aria-expanded="false"><i class="icon icon-wepay"></i> 微信支付</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+</main>
+
+  <footer class="footer" itemscope itemtype="http://schema.org/WPFooter">
+    <script src="http://127.0.0.1:7001/client.js"></script>
+    <span id="site_uv">
+        local 本站访客数<span id="web_site_uv_tips"></span>人
+    </span>
+
+	
+	
+    <ul class="social-links">
+    	
+        <li><a href="https://github.com/magicyou" target="_blank" title="Github" data-toggle=tooltip data-placement=top><i class="icon icon-github"></i></a></li>
+        
+        <li><a href="https://weibo.com/p/1005052770664111/home?from=page_100505&mod=TAB&is_all=1#place" target="_blank" title="Weibo" data-toggle=tooltip data-placement=top><i class="icon icon-weibo"></i></a></li>
+        
+    </ul>
+
+    
+    
+        <!-- 不蒜子统计 -->
+        <!-- <span id="busuanzi_container_site_pv">
+                本站总访问量<span id="busuanzi_value_site_pv"></span>次
+        </span> -->
+        <!-- <span class="post-meta-divider">|</span> -->
+        <span id="busuanzi_container_site_uv">
+                本站访客数<span id="busuanzi_value_site_uv"></span>人
+        </span>
+  
+    <div class="copyright">
+    	
+        <div class="publishby">
+        	Theme by <a href="https://github.com/cofess" target="_blank"> cofess </a>base on <a href="https://github.com/cofess/hexo-theme-pure" target="_blank">pure</a>.
+        </div>
+    </div>
+</footer>
+  <script src="//cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
+<script>
+window.jQuery || document.write('<script src="js/jquery.min.js"><\/script>')
+</script>
+
+<script src="/js/plugin.min.js"></script>
+
+
+<script src="/js/application.js"></script>
+
+
+    <script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+
+<script src="/js/insight.js"></script>
+
+
+
+
+
+
+   
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+   
+    
+  <!-- <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css"> -->
+  <script src="//cdn.jsdelivr.net/npm/gitalk@1.4.0/dist/gitalk.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/blueimp-md5@2.10.0/js/md5.min.js"></script>
+  <script type="text/javascript">
+  var gitalk = new Gitalk({
+    clientID: 'e6bd9b1c9667be2eba71',
+    clientSecret: '0749dfe86f83d7fb16beb133646555d83d5d7fc7',
+    repo: 'gitalk_comment',
+    owner: 'magicyou',
+    admin: ['magicyou'],
+    id: md5(location.pathname),
+    distractionFreeMode: true
+  })
+  gitalk.render('comments')
+  </script>
+
+      
+
+
+
+
+
+
+
+</body>
+</html>
+
+<script type="text/javascript">document.write(unescape("%3Cspan id='cnzz_stat_icon_1280958573'%3E%3C/span%3E%3Cscript src='https://s9.cnzz.com/z_stat.php%3Fid%3D1280958573%26show%3Dpic' type='text/javascript'%3E%3C/script%3E"));</script>

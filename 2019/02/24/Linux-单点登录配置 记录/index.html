@@ -1,0 +1,827 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+  <meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="Cache-Control" content="no-transform" />
+  <meta http-equiv="Cache-Control" content="no-siteapp" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="format-detection" content="telephone=no,email=no,adress=no">
+  <!-- Color theme for statusbar -->
+  <meta name="theme-color" content="#000000" />
+  <!-- 强制页面在当前窗口以独立页面显示,防止别人在框架里调用页面 -->
+  <meta http-equiv="window-target" content="_top" />
+  
+  
+  <title>配置webgate拦截跳转到ldap登录页实现单点登录 | Hexo</title>
+  <meta name="description" content="前提是企业已经做好LDAP系统，子系统已经实现自己的登录逻辑，且子系统只需要配置好webgate以及相关配置，就能对接LDAP单点登录。(对于LDAP也就了解，这里不做LDAP的详细搭建)">
+<meta property="og:type" content="article">
+<meta property="og:title" content="配置webgate拦截跳转到ldap登录页实现单点登录">
+<meta property="og:url" content="https://blog.magicyou.cn/2019/02/24/Linux-%E5%8D%95%E7%82%B9%E7%99%BB%E5%BD%95%E9%85%8D%E7%BD%AE%20%E8%AE%B0%E5%BD%95/index.html">
+<meta property="og:site_name" content="MagicYou">
+<meta property="og:description" content="前提是企业已经做好LDAP系统，子系统已经实现自己的登录逻辑，且子系统只需要配置好webgate以及相关配置，就能对接LDAP单点登录。(对于LDAP也就了解，这里不做LDAP的详细搭建)">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2019-02-24T10:23:00.000Z">
+<meta property="article:modified_time" content="2019-02-24T10:23:00.000Z">
+<meta property="article:author" content="magicyou">
+<meta property="article:tag" content="Linux">
+<meta property="article:tag" content="Centos">
+<meta name="twitter:card" content="summary">
+  <!-- Canonical links -->
+  <link rel="canonical" href="https://blog.magicyou.cn/2019/02/24/Linux-%E5%8D%95%E7%82%B9%E7%99%BB%E5%BD%95%E9%85%8D%E7%BD%AE%20%E8%AE%B0%E5%BD%95/index.html">
+  
+    <link rel="alternate" href="/atom.xml" title="MagicYou" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png" type="image/x-icon">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+  
+  
+  
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1.4.0/dist/gitalk.min.css">
+  
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body class="main-center" itemscope itemtype="http://schema.org/WebPage">
+  <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+  <div class="slimContent">
+    <div class="navbar-header">
+      
+      
+      <div class="profile-block text-center">
+        <a id="avatar" href="https://github.com/magicyou" target="_blank">
+          <img class="img-circle img-rotate" src="http://tva3.sinaimg.cn/crop.0.0.180.180.180/a524faafjw1e8qgp5bmzyj2050050aa8.jpg" width="200" height="200">
+        </a>
+        <h2 id="name" class="hidden-xs hidden-sm">BruceLee</h2>
+        <h3 id="title" class="hidden-xs hidden-sm hidden-md">Web Developer</h3>
+        <small id="location" class="text-muted hidden-xs hidden-sm"><i class="icon icon-map-marker"></i> Beijing, China</small>
+      </div>
+      
+      <div class="search" id="search-form-wrap">
+
+    <form class="search-form sidebar-form">
+        <div class="input-group">
+            <input type="text" class="search-form-input form-control" placeholder="搜索" />
+            <span class="input-group-btn">
+                <button type="submit" class="search-form-submit btn btn-flat" onclick="return false;"><i class="icon icon-search"></i></button>
+            </span>
+        </div>
+    </form>
+    <div class="ins-search">
+  <div class="ins-search-mask"></div>
+  <div class="ins-search-container">
+    <div class="ins-input-wrapper">
+      <input type="text" class="ins-search-input" placeholder="想要查找什么..." x-webkit-speech />
+      <button type="button" class="close ins-close ins-selectable" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+    </div>
+    <div class="ins-section-wrapper">
+      <div class="ins-section-container"></div>
+    </div>
+  </div>
+</div>
+
+
+</div>
+      <button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target="#main-navbar" aria-controls="main-navbar" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+    <nav id="main-navbar" class="collapse navbar-collapse" itemscope itemtype="http://schema.org/SiteNavigationElement" role="navigation">
+      <ul class="nav navbar-nav main-nav ">
+        
+        
+        <li class="menu-item menu-item-home">
+          <a href="/.">
+            
+            <i class="icon icon-home-fill"></i>
+            
+            <span class="menu-title">首页</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives">
+            
+            <i class="icon icon-archives-fill"></i>
+            
+            <span class="menu-title">归档</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories">
+            
+            <i class="icon icon-folder"></i>
+            
+            <span class="menu-title">分类</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags">
+            
+            <i class="icon icon-tags"></i>
+            
+            <span class="menu-title">标签</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-repository">
+          <a href="/repository">
+            
+            <i class="icon icon-project"></i>
+            
+            <span class="menu-title">项目</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-books">
+          <a href="/books">
+            
+            <i class="icon icon-book-fill"></i>
+            
+            <span class="menu-title">书单</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-links">
+          <a href="/links">
+            
+            <i class="icon icon-friendship"></i>
+            
+            <span class="menu-title">友链</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about">
+            
+            <i class="icon icon-cup-fill"></i>
+            
+            <span class="menu-title">关于</span>
+          </a>
+        </li>
+        
+      </ul>
+      
+	
+    <ul class="social-links">
+    	
+        <li><a href="https://github.com/magicyou" target="_blank" title="Github" data-toggle=tooltip data-placement=top><i class="icon icon-github"></i></a></li>
+        
+        <li><a href="https://weibo.com/p/1005052770664111/home?from=page_100505&mod=TAB&is_all=1#place" target="_blank" title="Weibo" data-toggle=tooltip data-placement=top><i class="icon icon-weibo"></i></a></li>
+        
+    </ul>
+
+    </nav>
+  </div>
+</header>
+
+  
+    <aside class="sidebar" itemscope itemtype="http://schema.org/WPSideBar">
+  <div class="slimContent">
+    
+      <div class="widget">
+    <h3 class="widget-title">公告</h3>
+    <div class="widget-body">
+        <div id="board">
+            <div class="content">
+                <p>欢迎交流与分享经验!</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">分类</h3>
+    <div class="widget-body">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/JAVA/">JAVA</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/JavaScript/">JavaScript</a><span class="category-list-count">28</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Linux/">Linux</a><span class="category-list-count">9</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/MacOS/">MacOS</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/PHP/">PHP</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Python/">Python</a><span class="category-list-count">7</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Vue/">Vue</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/uni-app/">uni-app</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a><span class="category-list-count">13</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%A0%91%E8%8E%93%E6%B4%BE/">树莓派</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/">算法</a><span class="category-list-count">6</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80/">计算机基础</a><span class="category-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget-body">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Apache/" rel="tag">Apache</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CSS/" rel="tag">CSS</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CSS3/" rel="tag">CSS3</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Centos/" rel="tag">Centos</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/HTML/" rel="tag">HTML</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/HTML5/" rel="tag">HTML5</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/JAVA/" rel="tag">JAVA</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/JavaScript/" rel="tag">JavaScript</a><span class="tag-list-count">40</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux/" rel="tag">Linux</a><span class="tag-list-count">11</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MacOS/" rel="tag">MacOS</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Next-js/" rel="tag">Next.js</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Nginx/" rel="tag">Nginx</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PHP/" rel="tag">PHP</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Python/" rel="tag">Python</a><span class="tag-list-count">7</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/React/" rel="tag">React</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Vue/" rel="tag">Vue</a><span class="tag-list-count">6</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/canvas/" rel="tag">canvas</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/git/" rel="tag">git</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jQuery/" rel="tag">jQuery</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/other/" rel="tag">other</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/react/" rel="tag">react</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/scrapy/" rel="tag">scrapy</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/uni-app/" rel="tag">uni-app</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%B0%8F%E7%A8%8B%E5%BA%8F/" rel="tag">小程序</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%BE%AE%E4%BF%A1/" rel="tag">微信</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%BE%AE%E4%BF%A1%E5%85%AC%E4%BC%97%E5%8F%B7/" rel="tag">微信公众号</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%BE%AE%E4%BF%A1%E5%B0%8F%E7%A8%8B%E5%BA%8F/" rel="tag">微信小程序</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%A0%91%E8%8E%93%E6%B4%BE/" rel="tag">树莓派</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%AE%97%E6%B3%95/" rel="tag">算法</a><span class="tag-list-count">6</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80/" rel="tag">计算机基础</a><span class="tag-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget-body tagcloud">
+      <a href="/tags/Apache/" style="font-size: 13px;">Apache</a> <a href="/tags/CSS/" style="font-size: 13px;">CSS</a> <a href="/tags/CSS3/" style="font-size: 13.43px;">CSS3</a> <a href="/tags/Centos/" style="font-size: 13.43px;">Centos</a> <a href="/tags/HTML/" style="font-size: 13px;">HTML</a> <a href="/tags/HTML5/" style="font-size: 13px;">HTML5</a> <a href="/tags/JAVA/" style="font-size: 13px;">JAVA</a> <a href="/tags/JavaScript/" style="font-size: 14px;">JavaScript</a> <a href="/tags/Linux/" style="font-size: 13.86px;">Linux</a> <a href="/tags/MacOS/" style="font-size: 13px;">MacOS</a> <a href="/tags/Next-js/" style="font-size: 13px;">Next.js</a> <a href="/tags/Nginx/" style="font-size: 13px;">Nginx</a> <a href="/tags/PHP/" style="font-size: 13.43px;">PHP</a> <a href="/tags/Python/" style="font-size: 13.71px;">Python</a> <a href="/tags/React/" style="font-size: 13px;">React</a> <a href="/tags/Vue/" style="font-size: 13.57px;">Vue</a> <a href="/tags/canvas/" style="font-size: 13px;">canvas</a> <a href="/tags/git/" style="font-size: 13px;">git</a> <a href="/tags/jQuery/" style="font-size: 13.14px;">jQuery</a> <a href="/tags/other/" style="font-size: 13px;">other</a> <a href="/tags/react/" style="font-size: 13px;">react</a> <a href="/tags/scrapy/" style="font-size: 13px;">scrapy</a> <a href="/tags/uni-app/" style="font-size: 13.14px;">uni-app</a> <a href="/tags/%E5%B0%8F%E7%A8%8B%E5%BA%8F/" style="font-size: 13px;">小程序</a> <a href="/tags/%E5%BE%AE%E4%BF%A1/" style="font-size: 13.14px;">微信</a> <a href="/tags/%E5%BE%AE%E4%BF%A1%E5%85%AC%E4%BC%97%E5%8F%B7/" style="font-size: 13px;">微信公众号</a> <a href="/tags/%E5%BE%AE%E4%BF%A1%E5%B0%8F%E7%A8%8B%E5%BA%8F/" style="font-size: 13.29px;">微信小程序</a> <a href="/tags/%E6%A0%91%E8%8E%93%E6%B4%BE/" style="font-size: 13.14px;">树莓派</a> <a href="/tags/%E7%AE%97%E6%B3%95/" style="font-size: 13.57px;">算法</a> <a href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80/" style="font-size: 13px;">计算机基础</a>
+    </div>
+  </div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget-body">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/08/">八月 2022</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/03/">三月 2022</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/12/">十二月 2021</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/11/">十一月 2021</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/10/">十月 2021</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/09/">九月 2021</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/04/">四月 2021</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/02/">二月 2021</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">十二月 2020</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">十月 2020</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">八月 2020</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">六月 2020</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">四月 2020</a><span class="archive-list-count">11</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">三月 2020</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">一月 2020</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">十二月 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/09/">九月 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/08/">八月 2019</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/07/">七月 2019</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/02/">二月 2019</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/10/">十月 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">九月 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">七月 2018</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">五月 2018</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">四月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/03/">三月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/02/">二月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/01/">一月 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/11/">十一月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/10/">十月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/08/">八月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/06/">六月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/04/">四月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/03/">三月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/02/">二月 2017</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/01/">一月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">十二月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/11/">十一月 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">九月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">八月 2016</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/07/">七月 2016</a><span class="archive-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget-body">
+      <ul class="recent-post-list list-unstyled no-thumbnail">
+        
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a>
+              </p>
+              <p class="item-title">
+                <a href="/2022/08/31/react-Next.js%20%E4%B8%80%E4%BA%9B%E4%B8%9C%E8%A5%BF/" class="title">Next.js 一些东西</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2022-08-31T13:33:00.000Z" itemprop="datePublished">2022-08-31</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/Vue/">Vue</a>
+              </p>
+              <p class="item-title">
+                <a href="/2022/03/11/vue-%E7%89%B9%E6%80%A7/" class="title">vue-</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2022-03-11T14:13:02.000Z" itemprop="datePublished">2022-03-11</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80/">计算机基础</a>
+              </p>
+              <p class="item-title">
+                <a href="/2021/12/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80-%E8%BF%9B%E5%88%B6%E8%BD%AC%E6%8D%A2/" class="title">计算机基础-进制转换</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2021-12-10T05:34:12.000Z" itemprop="datePublished">2021-12-10</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/Vue/">Vue</a>
+              </p>
+              <p class="item-title">
+                <a href="/2021/11/15/vue-%E9%80%9A%E4%BF%A1%E6%96%B9%E5%BC%8F/" class="title">vue-通信方式</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2021-11-15T14:13:02.000Z" itemprop="datePublished">2021-11-15</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/Vue/">Vue</a>
+              </p>
+              <p class="item-title">
+                <a href="/2021/10/11/vue-%E9%87%8D%E6%96%B0%E7%A0%94%E7%A9%B6%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F/" class="title">vue-重新研究生命周期</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2021-10-11T14:13:02.000Z" itemprop="datePublished">2021-10-11</time>
+              </p>
+            </div>
+          </li>
+          
+      </ul>
+    </div>
+  </div>
+  
+
+    
+  </div>
+</aside>
+
+  
+  
+<main class="main" role="main">
+  <div class="content">
+  <article id="post-Linux-单点登录配置 记录" class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
+    
+    <div class="article-header">
+      
+        
+  
+    <h1 class="article-title" itemprop="name">
+      配置webgate拦截跳转到ldap登录页实现单点登录
+    </h1>
+  
+
+      
+      <div class="article-meta">
+        <span class="article-date">
+    <i class="icon icon-calendar-check"></i>
+	<a href="/2019/02/24/Linux-%E5%8D%95%E7%82%B9%E7%99%BB%E5%BD%95%E9%85%8D%E7%BD%AE%20%E8%AE%B0%E5%BD%95/" class="article-date">
+	  <time datetime="2019-02-24T10:23:00.000Z" itemprop="datePublished">2019-02-24</time>
+	</a>
+</span>
+        
+  <span class="article-category">
+    <i class="icon icon-folder"></i>
+    <a class="article-category-link" href="/categories/Linux/">Linux</a>
+  </span>
+
+        
+  <span class="article-tag">
+    <i class="icon icon-tags"></i>
+	<a class="article-tag-link-link" href="/tags/Centos/" rel="tag">Centos</a>, <a class="article-tag-link-link" href="/tags/Linux/" rel="tag">Linux</a>
+  </span>
+
+
+        
+	<span class="article-read hidden-xs">
+	    <i class="icon icon-eye-fill" aria-hidden="true"></i>
+	    <span id="busuanzi_container_page_pv">
+			<span id="busuanzi_value_page_pv">0</span>
+		</span>
+	</span>
+
+
+        <span class="post-comment"><i class="icon icon-comment"></i> <a href="/2019/02/24/Linux-%E5%8D%95%E7%82%B9%E7%99%BB%E5%BD%95%E9%85%8D%E7%BD%AE%20%E8%AE%B0%E5%BD%95/#comments" class="article-comment-link">评论</a></span>
+        
+	
+		<span class="post-wordcount hidden-xs" itemprop="wordCount">字数统计: 3.8k(字)</span>
+	
+	
+		<span class="post-readcount hidden-xs" itemprop="timeRequired">阅读时长: 16(分)</span>
+	
+
+      </div>
+    </div>
+    <div class="article-entry marked-body" itemprop="articleBody">
+      
+        <p>前提是企业已经做好LDAP系统，子系统已经实现自己的登录逻辑，且子系统只需要配置好webgate以及相关配置，就能对接LDAP单点登录。(对于LDAP也就了解，这里不做LDAP的详细搭建)</p>
+<span id="more"></span>
+
+
+
+<p>了解一下通过LDAP登录的原理</p>
+<p>![image-20190413163116319](/Users/magicyou/Library/Application Support/typora-user-images/image-20190413163116319.png)</p>
+<p>• 单点集成，需要在应用系统服务器配置Apache服务器，对应用系统做反向代理，并在其上安装用于拦截Http请求的插件Webgate。</p>
+<p>• OAM和插件通信，实现对应用系统的单点集成，此处需要应用系统改造现有登陆逻辑，接收OAM认证后传递的用户信息。</p>
+<p>• 集成LDAP单点的同时，需实现逃生机制，即可实现在应用系统本地登录认证。</p>
+<p>前面说过，我们的系统是在lnmp运行，所以Apache在这里作为中介，转到nginx的端口上的应用。</p>
+<h3 id="准备"><a href="#准备" class="headerlink" title="准备"></a>准备</h3><h5 id="1-增加用户和组"><a href="#1-增加用户和组" class="headerlink" title="1. 增加用户和组"></a>1. 增加用户和组</h5><p>User appuser</p>
+<p>Group appgrp</p>
+<ol start="2">
+<li><p>其他</p>
+<p>apache安装路径    /app/soft/apache/</p>
+<p>webgate目标安装路径 /app/soft/webgate/</p>
+<p>本机名  xxxx</p>
+<p>本机ip 10.0.XX.X</p>
+<p>按照集团给的配置信息（重要）：</p>
+</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>WebGate ID</td>
+<td>XXX_WebGate</td>
+</tr>
+<tr>
+<td>Password for WebGate</td>
+<td>123456</td>
+</tr>
+<tr>
+<td>Access Server ID</td>
+<td>acc_id_oam</td>
+</tr>
+<tr>
+<td>Host name where an Access Server is installed</td>
+<td>node2</td>
+</tr>
+<tr>
+<td>Port number the Access Server listens to</td>
+<td>6000</td>
+</tr>
+</tbody></table>
+<h3 id="安装apache"><a href="#安装apache" class="headerlink" title="安装apache"></a>安装apache</h3><ol>
+<li><p>安装apache</p>
+<p>尽可能不要用centos带的那个Apache，自己再装一个版本最好是2.2，因为老系统用的就是这个版本（毕竟webgate版本没有升级），防止莫名错误，低调行事。</p>
+</li>
+<li><p>修改httpd.conf 如下几项</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">User appuser</span><br><span class="line"></span><br><span class="line">Group appgrp</span><br><span class="line"></span><br><span class="line">Listen 9008</span><br><span class="line"></span><br><span class="line">ServerName 10.0.XX.X:9008</span><br><span class="line"></span><br></pre></td></tr></table></figure></li>
+<li><p>/etc/hosts添加</p>
+<p>10.0.XX.X hostname</p>
+</li>
+</ol>
+<h3 id="安装webgate"><a href="#安装webgate" class="headerlink" title="安装webgate"></a>安装webgate</h3><p>添加hosts文件</p>
+<p>在j2ee系统安装apache的服务器用root用户登录服务器，添加hosts文件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vi &#x2F;etc&#x2F;hosts</span><br></pre></td></tr></table></figure>
+
+
+
+<p>添加如下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">10.0.59.21 node1</span><br><span class="line">10.0.59.22 node2</span><br></pre></td></tr></table></figure>
+
+<p>安装依赖包等</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">cd &#x2F;lib64&#x2F;</span><br><span class="line"></span><br><span class="line">ln -s &#x2F;usr&#x2F;lib64&#x2F;libstdc++.so.6 .</span><br><span class="line">ln -s &#x2F;usr&#x2F;lib64&#x2F;libstdc++.so.5 .</span><br><span class="line">执行安装</span><br><span class="line"></span><br><span class="line">安装组件</span><br><span class="line">yum install libXau-1.0.6-4.el6.x86_64</span><br><span class="line">yum install libXau-1.0.6-4.el6.i686</span><br><span class="line">yum install libXdmcp-1.1.1-3.el6.x86_64</span><br><span class="line">yum install libXdmcp-1.1.1-3.el6.i686</span><br><span class="line">yum install libxcb-1.9.1-2.el6.x86_64</span><br><span class="line">yum install libxcb-1.9.1-2.el6.i686</span><br><span class="line">yum install libX11-1.6.0-2.2.el6.x86_64</span><br><span class="line">yum install libX11-1.6.0-2.2.el6.i686</span><br><span class="line">yum install libXext-1.3.2-2.1.el6.x86_64</span><br><span class="line">yum install libXext-1.3.2-2.1.el6.i686</span><br><span class="line">yum install libXp-1.0.2-2.1.el6.x86_64</span><br><span class="line">yum install libXp-1.0.2-2.1.el6.i686</span><br><span class="line">yum install libXi-1.7.2-2.2.el6.x86_64</span><br><span class="line">yum install libXi-1.7.2-2.2.el6.i686</span><br><span class="line">yum install libXtst-1.2.2-2.1.el6.x86_64</span><br><span class="line">yum install libXtst-1.2.2-2.1.el6.i686</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<p>命令行安装(使用appuser用户安装)</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cd &#x2F;home&#x2F;appuser&#x2F;software</span><br><span class="line">.&#x2F;Oracle_Access_Manager10_1_4_3_0_linux64_APACHE22_WebGate</span><br></pre></td></tr></table></figure>
+
+
+
+<p>开始了漫长的选择题以及填空题</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">[appuser@xxxx software]$ .&#x2F;Oracle_Access_Manager10_1_4_3_0_linux64_APACHE22_WebGate</span><br><span class="line">InstallShield Wizard</span><br><span class="line"></span><br><span class="line">���ڳ�ʼ�� InstallShield Wizard...</span><br><span class="line"></span><br><span class="line">����׼�� Java(tm) �����...</span><br><span class="line">...................................</span><br><span class="line">...................................</span><br><span class="line">...................................</span><br><span class="line">...................................</span><br><span class="line">...................................</span><br><span class="line">...................................</span><br><span class="line">...................................</span><br><span class="line">...................................</span><br><span class="line">...................................</span><br><span class="line">...................................</span><br><span class="line">...................................</span><br><span class="line">...................................</span><br><span class="line">...................................</span><br><span class="line">...................................</span><br><span class="line">...................................</span><br><span class="line">.............................</span><br><span class="line">��������[appuser@xxxx software]</span><br></pre></td></tr></table></figure>
+
+<p>莫名其妙，直接退出了，可能是如下问题，尝试解决。</p>
+<p>运行到此直接退出，无日志输出，使用如下命令可以输入日志</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">.&#x2F;Oracle_Access_Manager10_1_4_3_0_linux64_APACHE22_WebGate -is:log tmp.log</span><br></pre></td></tr></table></figure>
+
+<p>日志内容如下，最后报错信息：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ERROR: Invalid bundled JVM. Missing &#39;jvm&#39; file错误:无效的捆绑JVM。失踪的jvm文件</span><br></pre></td></tr></table></figure>
+
+<p>需要安装glibc.i686，glibc.x86_64已安装，但webgate依赖32位glibc</p>
+<p>安装命令如下，使用root身份，两个包需要同时安装。</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rpm -ivh glibc-2.12-1.80.el6.i686.rpm nss-softokn-freebl-3.12.9-11.el6.i686.rpm</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">[appuser@xxxx software]$ .&#x2F;Oracle_Access_Manager10_1_4_3_0_linux64_APACHE22_WebGate</span><br><span class="line">InstallShield Wizard</span><br><span class="line"></span><br><span class="line">���ڳ�ʼ�� InstallShield Wizard...</span><br><span class="line"></span><br><span class="line">����׼�� Java(tm) �����...</span><br><span class="line">...................................</span><br><span class="line">...................................</span><br><span class="line">...................................</span><br><span class="line">...................................</span><br><span class="line">...................................</span><br><span class="line">...................................</span><br><span class="line">...................................</span><br><span class="line">...................................</span><br><span class="line">...................................</span><br><span class="line">...................................</span><br><span class="line">...................................</span><br><span class="line">...................................</span><br><span class="line">...................................</span><br><span class="line">...................................</span><br><span class="line">...................................</span><br><span class="line">.............................</span><br><span class="line">�������� InstallShield Wizard...</span><br><span class="line"></span><br><span class="line">-------------------------------------------------------------------------------</span><br><span class="line">欢迎使用 Oracle Access Manager 10.1.4.3.0 WebGate 的 InstallShield 向导</span><br><span class="line"></span><br><span class="line">InstallShield 向导将在计算机上安装 Oracle Access Manager 10.1.4.3.0 WebGate。</span><br><span class="line">要继续，选择“下一步”。 </span><br><span class="line"></span><br><span class="line">Oracle Access Manager 10.1.4.3.0 WebGate</span><br><span class="line">Oracle</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">按 1 到下一步, 3 取消 或者 4 重新显示 [1] 1</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>填1，下一步</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">您即将安装的产品的所有者必须是运行 Web 服务器时使用的同一个用户身份。大多数时候, 运行 Web 服务器所使用的身份是 &#96;root&#39; 或</span><br><span class="line">&#96;nobody&#39;。查找所有者身份的快捷方式是对服务器进程执行 &#96;ps&#39;操作。</span><br><span class="line"></span><br><span class="line">   输入运行 Web 服务器时所使用身份的用户名 [nobody] appuser</span><br><span class="line"></span><br><span class="line">   为上述用户名输入组 [nobody] appgrp</span><br><span class="line"></span><br><span class="line">按 1 到下一步, 2 到上一步, 3 取消 或者 4 重新显示 [1] 1</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>如下：<br>用户名 appuser<br>用户组 appgrp<br>填1，下一步</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">请指定 Oracle Access Manager 10.1.4.3.0 WebGate 的安装目录。</span><br><span class="line"></span><br><span class="line">   请指定目录名称或按 Enter 键 [&#x2F;opt&#x2F;netpoint&#x2F;webgate] &#x2F;app&#x2F;soft&#x2F;webgate</span><br><span class="line"></span><br><span class="line">按 1 到下一步, 2 到上一步, 3 取消 或者 4 重新显示 [1] 1</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>填写webgate安装目录，/app/soft/webgate<br>填1，下一步</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">Oracle Access Manager 10.1.4.3.0 WebGate 将安装在以下位置：</span><br><span class="line">&#x2F;app&#x2F;soft&#x2F;webgate4&#x2F;access</span><br><span class="line">总大小：</span><br><span class="line"> 133.4 MB</span><br><span class="line">请记下 Oracle Access Manager 10.1.4.3.0 WebGate 安装目录: &#x2F;app&#x2F;soft&#x2F;webgate4&#x2F;access,</span><br><span class="line">因为您将来需要引用它。</span><br><span class="line"></span><br><span class="line">按 1 到下一步, 2 到上一步, 3 取消 或者 4 重新显示 [1] 1</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>填1，下一步</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">   GCC 运行时库的位置 []: &#x2F;lib64</span><br><span class="line"></span><br><span class="line">按 1 到下一步, 2 到上一步, 3 取消 或者 4 重新显示 [1] 1</span><br><span class="line"></span><br><span class="line">正在安装 Oracle Access Manager 10.1.4.3.0 WebGate... 请等待。</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">|-----------|-----------|-----------|------------|</span><br><span class="line">0%         25%         50%         75%        100%</span><br><span class="line">||||||||||||||||||||||||||||||||||||||||||||||||||</span><br><span class="line"></span><br><span class="line">正在创建卸载程序...</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">正在解压缩语言包。请稍候...</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">WebGate 配置</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">WebGate 配置</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">正在更改文件所有权和权限...</span><br><span class="line"></span><br><span class="line">-------------------------------------------------------------------------------</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">指定传输安全模式</span><br><span class="line"> [X]  1  -  公开模式:    不加密</span><br><span class="line"> [ ]  2  -  简单模式:  通过 SSL 和 Oracle 提供的公共密钥证书进行加密</span><br><span class="line"> [ ]  3  -  证书模式:    通过 SSL 和外部 CA 提供的公钥证书进行加密</span><br><span class="line"></span><br><span class="line">   要选择一个选项，请输入它的编号或在完成时输入 0： [0]</span><br><span class="line"></span><br><span class="line">按 1 到下一步, 3 取消 或者 4 重新显示 [1] 1</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>填1，下一步</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">请提供 WebGate ID, 主机名和 WebGate 连接的端口号。 必须对安装的每个 WebGate 使用唯一的 ID。</span><br><span class="line"></span><br><span class="line">   WebGate ID [XXX_WebGate]</span><br><span class="line"></span><br><span class="line">WebGate 的口令6 [*******]</span><br><span class="line"></span><br><span class="line">   Access Server ID [acc_id_oam]</span><br><span class="line"></span><br><span class="line">   在其中安装 Access Server 的主机名 [node2]</span><br><span class="line"></span><br><span class="line">   Access Server 监听的端口号 [6000]</span><br><span class="line"></span><br><span class="line">按 1 到下一步, 2 到上一步, 3 取消 或者 4 重新显示 [1] 1</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>按照集团给的配置填写，例：</p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>WebGate ID</td>
+<td>XXX_WebGate</td>
+</tr>
+<tr>
+<td>Password for WebGate</td>
+<td>123456</td>
+</tr>
+<tr>
+<td>Access Server ID</td>
+<td>acc_id_oam</td>
+</tr>
+<tr>
+<td>Host name where an Access Server is installed</td>
+<td>node2</td>
+</tr>
+<tr>
+<td>Port number the Access Server listens to</td>
+<td>6000</td>
+</tr>
+</tbody></table>
+<p>填1，下一步</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">正在配置 WebGate...</span><br><span class="line"></span><br><span class="line">-------------------------------------------------------------------------------</span><br><span class="line"></span><br><span class="line">Oracle Access Manager 10.1.4.3.0 WebGate 安装在 Oracle Access Manager 10.1.4.3.0</span><br><span class="line">WebGate 安装目录下。要使用 Oracle Access Manager 10.1.4.3.0 WebGate 模块, 可通过修改 Web</span><br><span class="line">服务器目录中的配置来配置 Web 服务器。Oracle 可以自动为您更新配置。您也可以手动更新。</span><br><span class="line"></span><br><span class="line">是否继续自动更新 &quot;httpd.conf&quot;?</span><br><span class="line"> [X]  1  -  是</span><br><span class="line"> [ ]  2  -  否</span><br><span class="line"></span><br><span class="line">   要选择一个选项，请输入它的编号或在完成时输入 0： [0]</span><br><span class="line"></span><br><span class="line">按 1 到下一步, 3 取消 或者 4 重新显示 [1] 1</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+<p>填1，下一步</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br></pre></td><td class="code"><pre><span class="line">-------------------------------------------------------------------------------</span><br><span class="line"></span><br><span class="line">   请输入 Web 服务器配置目录的 httpd.conf 的绝对路径。</span><br><span class="line">    (如 &quot;&#x2F;export&#x2F;apache&#x2F;conf&#x2F;httpd.conf&quot;) [] &#x2F;app&#x2F;soft&#x2F;apache&#x2F;conf&#x2F;httpd.conf</span><br><span class="line"></span><br><span class="line">按 1 到下一步, 2 到上一步, 3 取消 或者 4 重新显示 [1] 1</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">正在更新 Web 服务器配置...</span><br><span class="line"></span><br><span class="line">出现错误。请重试。</span><br><span class="line">WebGate already exists in your httpd.conf.</span><br><span class="line">EditHttpConf Error. Unable to automatically update</span><br><span class="line">&#x2F;app&#x2F;soft&#x2F;apache&#x2F;conf&#x2F;httpd.conf.</span><br><span class="line">No changes have been made to &#x2F;app&#x2F;soft&#x2F;apache&#x2F;conf&#x2F;httpd.conf.</span><br><span class="line">-------------------------------------------------------------------------------</span><br><span class="line"></span><br><span class="line">Oracle Access Manager 10.1.4.3.0 WebGate 安装在 Oracle Access Manager 10.1.4.3.0</span><br><span class="line">WebGate 安装目录下。要使用 Oracle Access Manager 10.1.4.3.0 WebGate 模块, 可通过修改 Web</span><br><span class="line">服务器目录中的配置来配置 Web 服务器。Oracle 可以自动为您更新配置。您也可以手动更新。</span><br><span class="line"></span><br><span class="line">是否继续自动更新 &quot;httpd.conf&quot;?</span><br><span class="line"> [X]  1  -  是</span><br><span class="line"> [ ]  2  -  否</span><br><span class="line"></span><br><span class="line">   要选择一个选项，请输入它的编号或在完成时输入 0： [0]</span><br><span class="line"></span><br><span class="line">按 1 到下一步, 3 取消 或者 4 重新显示 [1] 4</span><br><span class="line"></span><br><span class="line">-------------------------------------------------------------------------------</span><br><span class="line"></span><br><span class="line">Oracle Access Manager 10.1.4.3.0 WebGate 安装在 Oracle Access Manager 10.1.4.3.0</span><br><span class="line">WebGate 安装目录下。要使用 Oracle Access Manager 10.1.4.3.0 WebGate 模块, 可通过修改 Web</span><br><span class="line">服务器目录中的配置来配置 Web 服务器。Oracle 可以自动为您更新配置。您也可以手动更新。</span><br><span class="line"></span><br><span class="line">是否继续自动更新 &quot;httpd.conf&quot;?</span><br><span class="line"> [X]  1  -  是</span><br><span class="line"> [ ]  2  -  否</span><br><span class="line"></span><br><span class="line">   要选择一个选项，请输入它的编号或在完成时输入 0： [0]</span><br><span class="line"></span><br><span class="line">按 1 到下一步, 3 取消 或者 4 重新显示 [1] 1</span><br><span class="line"></span><br><span class="line">-------------------------------------------------------------------------------</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">   请输入 Web 服务器配置目录的 httpd.conf 的绝对路径。</span><br><span class="line">    (如 &quot;&#x2F;export&#x2F;apache&#x2F;conf&#x2F;httpd.conf&quot;) [&#x2F;app&#x2F;soft&#x2F;apache&#x2F;conf&#x2F;httpd.conf]</span><br><span class="line"></span><br><span class="line">按 1 到下一步, 2 到上一步, 3 取消 或者 4 重新显示 [1] 1</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">正在更新 Web 服务器配置...</span><br><span class="line"></span><br><span class="line">出现错误。请重试。</span><br><span class="line">Error: You are not authorized to configure this web server</span><br><span class="line">EditHttpConf Error. Unable to automatically update</span><br><span class="line">&#x2F;app&#x2F;soft&#x2F;apache&#x2F;conf&#x2F;httpd.conf.</span><br><span class="line">No changes have been made to &#x2F;app&#x2F;soft&#x2F;apache&#x2F;conf&#x2F;httpd.conf.</span><br><span class="line">-------------------------------------------------------------------------------</span><br><span class="line"></span><br><span class="line">Oracle Access Manager 10.1.4.3.0 WebGate 安装在 Oracle Access Manager 10.1.4.3.0</span><br><span class="line">WebGate 安装目录下。要使用 Oracle Access Manager 10.1.4.3.0 WebGate 模块, 可通过修改 Web</span><br><span class="line">服务器目录中的配置来配置 Web 服务器。Oracle 可以自动为您更新配置。您也可以手动更新。</span><br><span class="line"></span><br><span class="line">是否继续自动更新 &quot;httpd.conf&quot;?</span><br><span class="line"> [X]  1  -  是</span><br><span class="line"> [ ]  2  -  否</span><br><span class="line"></span><br><span class="line">   要选择一个选项，请输入它的编号或在完成时输入 0： [0]</span><br><span class="line"></span><br><span class="line">按 1 到下一步, 3 取消 或者 4 重新显示 [1] 4</span><br><span class="line"></span><br><span class="line">-------------------------------------------------------------------------------</span><br><span class="line"></span><br><span class="line">Oracle Access Manager 10.1.4.3.0 WebGate 安装在 Oracle Access Manager 10.1.4.3.0</span><br><span class="line">WebGate 安装目录下。要使用 Oracle Access Manager 10.1.4.3.0 WebGate 模块, 可通过修改 Web</span><br><span class="line">服务器目录中的配置来配置 Web 服务器。Oracle 可以自动为您更新配置。您也可以手动更新。</span><br><span class="line"></span><br><span class="line">是否继续自动更新 &quot;httpd.conf&quot;?</span><br><span class="line"> [X]  1  -  是</span><br><span class="line"> [ ]  2  -  否</span><br><span class="line"></span><br><span class="line">   要选择一个选项，请输入它的编号或在完成时输入 0： [0] 1</span><br><span class="line"></span><br><span class="line">是否继续自动更新 &quot;httpd.conf&quot;?</span><br><span class="line"> [X]  1  -  是</span><br><span class="line"> [ ]  2  -  否</span><br><span class="line"></span><br><span class="line">   要选择一个选项，请输入它的编号或在完成时输入 0： [0]</span><br><span class="line"></span><br><span class="line">按 1 到下一步, 3 取消 或者 4 重新显示 [1] 1</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<p>输入Apache配置文件的绝对路径，配置失败<br>查找原因：<br>1.怀疑是第一次配置的webgate在捣鬼，第一次配置成功，但是WebGate 主机名和 WebGate 连接的端口号是失败的，直接跳过了。删掉Apache，重装一次；<br>果然，奏效，接着往下走</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">-------------------------------------------------------------------------------</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">   请输入 Web 服务器配置目录的 httpd.conf 的绝对路径。</span><br><span class="line">    (如 &quot;&#x2F;export&#x2F;apache&#x2F;conf&#x2F;httpd.conf&quot;) [&#x2F;app&#x2F;soft&#x2F;apache&#x2F;conf&#x2F;httpd.conf]</span><br><span class="line"></span><br><span class="line">按 1 到下一步, 2 到上一步, 3 取消 或者 4 重新显示 [1] 1</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">正在更新 Web 服务器配置...</span><br><span class="line"></span><br><span class="line">-------------------------------------------------------------------------------</span><br><span class="line">配置 Web 服务器</span><br><span class="line"></span><br><span class="line">已经为 WebGate 修改 Web 服务器配置</span><br><span class="line"></span><br><span class="line"> 请重新启动 Web 服务器以完成 WebGate 的安装。</span><br><span class="line"></span><br><span class="line">按 1 到下一步, 3 取消 或者 4 重新显示 [1]</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+<p>填1，下一步</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">-------------------------------------------------------------------------------</span><br><span class="line">配置 Web 服务器</span><br><span class="line"></span><br><span class="line">如果 Web 服务器是在 SSL 模式下设置的, 则需要使用与 SSL 相关的参数配置 httpd.conf 文件。要手动调整 SSL 配置,</span><br><span class="line">请按显示的说明进行操作。</span><br><span class="line"></span><br><span class="line">按 1 到下一步, 2 到上一步, 3 取消 或者 4 重新显示 [1]</span><br><span class="line"></span><br><span class="line">-------------------------------------------------------------------------------</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">有关其余产品设置和 Web 服务器配置的信息, 请参阅文档:</span><br><span class="line"> &#x2F;app&#x2F;soft&#x2F;webgate4&#x2F;access&#x2F;oblix&#x2F;lang&#x2F;en-us&#x2F;docs&#x2F;config.htm</span><br><span class="line">  是否希望安装程序启动浏览器来查看此文档?</span><br><span class="line">也可以记下文档路径, 以后自己启动浏览器。</span><br><span class="line"> [X]  1  -  是</span><br><span class="line"> [ ]  2  -  否</span><br><span class="line"></span><br><span class="line">   要选择一个选项，请输入它的编号或在完成时输入 0： [0] 1</span><br><span class="line"></span><br><span class="line">有关其余产品设置和 Web 服务器配置的信息, 请参阅文档:</span><br><span class="line"> &#x2F;app&#x2F;soft&#x2F;webgate4&#x2F;access&#x2F;oblix&#x2F;lang&#x2F;en-us&#x2F;docs&#x2F;config.htm</span><br><span class="line">  是否希望安装程序启动浏览器来查看此文档?</span><br><span class="line">也可以记下文档路径, 以后自己启动浏览器。</span><br><span class="line"> [X]  1  -  是</span><br><span class="line"> [ ]  2  -  否</span><br><span class="line"></span><br><span class="line">   要选择一个选项，请输入它的编号或在完成时输入 0： [0]</span><br><span class="line"></span><br><span class="line">按 1 到下一步, 3 取消 或者 4 重新显示 [1] 1</span><br><span class="line"></span><br><span class="line">错误: 无法在当前路径中找到 Netscape 浏览器。</span><br><span class="line">-------------------------------------------------------------------------------</span><br><span class="line">配置 Web 服务器</span><br><span class="line"></span><br><span class="line">请启动浏览器并打开 &#x2F;app&#x2F;soft&#x2F;webgate4&#x2F;access &#x2F;oblix&#x2F;lang&#x2F;en-us&#x2F;docs&#x2F;config.htm 文档,</span><br><span class="line">以获得有关配置 Web 服务器的详细信息。</span><br><span class="line"></span><br><span class="line">按 1 到下一步, 2 到上一步, 3 取消 或者 4 重新显示 [1] 1</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+<p>启动浏览器失败，无所谓，往下走，<br>填1，下一步</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br><span class="line">正在更改文件所有权和权限...</span><br><span class="line"></span><br><span class="line">-------------------------------------------------------------------------------</span><br><span class="line"></span><br><span class="line">▽</span><br><span class="line">请阅读以下信息。</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">Oracle COREid 10.1.4.3.0 自述文件</span><br><span class="line"></span><br><span class="line">▽</span><br><span class="line">&lt;VirtualHost *:9008&gt;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">---------------------------------------</span><br><span class="line"> 目录</span><br><span class="line"> ---------------------------------------</span><br><span class="line"></span><br><span class="line">---------------------------------------</span><br><span class="line"> 与 Oracle 联系</span><br><span class="line"> ---------------------------------------</span><br><span class="line"></span><br><span class="line">如果您在安装或配置 NetPoint 方面有疑问，请与 Oracle 客户关怀联系，电话为 (800) 833-3536，或者可以访问链接</span><br><span class="line">http:&#x2F;&#x2F;www.oracle.com&#x2F;corporate&#x2F;contact&#x2F;index.html。</span><br><span class="line"></span><br><span class="line">Oracle</span><br><span class="line"> http:&#x2F;&#x2F;www.oracle.com</span><br><span class="line"> 公司总部</span><br><span class="line"> 500 Oracle Parkway</span><br><span class="line"> Redwood Shores，CA 94065</span><br><span class="line"></span><br><span class="line">按 Enter 键 阅读文本(Y)(Q) [输入 q 以退出(N)] q</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<p>完成安装<br>填q，退出</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">按 1 到下一步, 3 取消 或者 4 重新显示 [1] 1</span><br><span class="line"></span><br><span class="line">-------------------------------------------------------------------------------</span><br><span class="line"></span><br><span class="line">Oracle Access Manager 10.1.4.3.0 WebGate 已成功安装。</span><br><span class="line">Oracle Access Manager 10.1.4.3.0 WebGate 设置信息</span><br><span class="line"> 传输安全: open</span><br><span class="line"> WebGate ID: CRLD_ERPZT_WebGate</span><br><span class="line"> Access Server 主机名: drjtldapvdra05</span><br><span class="line"> Access Server 端口号: 5575</span><br><span class="line"></span><br><span class="line">按 3 完成 或者 4 重新显示 [3] 3</span><br><span class="line">您在 &#x2F;var&#x2F;spool&#x2F;mail&#x2F;appuser 中有邮件</span><br></pre></td></tr></table></figure>
+
+<p>webgate安装结束， Apache重启</p>
+<h3 id="Apache配置"><a href="#Apache配置" class="headerlink" title="Apache配置"></a>Apache配置</h3><p>1.1  修改/apps/apache/conf/httpd.conf<br>监听的端口：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Listen 9008</span><br></pre></td></tr></table></figure>
+
+<p>修改：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Include conf&#x2F;httpd-vhosts.conf</span><br></pre></td></tr></table></figure>
+
+<p>在 </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;Location &quot;&#x2F;oberr.cgi&quot;&gt;</span><br><span class="line">SetHandler obwebgateerr</span><br><span class="line">&lt;&#x2F;Location&gt;</span><br></pre></td></tr></table></figure>
+<p>下面增加：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;Location &quot;&#x2F;obrar.cgi&quot;&gt;</span><br><span class="line">AuthType Oblix</span><br><span class="line">require valid-user</span><br><span class="line">&lt;&#x2F;Location&gt;</span><br></pre></td></tr></table></figure>
+<p>修改：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;LocationMatch &quot;*&quot;&gt;</span><br><span class="line">AuthType Oblix</span><br><span class="line">require valid-user</span><br><span class="line">&lt;&#x2F;LocationMatch&gt;</span><br></pre></td></tr></table></figure>
+<p>为</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;LocationMatch &quot;^&#x2F;((?!(api|logfiles|osp)).)*$&quot;&gt;</span><br><span class="line">AuthType Oblix</span><br><span class="line">require valid-user</span><br><span class="line">&lt;&#x2F;LocationMatch&gt;</span><br></pre></td></tr></table></figure>
+
+<p>1.2.  修改/app/soft/apache/conf/httpd-vhost.conf<br>初始该配置文件的内容为空，参考以下配置：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">&lt;VirtualHost *:9008&gt;</span><br><span class="line">ServerAdmin jitian-web-osp</span><br><span class="line">DocumentRoot &quot;&#x2F;www&#x2F;jitian-web-osp&quot;</span><br><span class="line">ServerName jitian-web-osp</span><br><span class="line">ServerAlias jitian-web-osp</span><br><span class="line"># ErrorLog &quot;&#x2F;www&#x2F;jitian-web&#x2F;logs&#x2F;error_log&quot;</span><br><span class="line"># CustomLog &quot;&#x2F;www&#x2F;jitian-web&#x2F;logs&#x2F;dummy-host.8888.com-access_log&quot; common</span><br><span class="line"># 开启反向代理</span><br><span class="line"># Allow Override All</span><br><span class="line"># Order allow,deny</span><br><span class="line"># Allow from all</span><br><span class="line"># PHP</span><br><span class="line">ProxyPass &#x2F; http:&#x2F;&#x2F;10.0.XX.X:9009&#x2F;</span><br><span class="line">ProxyPassReverse &#x2F;  http:&#x2F;&#x2F;10.0.XX.X:9009&#x2F;</span><br><span class="line">&lt;&#x2F;VirtualHost&gt;</span><br></pre></td></tr></table></figure>
+
+<p>ProxyPass 与 ProxyPassReverse 后面的『<a target="_blank" rel="noopener" href="http://10.0.xx.x:9009/%E3%80%8F%E6%98%AF%E9%9C%80%E8%A6%81%E6%88%91%E4%BB%AC%E7%9A%84%E8%AF%B7%E6%B1%82%E7%9A%84%E7%9C%9F%E6%AD%A3%E7%9A%84%E7%9B%AE%E7%9A%84%E6%9C%8D%E5%8A%A1%E5%99%A8%EF%BC%8C%E5%85%B6%E5%89%8D%E8%BE%B9%E7%9A%84">http://10.0.XX.X:9009/』是需要我们的请求的真正的目的服务器，其前边的</a> 空格+/+空格 也是属于我们配置的一部分</p>
+<p>检查Apache是否安装成功<br>重启：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;app&#x2F;soft&#x2F;apache&#x2F;bin&#x2F;httpd -k start</span><br><span class="line">lsof -i :9008</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+      
+    </div>
+    <div class="article-footer">
+      <blockquote class="mt-2x">
+  <ul class="post-copyright list-unstyled">
+    
+    <li class="post-copyright-link hidden-xs">
+      <strong>本文链接：</strong>
+      <a href="https://blog.magicyou.cn/2019/02/24/Linux-%E5%8D%95%E7%82%B9%E7%99%BB%E5%BD%95%E9%85%8D%E7%BD%AE%20%E8%AE%B0%E5%BD%95/" title="配置webgate拦截跳转到ldap登录页实现单点登录" target="_blank" rel="external">https://blog.magicyou.cn/2019/02/24/Linux-单点登录配置 记录/</a>
+    </li>
+    
+    <li class="post-copyright-license">
+      <strong>版权声明： </strong> 本博客所有文章除特别声明外，均采用 <a href="http://creativecommons.org/licenses/by/4.0/deed.zh" target="_blank" rel="external">CC BY 4.0 CN协议</a> 许可协议。转载请注明出处！
+    </li>
+  </ul>
+</blockquote>
+
+
+<div class="panel panel-default panel-badger">
+  <div class="panel-body">
+    <figure class="media">
+      <div class="media-left">
+        <a href="https://github.com/magicyou" target="_blank" class="img-burn thumb-sm visible-lg">
+          <img src="http://tva3.sinaimg.cn/crop.0.0.180.180.180/a524faafjw1e8qgp5bmzyj2050050aa8.jpg" class="img-rounded w-full" alt="">
+        </a>
+      </div>
+      <div class="media-body">
+        <h3 class="media-heading"><a href="https://github.com/magicyou" target="_blank"><span class="text-dark">BruceLee</span><small class="ml-1x">Web Developer</small></a></h3>
+        <div>个人简介。</div>
+      </div>
+    </figure>
+  </div>
+</div>
+
+
+    </div>
+  </article>
+  
+    
+  <section id="comments">
+  	
+           
+    
+  </section>
+
+
+  
+</div>
+
+  <nav class="bar bar-footer clearfix" data-stick-bottom>
+  <div class="bar-inner">
+  
+  <ul class="pager pull-left">
+    
+    <li class="prev">
+      <a href="/2019/07/03/wx-%E5%BE%AE%E4%BF%A1%E5%B0%8F%E7%A8%8B%E5%BA%8F%E5%90%88%E6%88%90%E6%B5%B7%E6%8A%A5/" title="微信小程序---合成海报分享到朋友圈"><i class="icon icon-angle-left" aria-hidden="true"></i><span>&nbsp;&nbsp;上一篇</span></a>
+    </li>
+    
+    
+    <li class="next">
+      <a href="/2019/02/23/Linux-%E4%B8%80%E6%AC%A1%E7%8E%AF%E5%A2%83%E5%8D%87%E7%BA%A7%E8%AE%B0%E5%BD%95/" title="一次lnmp环境升级记录"><span>下一篇&nbsp;&nbsp;</span><i class="icon icon-angle-right" aria-hidden="true"></i></a>
+    </li>
+    
+    
+  </ul>
+  
+  
+  <!-- Button trigger modal -->
+  <button type="button" class="btn btn-fancy btn-donate pop-onhover bg-gradient-warning" data-toggle="modal" data-target="#donateModal"><span>赏</span></button>
+  <!-- <div class="wave-icon wave-icon-danger btn-donate" data-toggle="modal" data-target="#donateModal">
+    <div class="wave-circle"><span class="icon"><i class="icon icon-bill"></i></span></div>
+  </div> -->
+  
+  
+  <div class="bar-right">
+    
+    <div class="share-component" data-sites="weibo,qq,wechat" data-mobile-sites="weibo,qq,wechat"></div>
+    
+  </div>
+  </div>
+</nav>
+  
+<!-- Modal -->
+<div class="modal modal-center modal-small modal-xs-full fade" id="donateModal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content donate">
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      <div class="modal-body">
+        <div class="donate-box">
+          <div class="donate-head">
+            <p>感谢您的支持，我会继续努力的!</p>
+          </div>
+          <div class="tab-content">
+            <div role="tabpanel" class="tab-pane fade active in" id="alipay">
+              <div class="donate-payimg">
+                <img src="/images/donate/alipayimg.jpg" alt="扫码支持" title="扫一扫" />
+              </div>
+              <p class="text-muted mv">扫码打赏，你说多少就多少</p>
+              <p class="text-grey">打开支付宝扫一扫，即可进行扫码打赏哦</p>
+            </div>
+            <div role="tabpanel" class="tab-pane fade" id="wechatpay">
+              <div class="donate-payimg">
+                <img src="/images/donate/wechatpayimg.jpg" alt="扫码支持" title="扫一扫" />
+              </div>
+              <p class="text-muted mv">扫码打赏，你说多少就多少</p>
+              <p class="text-grey">打开微信扫一扫，即可进行扫码打赏哦</p>
+            </div>
+          </div>
+          <div class="donate-footer">
+            <ul class="nav nav-tabs nav-justified" role="tablist">
+              <li role="presentation" class="active">
+                <a href="#alipay" id="alipay-tab" role="tab" data-toggle="tab" aria-controls="alipay" aria-expanded="true"><i class="icon icon-alipay"></i> 支付宝</a>
+              </li>
+              <li role="presentation" class="">
+                <a href="#wechatpay" role="tab" id="wechatpay-tab" data-toggle="tab" aria-controls="wechatpay" aria-expanded="false"><i class="icon icon-wepay"></i> 微信支付</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+</main>
+
+  <footer class="footer" itemscope itemtype="http://schema.org/WPFooter">
+    <script src="http://127.0.0.1:7001/client.js"></script>
+    <span id="site_uv">
+        local 本站访客数<span id="web_site_uv_tips"></span>人
+    </span>
+
+	
+	
+    <ul class="social-links">
+    	
+        <li><a href="https://github.com/magicyou" target="_blank" title="Github" data-toggle=tooltip data-placement=top><i class="icon icon-github"></i></a></li>
+        
+        <li><a href="https://weibo.com/p/1005052770664111/home?from=page_100505&mod=TAB&is_all=1#place" target="_blank" title="Weibo" data-toggle=tooltip data-placement=top><i class="icon icon-weibo"></i></a></li>
+        
+    </ul>
+
+    
+    
+        <!-- 不蒜子统计 -->
+        <!-- <span id="busuanzi_container_site_pv">
+                本站总访问量<span id="busuanzi_value_site_pv"></span>次
+        </span> -->
+        <!-- <span class="post-meta-divider">|</span> -->
+        <span id="busuanzi_container_site_uv">
+                本站访客数<span id="busuanzi_value_site_uv"></span>人
+        </span>
+  
+    <div class="copyright">
+    	
+        <div class="publishby">
+        	Theme by <a href="https://github.com/cofess" target="_blank"> cofess </a>base on <a href="https://github.com/cofess/hexo-theme-pure" target="_blank">pure</a>.
+        </div>
+    </div>
+</footer>
+  <script src="//cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
+<script>
+window.jQuery || document.write('<script src="js/jquery.min.js"><\/script>')
+</script>
+
+<script src="/js/plugin.min.js"></script>
+
+
+<script src="/js/application.js"></script>
+
+
+    <script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+
+<script src="/js/insight.js"></script>
+
+
+
+
+
+
+   
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+   
+    
+  <!-- <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css"> -->
+  <script src="//cdn.jsdelivr.net/npm/gitalk@1.4.0/dist/gitalk.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/blueimp-md5@2.10.0/js/md5.min.js"></script>
+  <script type="text/javascript">
+  var gitalk = new Gitalk({
+    clientID: 'e6bd9b1c9667be2eba71',
+    clientSecret: '0749dfe86f83d7fb16beb133646555d83d5d7fc7',
+    repo: 'gitalk_comment',
+    owner: 'magicyou',
+    admin: ['magicyou'],
+    id: md5(location.pathname),
+    distractionFreeMode: true
+  })
+  gitalk.render('comments')
+  </script>
+
+      
+
+
+
+
+
+
+
+</body>
+</html>
+
+<script type="text/javascript">document.write(unescape("%3Cspan id='cnzz_stat_icon_1280958573'%3E%3C/span%3E%3Cscript src='https://s9.cnzz.com/z_stat.php%3Fid%3D1280958573%26show%3Dpic' type='text/javascript'%3E%3C/script%3E"));</script>
