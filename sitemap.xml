@@ -662,14 +662,14 @@
   </url>
   
   <url>
-    <loc>https://blog.magicyou.cn/tags/MacOS/</loc>
+    <loc>https://blog.magicyou.cn/tags/Python/</loc>
     <lastmod>2023-02-08</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
-    <loc>https://blog.magicyou.cn/tags/Python/</loc>
+    <loc>https://blog.magicyou.cn/tags/MacOS/</loc>
     <lastmod>2023-02-08</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -683,13 +683,6 @@
   </url>
   
   <url>
-    <loc>https://blog.magicyou.cn/tags/CSS3/</loc>
-    <lastmod>2023-02-08</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
     <loc>https://blog.magicyou.cn/tags/git/</loc>
     <lastmod>2023-02-08</lastmod>
     <changefreq>daily</changefreq>
@@ -697,14 +690,7 @@
   </url>
   
   <url>
-    <loc>https://blog.magicyou.cn/tags/jQuery/</loc>
-    <lastmod>2023-02-08</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://blog.magicyou.cn/tags/HTML5/</loc>
+    <loc>https://blog.magicyou.cn/tags/CSS3/</loc>
     <lastmod>2023-02-08</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -712,6 +698,13 @@
   
   <url>
     <loc>https://blog.magicyou.cn/tags/JAVA/</loc>
+    <lastmod>2023-02-08</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.magicyou.cn/tags/HTML5/</loc>
     <lastmod>2023-02-08</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -726,6 +719,13 @@
   
   <url>
     <loc>https://blog.magicyou.cn/tags/%E5%B0%8F%E7%A8%8B%E5%BA%8F/</loc>
+    <lastmod>2023-02-08</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.magicyou.cn/tags/jQuery/</loc>
     <lastmod>2023-02-08</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -753,7 +753,14 @@
   </url>
   
   <url>
-    <loc>https://blog.magicyou.cn/tags/react/</loc>
+    <loc>https://blog.magicyou.cn/tags/React/</loc>
+    <lastmod>2023-02-08</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.magicyou.cn/tags/Next-js/</loc>
     <lastmod>2023-02-08</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -774,21 +781,7 @@
   </url>
   
   <url>
-    <loc>https://blog.magicyou.cn/tags/React/</loc>
-    <lastmod>2023-02-08</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://blog.magicyou.cn/tags/Next-js/</loc>
-    <lastmod>2023-02-08</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://blog.magicyou.cn/tags/%E7%AE%97%E6%B3%95/</loc>
+    <loc>https://blog.magicyou.cn/tags/react/</loc>
     <lastmod>2023-02-08</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -803,6 +796,13 @@
   
   <url>
     <loc>https://blog.magicyou.cn/tags/HTML/</loc>
+    <lastmod>2023-02-08</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.magicyou.cn/tags/%E7%AE%97%E6%B3%95/</loc>
     <lastmod>2023-02-08</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
